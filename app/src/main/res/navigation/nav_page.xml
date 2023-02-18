@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_page"
+    app:startDestination="@id/wordsUnitsListFragment">
+
+    <fragment
+        android:id="@+id/wordsUnitsListFragment"
+        android:name="com.rai.powereng.ui.wordsUnitsList.WordsUnitsListFragment"
+        android:label="WordsUnitsListFragment" />
+    <fragment
+        android:id="@+id/usersRating"
+        android:name="com.rai.powereng.ui.usersRating.UsersRating"
+        android:label="UsersRating" />
+</navigation>
