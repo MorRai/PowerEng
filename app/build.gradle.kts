@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
 }
 
 android {
@@ -43,6 +45,8 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":data"))
+
+    implementation(libs.bundles.androidx.navigation)
 
     implementation(libs.koin.android)
     implementation(libs.bundles.androidx.lifecycle)
