@@ -13,7 +13,8 @@ class PowerEngApplication : Application() {
         startKoin {
            androidContext(this@PowerEngApplication)
            modules(
-
+               viewModelsModule,
+               firebaseAuthRepositoryModule
            )
        }
     }

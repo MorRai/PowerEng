@@ -2,10 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/contentFragment">
+    app:startDestination="@id/authorizationFragment">
 
     <fragment
         android:id="@+id/contentFragment"
         android:name="com.rai.powereng.ui.ContentFragment"
         android:label="ContentFragment" />
+    <fragment
+        android:id="@+id/authorizationFragment"
+        android:name="com.rai.powereng.ui.authorization.AuthorizationFragment"
+        android:label="AuthorizationFragment" >
+        <action
+            android:id="@+id/action_authorizationFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+    </fragment>
 </navigation>

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item android:id="@+id/classPersonFragment"
+        android:title="Words"
+        android:icon="@android:drawable/sym_contact_card" />
+    <item android:id="@+id/maps"
+        android:title="Account"
+        android:icon="@android:drawable/ic_dialog_map" />
 </menu>
