@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.rai.powereng.LceState
+import com.rai.powereng.model.LceState
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmetAuthorizationBinding
 import kotlinx.coroutines.launch

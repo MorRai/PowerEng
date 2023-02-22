@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -31,6 +33,18 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":domain"))
+
+
+    implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-storage:20.1.0")
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")
+
+    implementation(libs.kotlinx.coroutine)
+    implementation(libs.koin.android)
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.appcompat)

@@ -1,4 +1,4 @@
-package com.rai.powereng
+package com.rai.powereng.model
 
 sealed class LceState {
     data class Message(val message : String) : LceState()
