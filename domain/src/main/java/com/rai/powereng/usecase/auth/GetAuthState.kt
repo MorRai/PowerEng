@@ -4,5 +4,5 @@ import com.rai.powereng.repository.FirebaseAuthRepository
 import kotlinx.coroutines.CoroutineScope
 
 class GetAuthState( private val repo: FirebaseAuthRepository) {
-    suspend operator fun invoke() = repo.getFirebaseAuthState()
+     operator fun invoke(viewModelScope: CoroutineScope) = repo.getFirebaseAuthState(viewModelScope)
 }

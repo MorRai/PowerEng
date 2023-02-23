@@ -14,7 +14,8 @@ class PowerEngApplication : Application() {
            androidContext(this@PowerEngApplication)
            modules(
                viewModelsModule,
-               firebaseAuthRepositoryModule
+               firebaseAuthRepositoryModule,
+               useCaseModule
            )
        }
     }

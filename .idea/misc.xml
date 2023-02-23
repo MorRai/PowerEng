@@ -5,7 +5,11 @@
       <map>
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/activity_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_content.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_forgot_password.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_sign_in.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_sign_up.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_users_rating.xml" value="0.25885416666666666" />
+        <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_verify_email.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragment_words_units_list.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/layout/fragmet_authorization.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Rai/PowerEng/app/src/main/res/menu/menu_bottim_nav.xml" value="0.18802083333333333" />

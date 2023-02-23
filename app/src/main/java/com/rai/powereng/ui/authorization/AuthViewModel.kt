@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.rai.powereng.model.LceState
 import com.rai.powereng.FirebaseAuthRepository
-import com.rai.powereng.usecase.AuthUseCases
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val authUseCases: AuthUseCases,
+class AuthViewModel(
                     private val repository : FirebaseAuthRepository): ViewModel() {
     private val _firebaseUser = MutableStateFlow<FirebaseUser?>(null)
     val currentUser: StateFlow<FirebaseUser?> = _firebaseUser

@@ -13,7 +13,7 @@ interface FirebaseAuthRepository {
 
     fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
-    suspend fun signUpWithEmailPassword(name: String, email: String, password: String):Flow<Response<Boolean>>
+    suspend fun signUpWithEmailPassword(email: String, password: String):Flow<Response<Boolean>>
 
     suspend fun signInWithEmailPassword(email: String, password: String):Flow<Response<Boolean>>
 

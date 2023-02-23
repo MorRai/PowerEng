@@ -48,23 +48,12 @@ class AuthorizationFragment : Fragment() {
 
         with(binding) {
             emailSignInButton.setOnClickListener {
-                progressBar.isVisible = true
-                val email = binding.fieldEmail.text.toString()
-                val password = binding.fieldPassword.text.toString()
-                viewModel.signInUser(email, password)
+                findNavController().navigate(R.id.action_authorizationFragment_to_signInFragment)
             }
             emailCreateAccountButton.setOnClickListener {
-                progressBar.isVisible = true
-                val email = binding.fieldEmail.text.toString()
-                val password = binding.fieldPassword.text.toString()
-                viewModel.signUpUser(email, password)
+                findNavController().navigate(R.id.action_authorizationFragment_to_signUpFragment)
             }
-            resendPassword.setOnClickListener {
-                //стоит еще пару каких проверок сделать что владелец, а то так любой может отправлять, но для теста сойдет
-                progressBar.isVisible = true
-                val email = fieldEmail.text.toString()
-                viewModel.verifySendPasswordReset(email)
-            }
+
             continueWork.setOnClickListener {
                 findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
             }

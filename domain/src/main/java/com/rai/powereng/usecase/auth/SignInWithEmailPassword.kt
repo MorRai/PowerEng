@@ -1,11 +1,13 @@
 package com.rai.powereng.usecase.auth
 
+import com.rai.powereng.model.Response
 import com.rai.powereng.repository.FirebaseAuthRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SignInWithEmailPassword(
-private val repo: FirebaseAuthRepository,
-private val email: String,
-private val password: String
+private val repo: FirebaseAuthRepository
 ) {
-    suspend operator fun invoke() = repo.signInWithEmailPassword(email, password )
+     operator fun invoke(email:String, password:String): Flow<Response<Boolean>> = flow{
+        repo.signInWithEmailPassword(email, password )}
 }
