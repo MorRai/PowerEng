@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_authorizationFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_verifyEmailFragment"
+            app:destination="@id/verifyEmailFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -29,14 +32,14 @@
         <action
             android:id="@+id/action_signInFragment_to_contentFragment"
             app:destination="@id/contentFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.rai.powereng.ui.authorization.signUp.SignUpFragment"
         android:label="SignUpFragment" >
-        <action
-            android:id="@+id/action_signUpFragment_to_forgotPasswordFragment"
-            app:destination="@id/forgotPasswordFragment" />
         <action
             android:id="@+id/action_signUpFragment_to_contentFragment"
             app:destination="@id/contentFragment" />
@@ -45,4 +48,8 @@
         android:id="@+id/forgotPasswordFragment"
         android:name="com.rai.powereng.ui.authorization.forgotPassword.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment" />
+    <fragment
+        android:id="@+id/verifyEmailFragment"
+        android:name="com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailFragment"
+        android:label="VerifyEmailFragment" />
 </navigation>

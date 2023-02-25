@@ -4,17 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
 import com.rai.powereng.usecase.auth.SendPasswordReset
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class ForgotPasswordViewModel(sendPasswordReset: SendPasswordReset,
-                              email:String): ViewModel() {
+class ForgotPasswordViewModel(private val sendPasswordReset: SendPasswordReset): ViewModel() {
 
-    val sendPasswordResetEmailResponse  = sendPasswordReset.invoke(email).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = Response.Loading
-    )
+
+    private val _sendPasswordResetEmailResponse = MutableStateFlow<Response<Boolean>>(Response.Success(false))
+    val sendPasswordResetEmailResponse : StateFlow<Response<Boolean>> = _sendPasswordResetEmailResponse
+
+    fun signUpUser(email: String) = viewModelScope.launch {
+        _sendPasswordResetEmailResponse.value = Response.Loading
+        val result = sendPasswordReset.invoke(email)
+        _sendPasswordResetEmailResponse.value = result
+    }
+
 
 }
 

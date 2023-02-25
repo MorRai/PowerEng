@@ -9,4 +9,6 @@ val useCaseModule = module {
     factoryOf(::SendPasswordReset)
     factoryOf(::SignOut)
     factoryOf(::SignUpWithEmailPassword)
+    factoryOf(::GetAuthState)
+    factoryOf(::SendEmailVerification)
 }

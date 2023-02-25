@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.flow
 class SignUpWithEmailPassword(
     private val repo: FirebaseAuthRepository,
 ) {
-     operator fun invoke(email:String, password:String) : Flow<Response<Boolean>> = flow{repo.signUpWithEmailPassword( email, password )}
+    suspend operator fun invoke(email:String, password:String)  = repo.signUpWithEmailPassword( email, password )
 }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "928853453093",
+    "project_id": "powereng-cac3c",
+    "storage_bucket": "powereng-cac3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928853453093:android:88d142b43c850f43fd12cc",
+        "android_client_info": {
+          "package_name": "com.rai.powereng"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928853453093-esft1dq5nu00g4vohu84c5i3u927c6ht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rai.powereng",
+            "certificate_hash": "342e65a4b787822df51c141b277d721e744c624a"
+          }
+        },
+        {
+          "client_id": "928853453093-5hnorucalidl2391qhcjomu935jjikkv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuQ6-BZGiPhiCOHDv6vCYJZJoeZZOsC3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928853453093-5hnorucalidl2391qhcjomu935jjikkv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
