@@ -1,70 +1,105 @@
 package com.rai.powereng.repository
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FieldValue.serverTimestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 
-class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
 
-    //override val currentUser get() = auth.currentUser
+class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
+                                 private var oneTapClient: SignInClient,
+                                 private val db: FirebaseFirestore
+): FirebaseAuthRepository, KoinComponent {
+    private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
+    private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
 
 
-    override suspend fun signOut(): Flow<Response<Boolean>> = flow {
-        try {
-            emit(Response.Loading)
-            Firebase.auth.signOut()
-            emit(Response.Success(true))
+    override val isUserAuthenticatedInFirebase = auth.currentUser != null
+
+    override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?> {
+        return try {
+            val signInResult = oneTapClient.beginSignIn(signInRequest).await()
+            Response.Success(signInResult)
         } catch (e: Exception) {
-            emit(Response.Failure(e))
+            try {
+                val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
+                Response.Success(signUpResult)
+            } catch (e: Exception) {
+                Response.Failure(e)
+            }
         }
     }
 
+    override suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean> {
+        return try {
+            val googleCredential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(googleCredential).await()
+            val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
+            if (isNewUser) {
+                addUserToFirestore()
+            }
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    override suspend fun signOut(): Response<Boolean> =
+        try {
+            auth.signOut()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
 
     override suspend fun signUpWithEmailPassword(email: String, password: String) =
         try {
-            Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+            auth.createUserWithEmailAndPassword(email, password).await()
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)
         }
-
 
     override suspend fun signInWithEmailPassword(email: String, password: String) =
         try {
-            Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            auth.signInWithEmailAndPassword(email, password).await()
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)
         }
 
-
     override suspend fun sendPasswordReset(email: String) =
         try {
-            Firebase.auth.sendPasswordResetEmail(email).await()
+            auth.sendPasswordResetEmail(email).await()
            Response.Success(true)
         } catch (e: Exception) {
           Response.Failure(e)
         }
 
-
     override suspend fun sendEmailVerification()=
       try {
-          Firebase.auth.currentUser?.sendEmailVerification()?.await()
+          auth.currentUser?.sendEmailVerification()?.await()
           Response.Success(true)
         } catch (e: Exception) {
           Response.Failure(e)
         }
 
-
     override suspend fun reloadFirebaseUser()=flow {
         try {
             emit(Response.Loading)
-            Firebase.auth.currentUser?.reload()?.await()
+            auth.currentUser?.reload()?.await()
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Failure(e))
@@ -74,22 +109,35 @@ class FirebaseAuthRepositoryImpl : FirebaseAuthRepository{
     override suspend fun revokeAccess()=flow {
         try {
             emit(Response.Loading)
-            Firebase.auth.currentUser?.delete()?.await()
+            auth.currentUser?.delete()?.await()
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Failure(e))
         }
     }
 
-
     override fun getFirebaseAuthState(viewModelScope: CoroutineScope) = callbackFlow  {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser == null)
         }
-        Firebase.auth.addAuthStateListener(authStateListener)
+        auth.addAuthStateListener(authStateListener)
         awaitClose {
-            Firebase.auth.removeAuthStateListener(authStateListener)
+            auth.removeAuthStateListener(authStateListener)
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),   Firebase.auth.currentUser == null)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),   auth.currentUser == null)
 
+    private suspend fun addUserToFirestore() {
+        auth.currentUser?.apply {
+            val user = toUser()
+            db.collection("users").document(uid).set(user).await()
+        }
+    }
 }
+
+
+fun FirebaseUser.toUser() = mapOf(
+    "displayName" to displayName,
+    "email" to email,
+    "photoUrl" to photoUrl?.toString(),
+    "createdAt" to serverTimestamp()
+)

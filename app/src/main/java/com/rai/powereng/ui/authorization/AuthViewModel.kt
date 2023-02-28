@@ -6,10 +6,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.rai.powereng.usecase.auth.GetAuthState
 
-class AuthViewModel(getAuthState: GetAuthState,
+class AuthViewModel(private val getAuthState: GetAuthState,
 ): ViewModel() {
 
-    val authState = getAuthState.invoke(viewModelScope)
+    init {
+        getAuthStateResponse()
+    }
+
+    fun getAuthStateResponse() =  getAuthState.invoke(viewModelScope)
 
     val isEmailVerified get() =   Firebase.auth.currentUser?.isEmailVerified ?: false
 

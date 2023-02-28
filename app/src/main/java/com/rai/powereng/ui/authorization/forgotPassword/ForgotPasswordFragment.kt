@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.rai.powereng.databinding.FragmentForgotPasswordBinding
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
@@ -36,8 +37,9 @@ class ForgotPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
-            val email = binding.fieldEmail.text.toString()
+
             emailResetPassword.setOnClickListener {
+                val email = binding.fieldEmail.text.toString()
                 viewModel.signUpUser(email)
             }
 
@@ -49,8 +51,10 @@ class ForgotPasswordFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedIn = it.data
                             if (isUserSignedIn) {
-                                //хз что покуда делать надог лянуть как ето работает
-                                //findNavController().navigate(R.id.action_signInFragment_to_contentFragment)
+                                Toast.makeText(requireContext(),
+                                    "Письмо для востоновления аккаунта отправлено на почту!",
+                                    Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
                             }
                         }
                         is Response.Failure -> {

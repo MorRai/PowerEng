@@ -51,5 +51,9 @@
     <fragment
         android:id="@+id/verifyEmailFragment"
         android:name="com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailFragment"
-        android:label="VerifyEmailFragment" />
+        android:label="VerifyEmailFragment" >
+        <action
+            android:id="@+id/action_verifyEmailFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+    </fragment>
 </navigation>

@@ -15,7 +15,8 @@ class PowerEngApplication : Application() {
            modules(
                viewModelsModule,
                firebaseAuthRepositoryModule,
-               useCaseModule
+               useCaseModule,
+               firebaseRequestModule
            )
        }
     }

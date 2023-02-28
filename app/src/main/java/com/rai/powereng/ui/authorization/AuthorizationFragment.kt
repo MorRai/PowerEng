@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmetAuthorizationBinding
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,12 +56,15 @@ class AuthorizationFragment : Fragment() {
 
 
     private fun authState() {
-        lifecycleScope.launch {
 
-            if (!viewModel.isEmailVerified) {
-                //findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
+            val isUserSignedOut = viewModel.getAuthStateResponse().value
+            if (isUserSignedOut && !viewModel.isEmailVerified) {
+                findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
             }
+            else if(!isUserSignedOut && viewModel.isEmailVerified) {
+                findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
         }
+
     }
 
 

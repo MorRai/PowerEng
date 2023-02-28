@@ -5,11 +5,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
+
 interface FirebaseAuthRepository {
-    //val currentUser: FirebaseUser?
 
+    val isUserAuthenticatedInFirebase: Boolean
 
-    suspend fun signOut(): Flow<Response<Boolean>>
+    suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
+
+    suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean>
+
+    suspend fun signOut(): Response<Boolean>
 
     fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
