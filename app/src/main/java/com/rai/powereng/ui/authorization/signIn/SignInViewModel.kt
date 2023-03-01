@@ -2,21 +2,27 @@ package com.rai.powereng.ui.authorization.signIn
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.rai.powereng.model.Response
-import com.rai.powereng.usecase.auth.OneTapSignInWithGoogle
 import com.rai.powereng.usecase.auth.SignInWithEmailPassword
 import com.rai.powereng.usecase.auth.SignInWithGoogle
 import com.google.android.gms.auth.api.identity.SignInClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(private val signInWithEmailPassword: SignInWithEmailPassword,
-                      private val oneTapSignInWithGoogle: OneTapSignInWithGoogle,
+
                       private val signInWithGoogle: SignInWithGoogle,
-                      val oneTapClient: SignInClient
-): ViewModel()  {
+                      val oneTapClient: SignInClient,
+                      private var signInRequest:BeginSignInRequest,
+                      private var signUpRequest:BeginSignInRequest,
+    // private val oneTapSignInWithGoogle: OneTapSignInWithGoogle
+): ViewModel() {
+
+
 
     private val _signInResponse= MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val signInResponse: StateFlow<Response<Boolean>> = _signInResponse
@@ -35,7 +41,8 @@ class SignInViewModel(private val signInWithEmailPassword: SignInWithEmailPasswo
 
     fun oneTapSignIn() = viewModelScope.launch {
         _oneTapSignInResponse.value = Response.Loading
-        val result = oneTapSignInWithGoogle.invoke()
+       // val result = oneTapSignInWithGoogle.invoke()
+        val result = oneTapSignInWithGoogle()
         _oneTapSignInResponse.value = result
     }
 
@@ -43,6 +50,21 @@ class SignInViewModel(private val signInWithEmailPassword: SignInWithEmailPasswo
         _signInWithGoogleResponse.value = Response.Loading
         val result = signInWithGoogle.invoke(idToken)
         _signInWithGoogleResponse.value = result
+    }
+
+    //перенес сюда из прошлого модуля но есть вопрос как эту хуйню оставить в домейне без подключение андроид библеотек в не него
+    suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
+        return try {
+            val signInResult = oneTapClient.beginSignIn(signInRequest).await()
+            Response.Success(signInResult)
+        } catch (e: Exception) {
+            try {
+                val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
+                Response.Success(signUpResult)
+            } catch (e: Exception) {
+                Response.Failure(e)
+            }
+        }
     }
 
 }

@@ -49,7 +49,7 @@ dependencies {
 
     implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:+")
+    implementation("com.google.android.gms:play-services-auth:20.3.0")
     implementation ("com.google.firebase:firebase-storage:20.1.0")
     implementation ("com.google.firebase:firebase-firestore-ktx")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")

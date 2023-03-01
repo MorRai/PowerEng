@@ -10,13 +10,13 @@ interface FirebaseAuthRepository {
 
     val isUserAuthenticatedInFirebase: Boolean
 
-    suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
+    val isEmailVerified: Boolean
+
+    //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
 
     suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean>
 
     suspend fun signOut(): Response<Boolean>
-
-    fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
     suspend fun signUpWithEmailPassword(email: String, password: String):Response<Boolean>
 
@@ -27,6 +27,7 @@ interface FirebaseAuthRepository {
     suspend fun sendEmailVerification():Response<Boolean>
 
 
+    fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
     suspend fun reloadFirebaseUser():Flow<Response<Boolean>>
 

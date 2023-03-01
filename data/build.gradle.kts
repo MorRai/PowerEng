@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.android.material)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.android.gms:play-services-auth:+")
+    implementation("com.google.android.gms:play-services-auth:20.3.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)

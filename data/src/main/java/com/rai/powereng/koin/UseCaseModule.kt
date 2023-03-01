@@ -11,4 +11,6 @@ val useCaseModule = module {
     factoryOf(::SignUpWithEmailPassword)
     factoryOf(::GetAuthState)
     factoryOf(::SendEmailVerification)
+    factoryOf(::SignInWithGoogle)
+    factoryOf(::OneTapSignInWithGoogle)
 }

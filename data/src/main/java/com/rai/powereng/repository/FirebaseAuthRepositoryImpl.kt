@@ -6,6 +6,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue.serverTimestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rai.powereng.model.Response
@@ -14,21 +15,24 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
+
 
 
 class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
-                                 private var oneTapClient: SignInClient,
+                                 //private var oneTapClient: SignInClient,
                                  private val db: FirebaseFirestore
 ): FirebaseAuthRepository, KoinComponent {
-    private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
-    private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
 
 
     override val isUserAuthenticatedInFirebase = auth.currentUser != null
 
-    override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?> {
+    override val isEmailVerified = auth.currentUser?.isEmailVerified ?: false
+
+    /*
+    private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
+    private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
+
+    override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
         return try {
             val signInResult = oneTapClient.beginSignIn(signInRequest).await()
             Response.Success(signInResult)
@@ -41,6 +45,7 @@ class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
             }
         }
     }
+    */
 
     override suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean> {
         return try {
@@ -56,7 +61,7 @@ class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override suspend fun signOut(): Response<Boolean> =
+    override suspend fun signOut() =
         try {
             auth.signOut()
             Response.Success(true)

@@ -1,16 +1,15 @@
 package com.rai.powereng.koin
 
-
-import android.app.Application
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.rai.powereng.R
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -28,12 +27,12 @@ val firebaseRequestModule  = module {
     }
 
 
-    single(named("signInRequest")) {
+    single(named("signUpRequest")) {
         BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
-                    .setServerClientId("")
+                    .setServerClientId("928853453093-dps9hhilabn8v1thb8eom7lfqetsgj6h.apps.googleusercontent.com")
                     .setFilterByAuthorizedAccounts(false)
                     .build())
             .build()
@@ -43,10 +42,10 @@ val firebaseRequestModule  = module {
 
     single { Firebase.firestore }//FirebaseFirestore
 
-    single {  Identity.getSignInClient(get()) } //SignInClient
+    single{  Identity.getSignInClient(androidContext()) } //SignInClient
 
     single { GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("")
+        .requestIdToken("928853453093-dps9hhilabn8v1thb8eom7lfqetsgj6h.apps.googleusercontent.com")
         .requestEmail()
         .build()
     }

@@ -45,20 +45,21 @@ class VerifyEmailFragment : Fragment() {
             }
 
             lifecycleScope.launch {
-                viewModel.signOutResponse.collect {
-                    when (it) {
+                viewModel.signOutResponse.collect {response ->
+                    when (response) {
                         is Response.Loading -> progressBar.isVisible = true
                         is Response.Success -> {
                             progressBar.isVisible = false
-                            val isUserSignedOut = it.data
+                            val isUserSignedOut = response.data
                             if (isUserSignedOut) {
                                 findNavController().popBackStack()
+                                //кидает на прошлый экран и потом опять сюда
                             }
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
                             Toast.makeText(requireContext(),
-                                it.e.toString(),
+                                response.e.toString(),
                                 Toast.LENGTH_SHORT).show()
                         }
                     }

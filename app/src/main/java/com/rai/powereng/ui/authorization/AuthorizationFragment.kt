@@ -9,9 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmetAuthorizationBinding
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AuthorizationFragment : Fragment() {
@@ -39,7 +38,7 @@ class AuthorizationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        authState()
+       authState()
 
         with(binding) {
             emailSignInButton.setOnClickListener {
@@ -51,20 +50,19 @@ class AuthorizationFragment : Fragment() {
             continueWork.setOnClickListener {
                 findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
             }
+
         }
     }
 
 
     private fun authState() {
-
-            val isUserSignedOut = viewModel.getAuthStateResponse().value
-            if (isUserSignedOut && !viewModel.isEmailVerified) {
-                findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
-            }
-            else if(!isUserSignedOut && viewModel.isEmailVerified) {
-                findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
+        //авторизацию надо по подписку а то записаем на ней чрез getAuthStateResponse
+        if (viewModel.isUserAuthenticatedInFirebase && !viewModel.isEmailVerified) {
+            findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
         }
-
+        else if(viewModel.isUserAuthenticatedInFirebase && viewModel.isEmailVerified) {
+            findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
+        }
     }
 
 
