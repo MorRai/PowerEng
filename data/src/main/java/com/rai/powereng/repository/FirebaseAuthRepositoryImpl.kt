@@ -122,7 +122,7 @@ class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     }
 
     override fun getFirebaseAuthState(viewModelScope: CoroutineScope) = callbackFlow  {
-        val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+            val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser == null)
         }
         auth.addAuthStateListener(authStateListener)

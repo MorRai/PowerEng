@@ -14,7 +14,6 @@ class AuthViewModel(private val getAuthState: GetAuthState,
     }
 
     fun getAuthStateResponse() =  getAuthState.invoke(viewModelScope)
-    val isUserAuthenticatedInFirebase  =   firebaseAuthRepository.isUserAuthenticatedInFirebase
 
     val isEmailVerified  =   firebaseAuthRepository.isEmailVerified
 

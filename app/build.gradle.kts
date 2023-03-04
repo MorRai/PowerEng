@@ -53,6 +53,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage:20.1.0")
     implementation ("com.google.firebase:firebase-firestore-ktx")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")
+
     implementation(libs.bundles.androidx.navigation)
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)
