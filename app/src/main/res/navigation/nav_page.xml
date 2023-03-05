@@ -6,10 +6,25 @@
 
     <fragment
         android:id="@+id/wordsUnitsListFragment"
-        android:name="com.rai.powereng.ui.wordsUnitsList.WordsUnitsListFragment"
-        android:label="WordsUnitsListFragment" />
+        android:name="com.rai.powereng.ui.unitsList.UnitsListFragment"
+        android:label="WordsUnitsListFragment" >
+        <action
+            android:id="@+id/action_wordsUnitsListFragment_to_partTasks"
+            app:destination="@id/partTasks" />
+    </fragment>
     <fragment
         android:id="@+id/usersRating"
         android:name="com.rai.powereng.ui.usersRating.UsersRating"
         android:label="UsersRating" />
+    <fragment
+        android:id="@+id/partTasks"
+        android:name="com.rai.powereng.ui.partTasks.PartTasks"
+        android:label="PartTasks" >
+        <argument
+            android:name="unitNum"
+            app:argType="integer" />
+        <argument
+            android:name="partNum"
+            app:argType="integer" />
+    </fragment>
 </navigation>
