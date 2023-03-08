@@ -10,4 +10,6 @@ val firebaseUnitsModule = module {
     }
 
     single { FirebaseFirestore.getInstance() }//its db
+
+    //FirebaseFirestore.getInstance().collection("unitList")
 }

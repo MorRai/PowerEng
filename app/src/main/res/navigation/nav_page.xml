@@ -9,22 +9,24 @@
         android:name="com.rai.powereng.ui.unitsList.UnitsListFragment"
         android:label="WordsUnitsListFragment" >
         <action
-            android:id="@+id/action_wordsUnitsListFragment_to_partTasks"
-            app:destination="@id/partTasks" />
+            android:id="@+id/action_wordsUnitsListFragment_to_partConfirmFragment2"
+            app:destination="@id/partConfirmFragment" />
     </fragment>
     <fragment
         android:id="@+id/usersRating"
         android:name="com.rai.powereng.ui.usersRating.UsersRating"
         android:label="UsersRating" />
     <fragment
-        android:id="@+id/partTasks"
-        android:name="com.rai.powereng.ui.partTasks.PartTasks"
-        android:label="PartTasks" >
+        android:id="@+id/partConfirmFragment"
+        android:name="com.rai.powereng.ui.partTasks.PartConfirmFragment"
+        android:label="PartConfirmFragment" >
         <argument
             android:name="unitNum"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="0" />
         <argument
-            android:name="partNum"
-            app:argType="integer" />
+            android:name="part"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

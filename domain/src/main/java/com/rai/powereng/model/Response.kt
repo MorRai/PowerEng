@@ -11,4 +11,6 @@ package com.rai.powereng.model
         data class Failure(
             val e: Exception
         ): Response<Nothing>()
+
+        companion object
     }

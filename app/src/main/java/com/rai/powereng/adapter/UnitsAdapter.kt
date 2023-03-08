@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rai.powereng.databinding.ItemUnitBinding
 import com.rai.powereng.model.UnitData
+import com.rai.powereng.ui.unitsList.PartClickListener
 
 
 class UnitsAdapter(
     context: Context,
-    private val onItemClicked: (UnitData) -> Unit,
+    private val partListener: PartClickListener
+   // private val onItemClicked: (UnitData) -> Unit,
 ) : ListAdapter<UnitData, UnitViewHolder>(DIFF_UTIL) {
 
+   //var ? = null
 
     private val layoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnitViewHolder {
@@ -25,7 +28,7 @@ class UnitsAdapter(
 
     override fun onBindViewHolder(holder: UnitViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item,onItemClicked)
+        holder.bind(item,partListener)
     }
     companion object {
         private val DIFF_UTIL = object : DiffUtil.ItemCallback<UnitData>() {
@@ -52,12 +55,25 @@ class UnitViewHolder(
     private val binding: ItemUnitBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: UnitData, onItemClicked: (UnitData) -> Unit) {
-        //binding.imageCard.load(item.image)
-        //binding.nameClass.text = item.name
-        //itemView.setOnClickListener {
-            //onItemClicked(item)
-       // }
+    fun bind(item: UnitData, partListener: PartClickListener) {
+        binding.unitDescription.text = item.description
+        binding.unitNumber.text = "Unit ${item.unitId}"  //покуда тест
+        binding.part1.setOnClickListener {
+            partListener.onPartClickListener(item.unitId,1)
+        }
+        binding.part2.setOnClickListener {
+            partListener.onPartClickListener(item.unitId,2)
+        }
+        binding.part3.setOnClickListener {
+            partListener.onPartClickListener(item.unitId,3)
+        }
+        binding.part4.setOnClickListener {
+            partListener.onPartClickListener(item.unitId,4)
+        }
+        binding.part5.setOnClickListener {
+            partListener.onPartClickListener(item.unitId,5)
+        }
+
     }
 
 }

@@ -41,7 +41,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-storage:20.1.0")
     implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
 
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)
@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.android.material)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.android.gms:play-services-auth:20.3.0")
+    implementation("com.google.android.gms:play-services-auth:20.4.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)

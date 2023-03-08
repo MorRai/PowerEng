@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface UnitsRepository {
 
-    suspend fun getUnitsData(): Flow<Response<List<UnitData>>>
+    fun getUnitsData(): Flow<Response<List<UnitData>>>
 }

@@ -16,7 +16,7 @@ import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UnitsListFragment : Fragment() {
+class UnitsListFragment : Fragment(), PartClickListener {
     private var _binding: FragmentUnitsListBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
@@ -39,10 +39,7 @@ class UnitsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             val adapter =
-                UnitsAdapter(requireContext()) {
-                    findNavController().navigate(UnitsListFragmentDirections.actionWordsUnitsListFragmentToPartTasks(
-                        1,1))
-                }
+                UnitsAdapter(requireContext(), this@UnitsListFragment )
 
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = adapter
@@ -79,5 +76,9 @@ class UnitsListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onPartClickListener(unitNum: Int,part: Int) {
+        findNavController().navigate(UnitsListFragmentDirections.actionWordsUnitsListFragmentToPartConfirmFragment2(unitNum, part))
     }
 }
