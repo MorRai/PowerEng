@@ -63,7 +63,10 @@ class SignInFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedIn = it.data
                             if (isUserSignedIn) {
-                                findNavController().navigate(R.id.action_signInFragment_to_contentFragment)
+                                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                if (resultNav.not()) {
+                                    findNavController().navigate(R.id.contentFragment)
+                                }
                             }
                         }
                         is Response.Failure -> {
@@ -105,7 +108,10 @@ class SignInFragment : Fragment() {
                                 progressBar.isVisible = false
                                 val isUserSignedIn = response.data
                                 if (isUserSignedIn) {
-                                    findNavController().navigate(R.id.action_signInFragment_to_contentFragment)
+                                    val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                    if (resultNav.not()) {
+                                        findNavController().navigate(R.id.contentFragment)
+                                    }
                                 }
                             }
                             is Response.Failure -> {

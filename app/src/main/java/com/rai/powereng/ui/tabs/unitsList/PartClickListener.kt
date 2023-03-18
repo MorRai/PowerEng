@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.unitsList
+package com.rai.powereng.ui.tabs.unitsList
 
 interface PartClickListener {
     fun onPartClickListener(unitNum:Int,part: Int)

@@ -1,5 +1,6 @@
 package com.rai.powereng.repository
 
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.rai.powereng.model.Response
@@ -8,11 +9,11 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
 class UnitsRepositoryImpl(
-    //private val unitsCollRef: CollectionReference
+    private val db: FirebaseFirestore
     ):UnitsRepository {
 
     override fun getUnitsData() = callbackFlow {
-        val snapshotListener = FirebaseFirestore.getInstance().collection("unitList").addSnapshotListener { snapshot, e ->
+        val snapshotListener = db.collection("unitList").addSnapshotListener { snapshot, e ->
             val unitsResponse = if (snapshot != null) {
                 val units = snapshot.toObjects(UnitData::class.java)
                 Response.Success(units)

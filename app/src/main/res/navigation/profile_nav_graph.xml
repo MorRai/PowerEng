@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_profile"
+    app:startDestination="@id/profileContainerFragment">
+
+    <fragment
+        android:id="@+id/profileContainerFragment"
+        android:name="com.rai.powereng.ui.tabs.profile.ProfileContainerFragment"
+        android:label="ProfileContainerFragment" >
+        <action
+            android:id="@+id/action_profileContainerFragment_to_profileContentFragment"
+            app:destination="@id/profileContentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileContentFragment"
+        android:name="com.rai.powereng.ui.tabs.profile.ProfileContentFragment"
+        android:label="ProfileContentFragment" />
+</navigation>

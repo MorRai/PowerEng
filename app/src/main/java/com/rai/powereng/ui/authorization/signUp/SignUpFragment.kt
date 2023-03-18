@@ -80,7 +80,10 @@ class SignUpFragment : Fragment() {
                             progressBar.isVisible = false
                             val isEmailVerification = it.data
                             if (isEmailVerification) {
-                                findNavController().navigate(R.id.action_signUpFragment_to_contentFragment)
+                                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                if (resultNav.not()) {
+                                    findNavController().navigate(R.id.contentFragment)
+                                }
                             }
                         }
                         is Response.Failure -> {

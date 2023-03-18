@@ -1,32 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_page"
-    app:startDestination="@id/wordsUnitsListFragment">
-
-    <fragment
-        android:id="@+id/wordsUnitsListFragment"
-        android:name="com.rai.powereng.ui.unitsList.UnitsListFragment"
-        android:label="WordsUnitsListFragment" >
-        <action
-            android:id="@+id/action_wordsUnitsListFragment_to_partConfirmFragment2"
-            app:destination="@id/partConfirmFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/usersRating"
-        android:name="com.rai.powereng.ui.usersRating.UsersRating"
-        android:label="UsersRating" />
-    <fragment
-        android:id="@+id/partConfirmFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartConfirmFragment"
-        android:label="PartConfirmFragment" >
-        <argument
-            android:name="unitNum"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="part"
-            app:argType="integer"
-            android:defaultValue="0" />
-    </fragment>
+    app:startDestination="@id/menu_words">
+    <include app:graph="@navigation/units_nav_graph" />
+    <include app:graph="@navigation/profile_nav_graph" />
+    <include app:graph="@navigation/rating_nav_graph" />
 </navigation>

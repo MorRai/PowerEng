@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/classPersonFragment"
+    <item android:id="@+id/menu_words"
         android:title="Words"
         android:icon="@android:drawable/sym_contact_card" />
-    <item android:id="@+id/maps"
-        android:title="Account"
+    <item android:id="@+id/menu_rating"
+        android:title="Rating"
+        android:icon="@android:drawable/ic_dialog_map" />
+    <item android:id="@+id/menu_profile"
+        android:title="Profile"
         android:icon="@android:drawable/ic_dialog_map" />
 </menu>

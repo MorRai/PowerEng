@@ -38,7 +38,10 @@ class VerifyEmailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
             continueAction.setOnClickListener {
-                findNavController().navigate(R.id.action_verifyEmailFragment_to_contentFragment)
+                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                if (resultNav.not()) {
+                    findNavController().navigate(R.id.contentFragment)
+                }
             }
             relogin.setOnClickListener {
                 viewModel.signOutUser()

@@ -26,7 +26,6 @@ interface FirebaseAuthRepository {
 
     suspend fun sendEmailVerification():Response<Boolean>
 
-
     fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
     suspend fun reloadFirebaseUser():Flow<Response<Boolean>>

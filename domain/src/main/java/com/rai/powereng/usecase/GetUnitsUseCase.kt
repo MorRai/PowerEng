@@ -8,7 +8,5 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetUnitsUseCase(private val repoUnits: UnitsRepository){
-
     operator fun invoke() = repoUnits.getUnitsData()
-
 }

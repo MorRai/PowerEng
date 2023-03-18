@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_rating"
+    app:startDestination="@id/usersRatingContainerFragment">
+
+    <fragment
+        android:id="@+id/usersRatingContainerFragment"
+        android:name="com.rai.powereng.ui.tabs.usersRating.UsersRatingContainerFragment"
+        android:label="UsersRatingContainerFragment" >
+        <action
+            android:id="@+id/action_usersRatingContainerFragment_to_usersRatingContentFragment"
+            app:destination="@id/usersRatingContentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/usersRatingContentFragment"
+        android:name="com.rai.powereng.ui.tabs.usersRating.UsersRatingContentFragment"
+        android:label="UsersRatingContentFragment" />
+</navigation>

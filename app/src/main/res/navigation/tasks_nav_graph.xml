@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tasks_nav_graph"
+    app:startDestination="@id/partConfirmFragment">
+
+    <fragment
+        android:id="@+id/partConfirmFragment"
+        android:name="com.rai.powereng.ui.partTasks.PartConfirmFragment"
+        android:label="PartConfirmFragment" >
+        <action
+            android:id="@+id/action_partConfirmFragment_to_partTasksFragment"
+            app:destination="@id/partTasksFragment" />
+        <action
+            android:id="@+id/action_contentFragment_to_tasks_nav_graph"
+            app:destination="@id/tasks_nav_graph"/>
+        <argument
+            android:name="unitNum"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="part"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/partTasksFragment"
+        android:name="com.rai.powereng.ui.partTasks.PartTasksFragment"
+        android:label="PartTasksFragment" />
+</navigation>

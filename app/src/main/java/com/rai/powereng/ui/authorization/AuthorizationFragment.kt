@@ -43,14 +43,25 @@ class AuthorizationFragment : Fragment() {
                 findNavController().navigate(R.id.action_authorizationFragment_to_signUpFragment)
             }
             continueWork.setOnClickListener {
-                findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
+                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                if (resultNav.not()) {
+                    // we can't open new destination with this action
+                    // --> we opened Auth flow from splash
+                    // --> need to open main graph
+                    findNavController().navigate(R.id.contentFragment)
+                }
             }
             viewModel.getAuthStateResponse()
 
+
+            // надо исправить ведь теперь есть спешл
             if (!viewModel.getAuthStateResponse().value && !viewModel.isEmailVerified) {
                 findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
             } else if (!viewModel.getAuthStateResponse().value && viewModel.isEmailVerified) {
-                findNavController().navigate(R.id.action_authorizationFragment_to_contentFragment)
+                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                if (resultNav.not()) {
+                    findNavController().navigate(R.id.contentFragment)
+                }
             }
 
         }

@@ -7,7 +7,10 @@ import com.rai.powereng.ui.authorization.forgotPassword.ForgotPasswordViewModel
 import com.rai.powereng.ui.authorization.signIn.SignInViewModel
 import com.rai.powereng.ui.authorization.signUp.SignUpViewModel
 import com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailViewModel
-import com.rai.powereng.ui.unitsList.UnitsListViewModel
+import com.rai.powereng.ui.splash.SplashViewModel
+import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
+import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
+import com.rai.powereng.ui.tabs.usersRating.UserRatingContainerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 
@@ -17,6 +20,9 @@ val viewModelsModule = module {
     viewModelOf(::ForgotPasswordViewModel)
     viewModelOf(::VerifyEmailViewModel)
     viewModelOf(::UnitsListViewModel)
+    viewModelOf(::SplashViewModel)
+    viewModelOf(::ProfileContainerViewModel)
+    viewModelOf(::UserRatingContainerViewModel)
     viewModel {
         SignInViewModel(get(),
             get(),
