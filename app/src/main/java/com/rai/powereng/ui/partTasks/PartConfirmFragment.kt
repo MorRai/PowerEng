@@ -1,6 +1,5 @@
 package com.rai.powereng.ui.partTasks
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +18,6 @@ class PartConfirmFragment: Fragment() {
 
     private val args by navArgs<PartConfirmFragmentArgs>()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        //parentFragment.visibility = View.GONE
-
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,19 +36,11 @@ class PartConfirmFragment: Fragment() {
             cancel.setOnClickListener {
                 findNavController().popBackStack()
             }
-            cancel2.setOnClickListener {
-
-                //action_partConfirmFragment_to_partTasksFragment2
-                //findNavController().navigate(PartConfirmFragmentDirections.actionPartConfirmFragment2ToPartTasksFragment2())
+            startTasks.setOnClickListener {
+                findNavController().navigate(PartConfirmFragmentDirections.actionPartConfirmFragmentToPartTasksFragment(args.unitNum,args.part))
             }
 
         }
-    }
-
-
-    override fun onDetach() {
-       // (fragment as ContentFragment).showBottomNavigation()
-        super.onDetach()
     }
 
     override fun onDestroyView() {

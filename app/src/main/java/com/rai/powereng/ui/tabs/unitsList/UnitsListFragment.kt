@@ -84,18 +84,8 @@ class UnitsListFragment : Fragment(), PartClickListener {
     }
     override fun onPartClickListener(unitNum: Int,part: Int) {
 
-
         Navigation.findNavController(requireActivity(), R.id.nav_container)
-          //  .navigate(R.id.action_contentFragment_to_tasks_nav_graph)
             .navigate(ContentFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part))
-           // .navigate(PartConfirmFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part))
 
-      //  findNavController().navigate(
-           // UnitsListFragmentDirections.actionWordsUnitsListFragmentToPartConfirmFragment2(
-            //    unitNum,
-         //       part
-        //    )
-       // )
-        //findNavController().navigate(UnitsListFragmentDirections.actionWordsUnitsListFragmentToNavTest())
     }
 }

@@ -27,10 +27,5 @@ class UnitsRepositoryImpl(
         }
     }
 
-   // private suspend fun getMoviesFromCloudFirestore(): List<UnitData> {
-     //   return  FirebaseFirestore.getInstance().collection("unitList").get().await().toObjects(UnitData::class.java)
-  //  }
-
-
 }
 

@@ -26,5 +26,14 @@
     <fragment
         android:id="@+id/partTasksFragment"
         android:name="com.rai.powereng.ui.partTasks.PartTasksFragment"
-        android:label="PartTasksFragment" />
+        android:label="PartTasksFragment" >
+        <argument
+            android:name="unitId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="partId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import com.rai.powereng.ui.authorization.forgotPassword.ForgotPasswordViewModel
 import com.rai.powereng.ui.authorization.signIn.SignInViewModel
 import com.rai.powereng.ui.authorization.signUp.SignUpViewModel
 import com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailViewModel
+import com.rai.powereng.ui.partTasks.PartTasksViewModel
 import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
@@ -23,6 +24,7 @@ val viewModelsModule = module {
     viewModelOf(::SplashViewModel)
     viewModelOf(::ProfileContainerViewModel)
     viewModelOf(::UserRatingContainerViewModel)
+    viewModelOf(::PartTasksViewModel)
     viewModel {
         SignInViewModel(get(),
             get(),
