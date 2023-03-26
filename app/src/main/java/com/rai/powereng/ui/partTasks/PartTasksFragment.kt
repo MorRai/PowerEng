@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -50,11 +49,9 @@ class PartTasksFragment: Fragment() {
             when (it) {
                 is Response.Loading -> {}
                 is Response.Success -> {
-                    //progressBar.isVisible = false
                     bind(it.data)
                 }
                 is Response.Failure -> {
-                    //progressBar.isVisible = false
                     Toast.makeText(requireContext(),
                         it.e.toString(),
                         Toast.LENGTH_SHORT).show()
@@ -73,10 +70,54 @@ class PartTasksFragment: Fragment() {
         viewModel.getTasksUser(args.unitId,args.partId,taskNum)
     }
 
-    fun bind(task:TaskData){
+    private fun bind(task:TaskData){
         with(binding) {
-            val checkAnswer = task.sentenceEN
-            description.text = "Переведите предложение:"
+            if (task.typeTask == 1 || task.typeTask == 2){
+                description.text = "Переведите предложение:"
+                itemTranclate.root.visibility = View.VISIBLE
+                itemMissingWord.root.visibility = View.GONE
+                bindForTranslate(task)
+            }else if (task.typeTask == 3 ){
+                description.text = "Вставьте слово"
+                itemTranclate.root.visibility = View.GONE
+                itemMissingWord.root.visibility = View.VISIBLE
+                bindForMissingWord(task)
+            }
+        }
+    }
+
+    private fun bindForMissingWord(task: TaskData){
+        with(binding){
+            val checkAnswer = task.answer
+            var radioAnswer = ""
+            check.setOnClickListener {
+                when(itemMissingWord.wordVariants.checkedRadioButtonId){
+                    R.id.variantOne ->radioAnswer =  itemMissingWord.variantOne.text.toString()
+                    R.id.variantTwo -> radioAnswer =  itemMissingWord.variantTwo.text.toString()
+                }
+                if(radioAnswer == ""){
+                    Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT).show()
+                }
+                else if (checkAnswer == radioAnswer) {
+                    Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
+                    taskNum += 1
+                    clearForm()
+                }else{
+                    Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
+                    taskNum += 1
+                    clearForm()
+                }
+            }
+            val listWords = task.variants.split(" ")//их всегда 2
+            itemMissingWord.variantOne.text = listWords[0]
+            itemMissingWord.variantTwo.text = listWords[1]
+            itemMissingWord.exerciseInfo.text = task.question
+        }
+    }
+
+    private fun bindForTranslate(task: TaskData){
+        with(binding){
+            val checkAnswer = task.answer
             check.setOnClickListener {
                 var answerString = ""
                 for (childView in itemTranclate.answerBox.children) {
@@ -94,15 +135,16 @@ class PartTasksFragment: Fragment() {
                 clearForm()
 
             }
-            val listWords = task.composeKitEN.split(" ") + task.sentenceEN.split(" ")
+            val listWords = task.answer.split(" ") + task.variants.split(" ")
             listWords.forEach {
                 addTextViewToOption(it)
             }
-            itemTranclate.exerciseInfo.text = task.sentenceRUS
+            itemTranclate.exerciseInfo.text = task.question
         }
+
     }
 
-    fun addTextViewToOption(text:String){
+    private fun addTextViewToOption(text:String){
         val textView =Button(requireContext())
         textView.text = text
         textView.setPadding(16,16,16,16)
@@ -114,7 +156,7 @@ class PartTasksFragment: Fragment() {
         binding.itemTranclate.optionBox.addView(textView)
     }
 
-    fun addTextViewToAnswer(text:String){
+    private fun addTextViewToAnswer(text:String){
         val textView =Button(requireContext())
         textView.text = text
         textView.setPadding(16,16,16,16)
