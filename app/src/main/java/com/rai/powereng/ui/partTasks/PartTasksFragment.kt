@@ -1,6 +1,8 @@
 package com.rai.powereng.ui.partTasks
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +19,16 @@ import com.rai.powereng.model.TaskData
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
-class PartTasksFragment: Fragment() {
+class PartTasksFragment : Fragment(){
     private var _binding: FragmentPartTasksBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
             "View was destroyed"
         }
+
+    private var tts: TextToSpeech? = null
 
     private val viewModel by viewModel<PartTasksViewModel>()
     private val args by navArgs<PartTasksFragmentArgs>()
@@ -42,8 +47,8 @@ class PartTasksFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.getTasksUser(args.unitId,args.partId,taskNum)
+       // tts = TextToSpeech(requireContext(), this)
+        viewModel.getTasksUser(args.unitId, args.partId, taskNum)
 
         viewModel.tasksFlow.onEach {
             when (it) {
@@ -52,9 +57,11 @@ class PartTasksFragment: Fragment() {
                     bind(it.data)
                 }
                 is Response.Failure -> {
-                    Toast.makeText(requireContext(),
+                    Toast.makeText(
+                        requireContext(),
                         it.e.toString(),
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -62,47 +69,94 @@ class PartTasksFragment: Fragment() {
     }
 
 
-    private fun clearForm(){
+    private fun clearForm() {
         with(binding) {
             itemTranclate.answerBox.removeAllViews()
             itemTranclate.optionBox.removeAllViews()
         }
-        viewModel.getTasksUser(args.unitId,args.partId,taskNum)
+        viewModel.getTasksUser(args.unitId, args.partId, taskNum)
     }
 
-    private fun bind(task:TaskData){
+    private fun bind(task: TaskData) {
         with(binding) {
-            if (task.typeTask == 1 || task.typeTask == 2){
+            if (task.typeTask == 1 || task.typeTask == 2) {
                 description.text = "Переведите предложение:"
                 itemTranclate.root.visibility = View.VISIBLE
                 itemMissingWord.root.visibility = View.GONE
+                itemListen.root.visibility = View.GONE
                 bindForTranslate(task)
-            }else if (task.typeTask == 3 ){
+            } else if (task.typeTask == 3) {
                 description.text = "Вставьте слово"
                 itemTranclate.root.visibility = View.GONE
                 itemMissingWord.root.visibility = View.VISIBLE
+                itemListen.root.visibility = View.GONE
                 bindForMissingWord(task)
+            }
+            else if (task.typeTask == 4) {
+                description.text = "Введите что услышали"
+                itemTranclate.root.visibility = View.GONE
+                itemMissingWord.root.visibility = View.GONE
+                itemListen.root.visibility = View.VISIBLE
+                bindForListen(task)
             }
         }
     }
 
-    private fun bindForMissingWord(task: TaskData){
+
+    private fun bindForListen(task: TaskData) {
         with(binding){
+            val textForListen = task.answer
+            itemListen.playSound.setOnClickListener {
+                speak(textForListen)
+            }
+            itemListen.playSoundSlow.setOnClickListener {
+                speak(textForListen,0.5f)
+            }
+
+            check.setOnClickListener {
+                var answerString = ""
+                for (childView in itemListen.answerBox.children) {
+                    if (childView is Button) {
+                        answerString = answerString + " " + childView.text
+                    }
+                }
+                answerString = answerString.drop(1)
+                if (textForListen == answerString) {
+                    Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
+                }
+                taskNum += 1
+                clearForm()
+
+            }
+            val listWords = task.answer.split(" ") + task.variants.split(" ")
+            listWords.forEach {
+                addTextViewToOption(it, task.typeTask)
+            }
+
+        }
+
+    }
+
+
+    private fun bindForMissingWord(task: TaskData) {
+        with(binding) {
             val checkAnswer = task.answer
             var radioAnswer = ""
             check.setOnClickListener {
-                when(itemMissingWord.wordVariants.checkedRadioButtonId){
-                    R.id.variantOne ->radioAnswer =  itemMissingWord.variantOne.text.toString()
-                    R.id.variantTwo -> radioAnswer =  itemMissingWord.variantTwo.text.toString()
+                when (itemMissingWord.wordVariants.checkedRadioButtonId) {
+                    R.id.variantOne -> radioAnswer = itemMissingWord.variantOne.text.toString()
+                    R.id.variantTwo -> radioAnswer = itemMissingWord.variantTwo.text.toString()
                 }
-                if(radioAnswer == ""){
-                    Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT).show()
-                }
-                else if (checkAnswer == radioAnswer) {
+                if (radioAnswer == "") {
+                    Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (checkAnswer == radioAnswer) {
                     Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
                     taskNum += 1
                     clearForm()
-                }else{
+                } else {
                     Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
                     taskNum += 1
                     clearForm()
@@ -115,20 +169,21 @@ class PartTasksFragment: Fragment() {
         }
     }
 
-    private fun bindForTranslate(task: TaskData){
-        with(binding){
+    private fun bindForTranslate(task: TaskData) {
+        with(binding) {
             val checkAnswer = task.answer
+            itemTranclate.exerciseInfo.text = task.question
             check.setOnClickListener {
                 var answerString = ""
                 for (childView in itemTranclate.answerBox.children) {
-                    if (childView is Button)  {
+                    if (childView is Button) {
                         answerString = answerString + " " + childView.text
                     }
                 }
                 answerString = answerString.drop(1)
                 if (checkAnswer == answerString) {
                     Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
                 }
                 taskNum += 1
@@ -137,32 +192,35 @@ class PartTasksFragment: Fragment() {
             }
             val listWords = task.answer.split(" ") + task.variants.split(" ")
             listWords.forEach {
-                addTextViewToOption(it)
+                addTextViewToOption(it, task.typeTask)
             }
-            itemTranclate.exerciseInfo.text = task.question
+
         }
 
     }
 
-    private fun addTextViewToOption(text:String){
-        val textView =Button(requireContext())
+    private fun addTextViewToOption(text: String, typeTask: Int) {
+        val textView = Button(requireContext())
         textView.text = text
-        textView.setPadding(16,16,16,16)
+        textView.setPadding(16, 16, 16, 16)
         textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
-            addTextViewToAnswer(text)
+            if (typeTask == 1 || typeTask == 4) {
+                speak(text)
+            }
+            addTextViewToAnswer(text,typeTask)
             binding.itemTranclate.optionBox.removeView(textView)
         }
         binding.itemTranclate.optionBox.addView(textView)
     }
 
-    private fun addTextViewToAnswer(text:String){
-        val textView =Button(requireContext())
+    private fun addTextViewToAnswer(text: String, typeTask: Int) {
+        val textView = Button(requireContext())
         textView.text = text
-        textView.setPadding(16,16,16,16)
+        textView.setPadding(16, 16, 16, 16)
         textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
-            addTextViewToOption(text)
+            addTextViewToOption(text,typeTask)
             binding.itemTranclate.answerBox.removeView(textView)
         }
         binding.itemTranclate.answerBox.addView(textView)
@@ -172,6 +230,28 @@ class PartTasksFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+    }
+
+
+    private fun speak(text: String, speed:Float = 1.0f) {
+        tts = TextToSpeech(requireContext(),TextToSpeech.OnInitListener {
+            if (it == TextToSpeech.SUCCESS) {
+                val result = tts!!.setLanguage(Locale.US)
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Log.e("TTS", "The Language not supported!")
+
+                }
+                tts!!.setSpeechRate(speed)
+                tts!!.speak(text, TextToSpeech.QUEUE_ADD, null)
+
+            } else {
+                Log.e("TTS", "Initialization failed!")
+            }
+        })
     }
 
 }
