@@ -1,51 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shab"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/description"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="Описание типа задания..." />
+        android:layout_height="match_parent">
 
-    <include android:id="@+id/item_tranclate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_weight="1"
-        layout="@layout/item_task_tranclate"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <include android:id="@+id/item_missing_word"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="gone"
-        layout="@layout/item_task_missing_word"/>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Описание типа задания..." />
 
-    <include android:id="@+id/item_listen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="gone"
-        layout="@layout/item_task_listen"/>
+            <include
+                android:id="@+id/item_tranclate"
+                layout="@layout/item_task_tranclate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/item_missing_word"
+                layout="@layout/item_task_missing_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/item_listen"
+                layout="@layout/item_task_listen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone" />
 
 
-    <Button
-        android:id="@+id/check"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        android:textSize="16sp"
-        android:textAllCaps="true"
-        android:text="Проверить" />
+            <Button
+                android:id="@+id/check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:text="Проверить"
+                android:textAllCaps="true"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/dialog_result_id"
+                layout="@layout/dialog_result" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 </LinearLayout>

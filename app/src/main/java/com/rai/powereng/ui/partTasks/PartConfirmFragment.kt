@@ -1,5 +1,6 @@
 package com.rai.powereng.ui.partTasks
 
+import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,11 +38,14 @@ class PartConfirmFragment: Fragment() {
                 findNavController().popBackStack()
             }
             startTasks.setOnClickListener {
+
                 findNavController().navigate(PartConfirmFragmentDirections.actionPartConfirmFragmentToPartTasksFragment(args.unitNum,args.part))
             }
 
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

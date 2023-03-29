@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class PartTasksFragment : Fragment(){
+class PartTasksFragment : Fragment() {
     private var _binding: FragmentPartTasksBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
@@ -47,7 +48,7 @@ class PartTasksFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       // tts = TextToSpeech(requireContext(), this)
+        // tts = TextToSpeech(requireContext(), this)
         viewModel.getTasksUser(args.unitId, args.partId, taskNum)
 
         viewModel.tasksFlow.onEach {
@@ -91,44 +92,42 @@ class PartTasksFragment : Fragment(){
                 itemMissingWord.root.visibility = View.VISIBLE
                 itemListen.root.visibility = View.GONE
                 bindForMissingWord(task)
-            }
-            else if (task.typeTask == 4) {
+            } else if (task.typeTask == 4) {
                 description.text = "Введите что услышали"
                 itemTranclate.root.visibility = View.GONE
                 itemMissingWord.root.visibility = View.GONE
                 itemListen.root.visibility = View.VISIBLE
                 bindForListen(task)
             }
+            dialogResultId.buttonContinue.setOnClickListener {
+                taskNum += 1
+                clearForm()
+                bottomSheet.visibility = View.GONE
+            }
         }
     }
 
 
     private fun bindForListen(task: TaskData) {
-        with(binding){
+        with(binding) {
             val textForListen = task.answer
             itemListen.playSound.setOnClickListener {
                 speak(textForListen)
             }
             itemListen.playSoundSlow.setOnClickListener {
-                speak(textForListen,0.5f)
+                speak(textForListen, 0.5f)
             }
 
             check.setOnClickListener {
-                var answerString = ""
+                var checkAnswer = ""
                 for (childView in itemListen.answerBox.children) {
                     if (childView is Button) {
-                        answerString = answerString + " " + childView.text
+                        checkAnswer = checkAnswer + " " + childView.text
                     }
                 }
-                answerString = answerString.drop(1)
-                if (textForListen == answerString) {
-                    Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
-                }
-                taskNum += 1
-                clearForm()
-
+                checkAnswer = checkAnswer.drop(1)
+                setSettingsDialog(checkAnswer == textForListen,checkAnswer)
+                bottomSheet.visibility = View.VISIBLE
             }
             val listWords = task.answer.split(" ") + task.variants.split(" ")
             listWords.forEach {
@@ -143,23 +142,18 @@ class PartTasksFragment : Fragment(){
     private fun bindForMissingWord(task: TaskData) {
         with(binding) {
             val checkAnswer = task.answer
-            var radioAnswer = ""
+            var answerString = ""
             check.setOnClickListener {
                 when (itemMissingWord.wordVariants.checkedRadioButtonId) {
-                    R.id.variantOne -> radioAnswer = itemMissingWord.variantOne.text.toString()
-                    R.id.variantTwo -> radioAnswer = itemMissingWord.variantTwo.text.toString()
+                    R.id.variantOne -> answerString = itemMissingWord.variantOne.text.toString()
+                    R.id.variantTwo -> answerString = itemMissingWord.variantTwo.text.toString()
                 }
-                if (radioAnswer == "") {
+                if (answerString == "") {
                     Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT)
                         .show()
-                } else if (checkAnswer == radioAnswer) {
-                    Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
-                    taskNum += 1
-                    clearForm()
                 } else {
-                    Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
-                    taskNum += 1
-                    clearForm()
+                    setSettingsDialog(checkAnswer == answerString,checkAnswer)
+                    bottomSheet.visibility = View.VISIBLE
                 }
             }
             val listWords = task.variants.split(" ")//их всегда 2
@@ -171,6 +165,7 @@ class PartTasksFragment : Fragment(){
 
     private fun bindForTranslate(task: TaskData) {
         with(binding) {
+            // shab.animate().translationX(1.0f)
             val checkAnswer = task.answer
             itemTranclate.exerciseInfo.text = task.question
             check.setOnClickListener {
@@ -181,13 +176,9 @@ class PartTasksFragment : Fragment(){
                     }
                 }
                 answerString = answerString.drop(1)
-                if (checkAnswer == answerString) {
-                    Toast.makeText(requireContext(), "успех", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "провал", Toast.LENGTH_SHORT).show()
-                }
-                taskNum += 1
-                clearForm()
+                setSettingsDialog(checkAnswer == answerString,checkAnswer)
+                bottomSheet.visibility = View.VISIBLE
+
 
             }
             val listWords = task.answer.split(" ") + task.variants.split(" ")
@@ -208,7 +199,7 @@ class PartTasksFragment : Fragment(){
             if (typeTask == 1 || typeTask == 4) {
                 speak(text)
             }
-            addTextViewToAnswer(text,typeTask)
+            addTextViewToAnswer(text, typeTask)
             binding.itemTranclate.optionBox.removeView(textView)
         }
         binding.itemTranclate.optionBox.addView(textView)
@@ -220,10 +211,34 @@ class PartTasksFragment : Fragment(){
         textView.setPadding(16, 16, 16, 16)
         textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
-            addTextViewToOption(text,typeTask)
+            addTextViewToOption(text, typeTask)
             binding.itemTranclate.answerBox.removeView(textView)
         }
         binding.itemTranclate.answerBox.addView(textView)
+    }
+
+    fun setSettingsDialog(answerIsTrue:Boolean,answer:String){
+        with(binding.dialogResultId){
+        if (answerIsTrue){
+            dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite))
+            resultAnswer.setTextColor(resources.getColor(R.color.green))
+            textAnswer.setTextColor(resources.getColor(R.color.green))
+            buttonContinue.setBackgroundColor(resources.getColor(R.color.green))
+            buttonContinue.setTextColor(resources.getColor(R.color.white))
+            resultAnswer.text = "Правильно!"
+            textAnswer.text = answer
+        }else{
+            dialogResult.setBackgroundColor(resources.getColor(R.color.red_lite))
+            buttonContinue.setBackgroundColor(resources.getColor(R.color.red))
+            buttonContinue.setTextColor(resources.getColor(R.color.white))
+            resultAnswer.setTextColor(resources.getColor(R.color.red))
+            textAnswer.setTextColor(resources.getColor(R.color.red))
+            trueAnswerText.setTextColor(resources.getColor(R.color.red))
+            resultAnswer.text = "Не верно!"
+            trueAnswerText.text = "Правильный ответ: "
+            textAnswer.text = answer
+        }
+        }
     }
 
 
@@ -237,8 +252,8 @@ class PartTasksFragment : Fragment(){
     }
 
 
-    private fun speak(text: String, speed:Float = 1.0f) {
-        tts = TextToSpeech(requireContext(),TextToSpeech.OnInitListener {
+    private fun speak(text: String, speed: Float = 1.0f) {
+        tts = TextToSpeech(requireContext(), TextToSpeech.OnInitListener {
             if (it == TextToSpeech.SUCCESS) {
                 val result = tts!!.setLanguage(Locale.US)
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
