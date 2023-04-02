@@ -104,6 +104,11 @@ class PartTasksFragment : Fragment() {
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.progress.onEach {
+            binding.progressPath.max = amountTasks
+            binding.progressPath.progress = it
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 
@@ -282,23 +287,24 @@ class PartTasksFragment : Fragment() {
                 if (workWithList) {
                     listErrors.removeAt(0)
                 }
-                dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite))
-                resultAnswer.setTextColor(resources.getColor(R.color.green))
-                textAnswer.setTextColor(resources.getColor(R.color.green))
-                buttonContinue.setBackgroundColor(resources.getColor(R.color.green))
-                buttonContinue.setTextColor(resources.getColor(R.color.white))
+                viewModel.addProgress()
+                dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite, null))
+                resultAnswer.setTextColor(resources.getColor(R.color.green, null))
+                textAnswer.setTextColor(resources.getColor(R.color.green, null))
+                buttonContinue.setBackgroundColor(resources.getColor(R.color.green, null))
+                buttonContinue.setTextColor(resources.getColor(R.color.white, null))
                 resultAnswer.text = "Правильно!"
                 textAnswer.text = answer
             } else {
                 if (!workWithList) {
                     listErrors.add(numTask)
                 }
-                dialogResult.setBackgroundColor(resources.getColor(R.color.red_lite))
-                buttonContinue.setBackgroundColor(resources.getColor(R.color.red))
-                buttonContinue.setTextColor(resources.getColor(R.color.white))
-                resultAnswer.setTextColor(resources.getColor(R.color.red))
-                textAnswer.setTextColor(resources.getColor(R.color.red))
-                trueAnswerText.setTextColor(resources.getColor(R.color.red))
+                dialogResult.setBackgroundColor(resources.getColor(R.color.red_lite, null))
+                buttonContinue.setBackgroundColor(resources.getColor(R.color.red, null))
+                buttonContinue.setTextColor(resources.getColor(R.color.white, null))
+                resultAnswer.setTextColor(resources.getColor(R.color.red, null))
+                textAnswer.setTextColor(resources.getColor(R.color.red, null))
+                trueAnswerText.setTextColor(resources.getColor(R.color.red, null))
                 resultAnswer.text = "Не верно!"
                 trueAnswerText.text = "Правильный ответ: "
                 textAnswer.text = answer
