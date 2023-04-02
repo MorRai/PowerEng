@@ -35,5 +35,12 @@
             android:name="partId"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_partTasksFragment_to_partTasksFinishFragment"
+            app:destination="@id/partTasksFinishFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/partTasksFinishFragment"
+        android:name="com.rai.powereng.ui.partTasks.PartTasksFinishFragment"
+        android:label="PartTasksFinishFragment" />
 </navigation>

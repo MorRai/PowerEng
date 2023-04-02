@@ -22,4 +22,17 @@ class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRepository {
             Response.Failure(exception)
         }
     }
+
+    override suspend fun getAmountTasksInPart(unitId: Int, partId: Int): Response<Int> {
+        return try {
+            val response = db.collection("tasks")
+                .whereEqualTo("unit", unitId)
+                .whereEqualTo("part", partId)
+                .get()
+                .await().documents.size
+            Response.Success(response)
+        } catch (exception: Exception) {
+            Response.Failure(exception)
+        }
+    }
 }

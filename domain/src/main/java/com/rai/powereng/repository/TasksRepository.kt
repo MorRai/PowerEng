@@ -8,4 +8,6 @@ interface TasksRepository {
 
     suspend fun getTasksData(unitId: Int, partId: Int, taskNum: Int): Response<TaskData>
 
+    suspend fun getAmountTasksInPart(unitId: Int,partId: Int): Response<Int>
+
 }
