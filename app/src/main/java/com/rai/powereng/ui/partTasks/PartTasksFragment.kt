@@ -41,6 +41,7 @@ class PartTasksFragment : Fragment() {
 
     private var taskNum = 1
     private var amountTasks = 0
+    private var amountMistakes= 0
     private var workWithList = false
     private val listErrors = mutableListOf<Int>()
 
@@ -118,6 +119,7 @@ class PartTasksFragment : Fragment() {
             itemTranclate.optionBox.removeAllViews()
 
             if (workWithList && listErrors.size > 0 ) {
+                amountMistakes = listErrors.size
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
@@ -133,7 +135,7 @@ class PartTasksFragment : Fragment() {
                     viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
                 }
             } else {
-                findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment())
+                findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(args.unitId,args.partId,amountMistakes))
             }
         }
     }
@@ -150,8 +152,8 @@ class PartTasksFragment : Fragment() {
             } else if (task.typeTask == 3) {
                 description.text = "Вставьте слово"
                 exerciseInfo.visibility = View.VISIBLE
-                itemTranclate.root.visibility = View.GONE
                 itemMissingWord.root.visibility = View.VISIBLE
+                itemTranclate.root.visibility = View.GONE
                 itemListen.root.visibility = View.GONE
                 bindForMissingWord(task)
             } else if (task.typeTask == 4) {

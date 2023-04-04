@@ -18,7 +18,8 @@ class PowerEngApplication : Application() {
                useCaseModule,
                firebaseRequestModule,
                unitsRepositoryModule,
-               tasksRepositoryModule
+               tasksRepositoryModule,
+               userProgressInfoRepositoryModule
            )
        }
     }
