@@ -5,18 +5,18 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val firebaseAuthRepositoryModule = module {
+internal val firebaseAuthRepositoryModule = module {
     singleOf(::FirebaseAuthRepositoryImpl){bind<FirebaseAuthRepository>() }
 }
 
-val unitsRepositoryModule = module {
+internal val unitsRepositoryModule = module {
     singleOf(::UnitsRepositoryImpl){bind<UnitsRepository>() }
 }
 
-val tasksRepositoryModule = module {
+internal val tasksRepositoryModule = module {
     singleOf(::TasksRepositoryImpl){bind<TasksRepository>() }
 }
 
-val userProgressInfoRepositoryModule = module {
+internal val userProgressInfoRepositoryModule = module {
     singleOf(::UserProgressInfoRepositoryImpl){bind<UserProgressInfoRepository>() }
 }

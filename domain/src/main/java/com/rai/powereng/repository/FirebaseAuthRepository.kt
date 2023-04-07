@@ -12,6 +12,8 @@ interface FirebaseAuthRepository {
 
     val isEmailVerified: Boolean
 
+    val currentUserId: String
+
     //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
 
     suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean>

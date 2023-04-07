@@ -13,13 +13,9 @@ class PowerEngApplication : Application() {
         startKoin {
            androidContext(this@PowerEngApplication)
            modules(
-               viewModelsModule,
-               firebaseAuthRepositoryModule,
-               useCaseModule,
-               firebaseRequestModule,
-               unitsRepositoryModule,
-               tasksRepositoryModule,
-               userProgressInfoRepositoryModule
+               dataModule,
+               viewModelsModule
+
            )
        }
     }

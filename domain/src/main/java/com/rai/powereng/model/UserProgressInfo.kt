@@ -1,8 +1,7 @@
 package com.rai.powereng.model
 
 data class UserProgressInfo(
-    val usersAppId: String = "",
-    val user: String="",
+    val userId: String="",
     val points: Int=0,
     val data: String = "",
     val mistakes: Int=0,

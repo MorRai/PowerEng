@@ -13,7 +13,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val firebaseRequestModule  = module {
+internal val firebaseRequestModule  = module {
     single(named("signInRequest")){
         BeginSignInRequest.builder()
         .setGoogleIdTokenRequestOptions(

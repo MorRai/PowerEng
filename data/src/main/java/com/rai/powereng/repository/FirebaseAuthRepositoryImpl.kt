@@ -14,7 +14,7 @@ import org.koin.core.component.KoinComponent
 
 
 
-class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
+internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
                                  //private var oneTapClient: SignInClient,
                                  private val db: FirebaseFirestore
 ): FirebaseAuthRepository, KoinComponent {
@@ -23,6 +23,9 @@ class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     override val isUserAuthenticatedInFirebase = auth.currentUser != null
 
     override val isEmailVerified = auth.currentUser?.isEmailVerified ?: false
+
+    override val currentUserId: String
+        get() = auth.currentUser?.uid.orEmpty()
 
     /*
     private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))

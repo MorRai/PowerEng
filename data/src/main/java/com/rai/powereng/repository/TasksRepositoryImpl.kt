@@ -5,7 +5,7 @@ import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import kotlinx.coroutines.tasks.await
 
-class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRepository {
+internal class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRepository {
 
     override suspend fun getTasksData(unitId: Int, partId: Int, taskNum: Int): Response<TaskData> {
         return try {

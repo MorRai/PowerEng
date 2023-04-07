@@ -43,18 +43,21 @@ class PartTasksFinishFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding){
+        with(binding) {
             buttonContinue.setOnClickListener {
-                val androidID = "test"//нужно как то получать
                 var points = 50 - 5 * args.mistakes
-                if(points<20){
+                if (points < 20) {
                     points = 20
                 }
                 val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                 val dateText = dateFormat.format(Date())
-
-                val userInfo = UserProgressInfo(androidID,androidID,points,dateText,args.mistakes,args.unitId,args.partId)
-                viewModel.addUserInfo(userInfo)
+                viewModel.addUserInfo(
+                    points = points,
+                    dateText = dateText,
+                    mistakes = args.mistakes,
+                    unitId = args.unitId,
+                    partId = args.partId
+                )
             }
 
             lifecycleScope.launch {
@@ -64,7 +67,8 @@ class PartTasksFinishFragment : Fragment() {
                         is Response.Success -> {
                             progressBar.isVisible = false
                             if (it.data) {
-                                val resultNav = findNavController().popBackStack(R.id.tasks_nav_graph, true)
+                                val resultNav =
+                                    findNavController().popBackStack(R.id.tasks_nav_graph, true)
                                 if (resultNav.not()) {
                                     findNavController().navigate(R.id.contentFragment)
                                 }
@@ -72,9 +76,11 @@ class PartTasksFinishFragment : Fragment() {
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
+                            Toast.makeText(
+                                requireContext(),
                                 it.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
