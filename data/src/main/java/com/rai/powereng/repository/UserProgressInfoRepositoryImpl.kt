@@ -15,7 +15,7 @@ internal class UserProgressInfoRepositoryImpl(
 
     override suspend fun addUserProgressInfo(userProgressInfo: UserProgressInfo): Response<Boolean> {
         return try {
-            val id = "unit ${userProgressInfo.unitId} part ${userProgressInfo.partId}"
+            val id = "unit${userProgressInfo.unitId}part${userProgressInfo.partId}"
             val response = db.collection("tasks")
                 .document(id)
                 .get()
@@ -62,16 +62,17 @@ internal class UserProgressInfoRepositoryImpl(
 
     override suspend fun refreshUserScore(currentUserId:String): Response<Boolean> {
         return try {
-            val response = db.collection("tasks")
+            val response = db.collection("usersProgressInfo")
                 .whereEqualTo("userId", currentUserId)
                 .get()
                 .await().documents.mapNotNull { snapShot ->
-                    snapShot.toObject(UserScore::class.java)
+                    snapShot.toObject(UserProgressInfo::class.java)
                 }
-            val sumScore = response.sumOf { it.score }
+            val sumScore = response.sumOf { it.points }
             val userScore = UserScore(score=sumScore, userId = currentUserId)
             db.collection("usersScore")
                 .document(currentUserId)
+                    //нужно добавить запись новой даты если вчера что бы отслежвать страйки)
                 .set(userScore).await()
             Response.Success(true)
         } catch (e: Exception) {

@@ -20,4 +20,5 @@ internal val useCaseModule = module {
     factoryOf(::AddUserInfoUseCase)
     factoryOf(::TransferUserInfoUseCase)
     factoryOf(::GetUserIdUseCase)
+    factoryOf(::GetUsersScoreUseCase)
 }

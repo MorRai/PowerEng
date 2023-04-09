@@ -13,6 +13,7 @@ import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
 import com.rai.powereng.ui.tabs.usersRating.UserRatingContainerViewModel
+import com.rai.powereng.ui.tabs.usersRating.UsersRatingContentViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 
@@ -27,6 +28,7 @@ val viewModelsModule = module {
     viewModelOf(::UserRatingContainerViewModel)
     viewModelOf(::PartTasksViewModel)
     viewModelOf(::PartTasksFinishViewModel)
+    viewModelOf(::UsersRatingContentViewModel)
     viewModel {
         SignInViewModel(get(),
             get(),

@@ -17,7 +17,7 @@ internal class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRep
                 .await().documents.mapNotNull { snapShot ->
                     snapShot.toObject(TaskData::class.java)
                 }
-            Response.Success(response[0])//возвращаем первый, конечно не красиво как то
+            Response.Success(response[0])//return first, its can be more effectively
         } catch (exception: Exception) {
             Response.Failure(exception)
         }

@@ -119,7 +119,6 @@ class PartTasksFragment : Fragment() {
             itemTranclate.optionBox.removeAllViews()
 
             if (workWithList && listErrors.size > 0 ) {
-                amountMistakes = listErrors.size
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
@@ -132,6 +131,7 @@ class PartTasksFragment : Fragment() {
                 check.setOnClickListener {
                     errorsScreen.root.visibility = View.GONE
                     workWithList = true
+                    amountMistakes = listErrors.size
                     viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
                 }
             } else {

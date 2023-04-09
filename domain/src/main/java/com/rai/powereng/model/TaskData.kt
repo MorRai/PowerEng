@@ -8,11 +8,4 @@ data class TaskData(
     val question:String="",
     val answer:String="",
     val variants:String=""
-    //val composeKitEN:String="",
-   //val composeKitRUS:String="",
-    //val sentenceEN:String="",
-    //val sentenceRUS:String="",
-    //val composeKitWord:String="",
-    //val unknownWord:String=""
-
 )
