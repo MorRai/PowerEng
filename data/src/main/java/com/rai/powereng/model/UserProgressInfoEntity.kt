@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "user_progress_info")
 internal data class UserProgressInfoEntity(
     @PrimaryKey
-    @ColumnInfo(name = "id") val id: Int,
+    @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "user_id")val userId: String,
     @ColumnInfo(name = "points")val points: Int,
     @ColumnInfo(name = "data")val data: String ,

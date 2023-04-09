@@ -17,7 +17,7 @@ internal fun UserProgressInfoEntity.toDomainModels(currentUserId:String): UserPr
 
 internal fun UserProgressInfo.toDomainModels() : UserProgressInfoEntity{
     return UserProgressInfoEntity(
-        id = "$unitId$partId".toInt(),
+        id = "unit $unitId part $partId",
         userId = userId,
         points = points,
         data = data,

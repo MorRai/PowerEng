@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentUsersRatingBinding
 
 class ProfileContentFragment: Fragment()  {
@@ -29,13 +27,7 @@ class ProfileContentFragment: Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
-            button.setOnClickListener {
-                editTextNumber.setText("6666")
-            }
-            button2.setOnClickListener {
-                Navigation.findNavController(requireActivity(), R.id.nav_container)
-                    .navigate(R.id.action_contentFragment_to_auth_nav_graph)
-            }
+
         }
     }
 }

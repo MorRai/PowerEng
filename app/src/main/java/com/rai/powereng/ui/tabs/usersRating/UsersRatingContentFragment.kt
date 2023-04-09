@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.rai.powereng.R
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.rai.powereng.adapter.UsersRatingAdapter
 import com.rai.powereng.databinding.FragmentUsersRatingBinding
+import com.rai.powereng.model.Response
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UsersRatingContentFragment: Fragment() {
     private var _binding: FragmentUsersRatingBinding? = null
@@ -16,6 +21,8 @@ class UsersRatingContentFragment: Fragment() {
         get() = requireNotNull(_binding) {
             "View was destroyed"
         }
+
+    private val viewModel by viewModel<UsersRatingContentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,13 +37,42 @@ class UsersRatingContentFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
-            button.setOnClickListener {
-                editTextNumber.setText("5555")
+            val adapter =
+                UsersRatingAdapter(requireContext() )
+
+            val layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = layoutManager
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.usersScoreFlow.collect { response ->
+                    when (response) {
+                        is Response.Success -> {
+                            isVisibleProgressBar(false)
+                            adapter.submitList(response.data)
+                        }
+                        is Response.Failure -> {
+                            isVisibleProgressBar(false)
+                            Toast.makeText(
+                                requireContext(),
+                                response.e.message ?: "", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        Response.Loading -> {
+                            isVisibleProgressBar(true)
+                        }
+                    }
+                }
             }
-            button2.setOnClickListener {
-                Navigation.findNavController(requireActivity(), R.id.nav_container)
-                    .navigate(R.id.action_contentFragment_to_auth_nav_graph)
-            }
+
         }
+    }
+
+    private fun isVisibleProgressBar(visible: Boolean) {
+        binding.paginationProgressBar.isVisible = visible
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
