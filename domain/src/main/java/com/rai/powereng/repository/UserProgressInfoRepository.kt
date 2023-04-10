@@ -11,5 +11,5 @@ interface UserProgressInfoRepository {
     suspend fun transferUserProgressInfo(currentUserId:String): Response<Boolean>
     suspend fun refreshUserScore(currentUserId:String): Response<Boolean>
      fun getUsersScore(): Flow<Response<List<UserScore>>>
-    suspend fun getYourScore(currentUserId:String): Response<UserScore>
+     fun getYourScore(currentUserId:String): Flow<Response<UserScore>>
 }

@@ -11,6 +11,7 @@ import com.rai.powereng.ui.partTasks.PartTasksFinishViewModel
 import com.rai.powereng.ui.partTasks.PartTasksViewModel
 import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
+import com.rai.powereng.ui.tabs.profile.ProfileContentViewModel
 import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
 import com.rai.powereng.ui.tabs.usersRating.UserRatingContainerViewModel
 import com.rai.powereng.ui.tabs.usersRating.UsersRatingContentViewModel
@@ -29,6 +30,7 @@ val viewModelsModule = module {
     viewModelOf(::PartTasksViewModel)
     viewModelOf(::PartTasksFinishViewModel)
     viewModelOf(::UsersRatingContentViewModel)
+    viewModelOf(::ProfileContentViewModel)
     viewModel {
         SignInViewModel(get(),
             get(),

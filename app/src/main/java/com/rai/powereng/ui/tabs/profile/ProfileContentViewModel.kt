@@ -1,15 +1,15 @@
-package com.rai.powereng.ui.tabs.usersRating
+package com.rai.powereng.ui.tabs.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
-import com.rai.powereng.usecase.GetUsersScoreUseCase
+import com.rai.powereng.usecase.GetUserScoreUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
-class UsersRatingContentViewModel(getUsersScoreUseCase: GetUsersScoreUseCase):ViewModel() {
+class ProfileContentViewModel(getUserScoreUseCase: GetUserScoreUseCase):ViewModel() {
 
-    val usersScoreFlow = getUsersScoreUseCase.invoke()
+    val userScoreFlow = getUserScoreUseCase.invoke()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
