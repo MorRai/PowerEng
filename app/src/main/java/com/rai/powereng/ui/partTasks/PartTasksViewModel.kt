@@ -25,11 +25,9 @@ class PartTasksViewModel(private val getTasksUseCase: GetTasksUseCase,
     val progress: StateFlow<Int>
         get() = _progress
 
-
     fun addProgress(){
         _progress.value += 1
     }
-
 
     fun getTasksUser(unitId: Int, partId: Int, taskNum: Int) = viewModelScope.launch {
         _tasksFlow.value = Response.Loading

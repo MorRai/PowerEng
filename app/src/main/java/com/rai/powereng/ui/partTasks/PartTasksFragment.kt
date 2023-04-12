@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.fragment.app.Fragment
@@ -117,52 +118,62 @@ class PartTasksFragment : Fragment() {
         with(binding) {
             itemTranclate.answerBox.removeAllViews()
             itemTranclate.optionBox.removeAllViews()
-
             if (workWithList && listErrors.size > 0 ) {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
             } else if (listErrors.size > 0) {
-                errorsScreen.root.visibility = View.VISIBLE
-                itemTranclate.root.visibility = View.GONE
-                itemMissingWord.root.visibility = View.GONE
-                exerciseInfo.visibility = View.GONE
-                itemListen.root.visibility = View.GONE
-                check.setOnClickListener {
-                    errorsScreen.root.visibility = View.GONE
-                    workWithList = true
-                    amountMistakes = listErrors.size
-                    viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
-                }
+                showErrorsScreen()
             } else {
                 findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(args.unitId,args.partId,amountMistakes))
             }
         }
     }
 
+
+    private fun showErrorsScreen() {
+        with(binding) {
+            errorsScreen.root.visibility = View.VISIBLE
+            itemTranclate.root.visibility = View.GONE
+            itemMissingWord.root.visibility = View.GONE
+            exerciseInfo.visibility = View.GONE
+            itemListen.root.visibility = View.GONE
+            check.setOnClickListener {
+                errorsScreen.root.visibility = View.GONE
+                workWithList = true
+                amountMistakes = listErrors.size
+                viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
+            }
+        }
+    }
+
     private fun bind(task: TaskData) {
         with(binding) {
-            if (task.typeTask == 1 || task.typeTask == 2) {
-                description.text = "Переведите предложение:"
-                itemTranclate.root.visibility = View.VISIBLE
-                exerciseInfo.visibility = View.VISIBLE
-                itemMissingWord.root.visibility = View.GONE
-                itemListen.root.visibility = View.GONE
-                bindForTranslate(task)
-            } else if (task.typeTask == 3) {
-                description.text = "Вставьте слово"
-                exerciseInfo.visibility = View.VISIBLE
-                itemMissingWord.root.visibility = View.VISIBLE
-                itemTranclate.root.visibility = View.GONE
-                itemListen.root.visibility = View.GONE
-                bindForMissingWord(task)
-            } else if (task.typeTask == 4) {
-                description.text = "Введите что услышали"
-                itemTranclate.root.visibility = View.VISIBLE
-                itemMissingWord.root.visibility = View.GONE
-                exerciseInfo.visibility = View.GONE
-                itemListen.root.visibility = View.VISIBLE
-                bindForListen(task)
+            when (task.typeTask) {
+                1, 2 -> {
+                    description.text = "Переведите предложение:"
+                    itemTranclate.root.visibility = View.VISIBLE
+                    exerciseInfo.visibility = View.VISIBLE
+                    itemMissingWord.root.visibility = View.GONE
+                    itemListen.root.visibility = View.GONE
+                    bindForTranslate(task)
+                }
+                3 -> {
+                    description.text = "Вставьте слово"
+                    exerciseInfo.visibility = View.VISIBLE
+                    itemMissingWord.root.visibility = View.VISIBLE
+                    itemTranclate.root.visibility = View.GONE
+                    itemListen.root.visibility = View.GONE
+                    bindForMissingWord(task)
+                }
+                4 -> {
+                    description.text = "Введите что услышали"
+                    itemTranclate.root.visibility = View.VISIBLE
+                    itemMissingWord.root.visibility = View.GONE
+                    exerciseInfo.visibility = View.GONE
+                    itemListen.root.visibility = View.VISIBLE
+                    bindForListen(task)
+                }
             }
             dialogResultId.buttonContinue.setOnClickListener {
                 if (taskNum <= amountTasks) {
@@ -217,7 +228,7 @@ class PartTasksFragment : Fragment() {
                     R.id.variantOne -> answerString = itemMissingWord.variantOne.text.toString()
                     R.id.variantTwo -> answerString = itemMissingWord.variantTwo.text.toString()
                 }
-                if (answerString == "") {
+                if (answerString.isBlank()) {
                     Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT)
                         .show()
                 } else {
@@ -283,7 +294,7 @@ class PartTasksFragment : Fragment() {
         binding.itemTranclate.answerBox.addView(textView)
     }
 
-    fun setSettingsDialog(answerIsTrue: Boolean, answer: String, numTask: Int) {
+    private fun setSettingsDialog(answerIsTrue: Boolean, answer: String, numTask: Int) {
         with(binding.dialogResultId) {
             if (answerIsTrue) {
                 if (workWithList) {
@@ -296,7 +307,6 @@ class PartTasksFragment : Fragment() {
                 buttonContinue.setBackgroundColor(resources.getColor(R.color.green, null))
                 buttonContinue.setTextColor(resources.getColor(R.color.white, null))
                 resultAnswer.text = "Правильно!"
-                textAnswer.text = answer
             } else {
                 if (!workWithList) {
                     listErrors.add(numTask)
@@ -309,20 +319,15 @@ class PartTasksFragment : Fragment() {
                 trueAnswerText.setTextColor(resources.getColor(R.color.red, null))
                 resultAnswer.text = "Не верно!"
                 trueAnswerText.text = "Правильный ответ: "
-                textAnswer.text = answer
             }
+            textAnswer.text = answer
         }
     }
 
 
-    fun accessibilityButtons(layout: ViewGroup, accessibility: Boolean) {
-        // Get all  views
-        val layoutButtons: Sequence<View> = layout.descendants
-        // loop through them, if they are instances of Button, disable them.
-        for (button in layoutButtons) {
-            if (button is Button) {
-                button.isClickable = accessibility
-            }
+    private fun accessibilityButtons(layout: ViewGroup, accessibility: Boolean) {
+        layout.descendants.filterIsInstance<Button>().forEach { button ->
+            button.isClickable = accessibility
         }
     }
 

@@ -1,10 +1,15 @@
 package com.rai.powereng.ui.tabs.profile
 
+
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.rai.powereng.databinding.FragmentProfileBinding
@@ -13,7 +18,7 @@ import com.rai.powereng.model.UserScore
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileContentFragment: Fragment()  {
+class ProfileContentFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
@@ -25,7 +30,7 @@ class ProfileContentFragment: Fragment()  {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentProfileBinding.inflate(inflater, container, false)
             .also { _binding = it }
@@ -56,11 +61,22 @@ class ProfileContentFragment: Fragment()  {
         }
     }
 
-    private fun bind(userScore: UserScore){
-        with(binding){
+    private fun bind(userScore: UserScore) {
+        with(binding) {
             textDaysStrike.text = userScore.daysStrike.toString()
-        }
+            val matrix = ColorMatrix().apply { setSaturation(0f) }
+            val greyFilter = ColorMatrixColorFilter(matrix)
+            layoutDaysStrike.forEach { child ->
+                if (child is ImageView) {
+                    val lastDigit = resources.getResourceName(child.id).last().digitToInt()
+                    child.colorFilter = if (lastDigit <= userScore.daysStrike) null else greyFilter
+                }
+            }
 
+            textViewScore.text= userScore.score.toString()
+            textViewPart.text= userScore.part.toString()
+            textViewUnit.text= userScore.unit.toString()
+        }
     }
 
     override fun onDestroyView() {

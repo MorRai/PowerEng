@@ -78,6 +78,10 @@ internal class UserProgressInfoRepositoryImpl(
                 .await().documents.mapNotNull { snapShot ->
                     snapShot.toObject(UserProgressInfo::class.java)
                 }
+
+            val groupedData = response.groupBy { it.unitId }
+            val maxUnit = groupedData.keys.maxOrNull() ?: 0
+            val maxPart = groupedData[maxUnit]?.maxByOrNull { it.partId }?.partId ?: 0
             val sumScore = response.sumOf { it.points }
 
             val oldUserScore = db.collection("usersScore")
@@ -86,15 +90,14 @@ internal class UserProgressInfoRepositoryImpl(
                 .await().toObject(UserScore::class.java)
 
             val userScore = when {
-                oldUserScore == null || getDifferenceDays(
-                    oldUserScore.dateLastCompleteTask,
-                    dateText
-                ) > 1 -> {
+                oldUserScore == null || getDifferenceDays(oldUserScore.dateLastCompleteTask, dateText) > 1 -> {
                     UserScore(
                         score = sumScore,
                         userId = currentUserId,
                         dateLastCompleteTask = dateText,
-                        daysStrike = 1
+                        daysStrike = 1,
+                        unit = maxUnit,
+                        part = maxPart
                     )
                 }
                 oldUserScore.dateLastCompleteTask == dateText -> {
@@ -102,7 +105,9 @@ internal class UserProgressInfoRepositoryImpl(
                         score = sumScore,
                         userId = currentUserId,
                         dateLastCompleteTask = oldUserScore.dateLastCompleteTask,
-                        daysStrike = oldUserScore.daysStrike
+                        daysStrike = oldUserScore.daysStrike,
+                        unit = maxUnit,
+                        part = maxPart
                     )
                 }
                 else -> {
@@ -110,7 +115,9 @@ internal class UserProgressInfoRepositoryImpl(
                         score = sumScore,
                         userId = currentUserId,
                         dateLastCompleteTask = dateText,
-                        daysStrike = oldUserScore.daysStrike + 1
+                        daysStrike = oldUserScore.daysStrike + 1,
+                        unit = maxUnit,
+                        part = maxPart
                     )
                 }
             }
@@ -165,7 +172,7 @@ internal class UserProgressInfoRepositoryImpl(
         val dateFormatInput = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val dateFirstParse = LocalDate.parse(dateFirst, dateFormatInput)
         val dateSecondParse = LocalDate.parse(dateSecond, dateFormatInput)
-        return (ChronoUnit.DAYS.between(dateFirstParse, dateSecondParse) + 1).toInt()
+        return (ChronoUnit.DAYS.between(dateFirstParse, dateSecondParse)).toInt()
     }
 
 }

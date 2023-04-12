@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -11,12 +11,14 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@color/browser_actions_bg_grey">
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp">
+            android:layout_height="180dp"
+            android:id="@+id/layoutDaysStrike">
 
             <TextView
                 android:id="@+id/textDaysStrike"
@@ -26,7 +28,7 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/rounded_textview"
                 android:gravity="center"
-                android:text="12"
+                android:text="0"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -72,18 +74,38 @@
                 android:id="@+id/fire2"
                 android:layout_width="33dp"
                 android:layout_height="29dp"
-                app:layout_constraintEnd_toStartOf="@+id/fire7"
+                app:layout_constraintEnd_toStartOf="@+id/fire3"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/fire1"
                 app:layout_constraintTop_toTopOf="@+id/fire1"
                 app:srcCompat="@drawable/fire" />
 
             <ImageView
-                android:id="@+id/fire3"
+                android:id="@+id/fire5"
+                android:layout_width="33dp"
+                android:layout_height="29dp"
+                app:layout_constraintBottom_toBottomOf="@+id/fire4"
+                app:layout_constraintEnd_toStartOf="@+id/fire6"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/fire4"
+                app:srcCompat="@drawable/fire" />
+
+            <ImageView
+                android:id="@+id/fire6"
+                android:layout_width="33dp"
+                android:layout_height="29dp"
+                app:layout_constraintEnd_toStartOf="@+id/fire7"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/fire5"
+                app:layout_constraintTop_toTopOf="@+id/fire5"
+                app:srcCompat="@drawable/fire" />
+
+            <ImageView
+                android:id="@+id/fire7"
                 android:layout_width="33dp"
                 android:layout_height="29dp"
                 app:layout_constraintBottom_toBottomOf="@+id/fire6"
-                app:layout_constraintEnd_toStartOf="@+id/fire4"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/fire6"
                 app:srcCompat="@drawable/fire" />
@@ -99,35 +121,114 @@
                 app:srcCompat="@drawable/fire" />
 
             <ImageView
-                android:id="@+id/fire5"
-                android:layout_width="33dp"
-                android:layout_height="29dp"
-                app:layout_constraintBottom_toBottomOf="@+id/fire4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/fire4"
-                app:srcCompat="@drawable/fire" />
-
-            <ImageView
-                android:id="@+id/fire6"
-                android:layout_width="33dp"
-                android:layout_height="29dp"
-                app:layout_constraintEnd_toStartOf="@+id/fire3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/fire7"
-                app:layout_constraintTop_toTopOf="@+id/fire7"
-                app:srcCompat="@drawable/fire" />
-
-            <ImageView
-                android:id="@+id/fire7"
+                android:id="@+id/fire3"
                 android:layout_width="33dp"
                 android:layout_height="29dp"
                 app:layout_constraintBottom_toBottomOf="@+id/fire2"
-                app:layout_constraintEnd_toStartOf="@+id/fire6"
+                app:layout_constraintEnd_toStartOf="@+id/fire4"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/fire2"
                 app:srcCompat="@drawable/fire" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/imageViewIcon"
+                android:layout_width="155dp"
+                android:layout_height="150dp"
+                android:src="@drawable/text_img"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textTitleScore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Score"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                app:layout_constraintStart_toEndOf="@id/imageViewIcon"
+                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+
+            <TextView
+                android:id="@+id/textTitleUnit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Unit"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+                app:layout_constraintTop_toBottomOf="@+id/textTitleScore" />
+
+            <TextView
+                android:id="@+id/textTitlePart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Part"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                app:layout_constraintStart_toEndOf="@id/imageViewIcon"
+                app:layout_constraintTop_toBottomOf="@+id/textTitleUnit" />
+
+            <TextView
+                android:id="@+id/textViewScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+
+            <TextView
+                android:id="@+id/textViewUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="1"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewScore" />
+
+            <TextView
+                android:id="@+id/textViewPart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="3"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUnit" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
