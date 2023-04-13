@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue.serverTimestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.rai.powereng.mapper.toDomainModels
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -22,10 +23,17 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
 
     override val isUserAuthenticatedInFirebase = auth.currentUser != null
 
-    override val isEmailVerified = auth.currentUser?.isEmailVerified ?: false
-
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
+
+
+    override fun getCurrentUser(viewModelScope: CoroutineScope) = callbackFlow {
+        val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+            trySend(auth.currentUser?.toDomainModels())
+        }
+        auth.addAuthStateListener(authStateListener)
+        awaitClose { auth.removeAuthStateListener(authStateListener) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser?.toDomainModels())
 
     /*
     private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
@@ -120,16 +128,6 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override fun getFirebaseAuthState(viewModelScope: CoroutineScope) = callbackFlow  {
-            val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(auth.currentUser == null)
-        }
-        auth.addAuthStateListener(authStateListener)
-        awaitClose {
-            auth.removeAuthStateListener(authStateListener)
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),   auth.currentUser == null)
-
     private suspend fun addUserToFirestore() {
         auth.currentUser?.apply {
             val user = toUser()
@@ -138,8 +136,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     }
 }
 
-
-fun FirebaseUser.toUser() = mapOf(
+internal fun FirebaseUser.toUser() = mapOf(
     "displayName" to displayName,
     "email" to email,
     "photoUrl" to photoUrl?.toString(),

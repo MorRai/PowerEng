@@ -34,7 +34,7 @@ class UsersRatingContainerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //viewModel.getAuthStateResponse()
-        if (!viewModel.getAuthStateResponse().value ){
+        if (viewModel.getCurrentUserResponse().value != null){
             findNavController().navigate(R.id.action_usersRatingContainerFragment_to_usersRatingContentFragment)
         }
         with(binding){

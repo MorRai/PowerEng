@@ -10,7 +10,7 @@ internal val useCaseModule = module {
     factoryOf(::SendPasswordReset)
     factoryOf(::SignOut)
     factoryOf(::SignUpWithEmailPassword)
-    factoryOf(::GetAuthState)
+    factoryOf(::GetCurrentUser)
     factoryOf(::SendEmailVerification)
     factoryOf(::SignInWithGoogle)
     factoryOf(::OneTapSignInWithGoogle)

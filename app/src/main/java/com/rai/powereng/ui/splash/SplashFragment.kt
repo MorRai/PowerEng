@@ -38,16 +38,15 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         with(binding) {
 
 
-
-            viewModel.getAuthStateResponse()
+            viewModel.geCurrentUserResponse()
 
             val navController = Navigation.findNavController(requireActivity(), R.id.nav_container)
             val mainGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-            if (!viewModel.getAuthStateResponse().value && viewModel.isEmailVerified) {
+            val currentUser = viewModel.geCurrentUserResponse().value
+            if ( currentUser !=null && currentUser.isEmailVerified) {
                 mainGraph.setStartDestination(R.id.contentFragment)
             } else{
                 mainGraph.setStartDestination (R.id.auth_nav_graph)

@@ -1,5 +1,7 @@
 package com.rai.powereng.mapper
 
+import com.google.firebase.auth.FirebaseUser
+import com.rai.powereng.model.User
 import com.rai.powereng.model.UserProgressInfo
 import com.rai.powereng.model.UserProgressInfoEntity
 
@@ -24,5 +26,16 @@ internal fun UserProgressInfo.toDomainModels() : UserProgressInfoEntity{
         mistakes = mistakes,
         unitId = unitId,
         partId = partId,
+    )
+}
+
+internal fun FirebaseUser.toDomainModels() : User {
+    return User(
+         uid = uid,
+         displayName= displayName,
+         email = email,
+         photoUrl = photoUrl.toString(),
+         registrationTimeMillis = metadata?.creationTimestamp,
+         isEmailVerified = isEmailVerified
     )
 }

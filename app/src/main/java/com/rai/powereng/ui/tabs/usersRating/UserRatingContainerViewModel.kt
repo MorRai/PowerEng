@@ -2,15 +2,15 @@ package com.rai.powereng.ui.tabs.usersRating
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rai.powereng.usecase.auth.GetAuthState
+import com.rai.powereng.usecase.auth.GetCurrentUser
 
 class UserRatingContainerViewModel(
-    private val getAuthState: GetAuthState
+    private val getCurrentUser: GetCurrentUser
 ) : ViewModel() {
 
     init {
-        getAuthStateResponse()
+        getCurrentUserResponse()
     }
 
-    fun getAuthStateResponse() = getAuthState.invoke(viewModelScope)
+    fun getCurrentUserResponse() = getCurrentUser.invoke(viewModelScope)
 }

@@ -1,6 +1,7 @@
 package com.rai.powereng.repository
 
 import com.rai.powereng.model.Response
+import com.rai.powereng.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,10 +11,9 @@ interface FirebaseAuthRepository {
 
     val isUserAuthenticatedInFirebase: Boolean
 
-    val isEmailVerified: Boolean
-
     val currentUserId: String
 
+     fun getCurrentUser(viewModelScope: CoroutineScope): StateFlow<User?>
     //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
 
     suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean>
@@ -27,8 +27,6 @@ interface FirebaseAuthRepository {
     suspend fun sendPasswordReset(email: String):Response<Boolean>
 
     suspend fun sendEmailVerification():Response<Boolean>
-
-    fun getFirebaseAuthState(viewModelScope: CoroutineScope): StateFlow<Boolean>
 
     suspend fun reloadFirebaseUser():Flow<Response<Boolean>>
 

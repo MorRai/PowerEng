@@ -51,13 +51,13 @@ class AuthorizationFragment : Fragment() {
                     findNavController().navigate(R.id.contentFragment)
                 }
             }
-            viewModel.getAuthStateResponse()
+            viewModel.getCurrentUserResponse()
 
 
-            // надо исправить ведь теперь есть спешл
-            if (!viewModel.getAuthStateResponse().value && !viewModel.isEmailVerified) {
+            val currentUser = viewModel.getCurrentUserResponse().value
+            if (currentUser !=null && !currentUser.isEmailVerified) {
                 findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
-            } else if (!viewModel.getAuthStateResponse().value && viewModel.isEmailVerified) {
+            } else if (currentUser !=null && currentUser.isEmailVerified) {
                 val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
                 if (resultNav.not()) {
                     findNavController().navigate(R.id.contentFragment)

@@ -9,7 +9,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.rai.powereng.R
 import com.rai.powereng.databinding.CheckAuthBinding
-import com.rai.powereng.ui.authorization.AuthViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileContainerFragment : Fragment() {
@@ -34,7 +33,7 @@ class ProfileContainerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //viewModel.getAuthStateResponse()
-        if (!viewModel.getAuthStateResponse().value ){
+        if (viewModel.getCurrentUserResponse().value != null){
             findNavController().navigate(R.id.action_profileContainerFragment_to_profileContentFragment)
         }
         with(binding) {

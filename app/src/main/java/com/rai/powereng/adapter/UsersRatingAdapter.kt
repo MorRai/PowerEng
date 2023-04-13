@@ -1,5 +1,6 @@
 package com.rai.powereng.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,9 +49,10 @@ class UsersRatingAdapter(context: Context): ListAdapter<UserScore, UsersScoreVie
 class UsersScoreViewHolder(
     private val binding: ItemRatingBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
+    @SuppressLint("SetTextI18n")
     fun bind(item: UserScore, position: Int) {
         binding.userName.text = item.userId
-        binding.userNum.text = position.toString()
+        binding.userNum.text = (position +1).toString() +"."
         binding.userScore.text = item.score.toString()
     }
 }
