@@ -36,6 +36,6 @@ internal fun FirebaseUser.toDomainModels() : User {
          email = email,
          photoUrl = photoUrl.toString(),
          registrationTimeMillis = metadata?.creationTimestamp,
-         isEmailVerified = isEmailVerified
+         isEmailVerified = isEmailVerified,
     )
 }

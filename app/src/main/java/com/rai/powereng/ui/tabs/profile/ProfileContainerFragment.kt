@@ -32,7 +32,7 @@ class ProfileContainerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //viewModel.getAuthStateResponse()
+        //viewModel.getCurrentUserResponse()
         if (viewModel.getCurrentUserResponse().value != null){
             findNavController().navigate(R.id.action_profileContainerFragment_to_profileContentFragment)
         }
@@ -42,5 +42,10 @@ class ProfileContainerFragment : Fragment() {
                     .navigate(R.id.action_contentFragment_to_auth_nav_graph)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

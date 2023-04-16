@@ -1,10 +1,15 @@
 package com.rai.powereng.repository
 
+import android.net.Uri
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FieldValue.serverTimestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.rai.powereng.mapper.toDomainModels
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.CoroutineScope
@@ -14,10 +19,9 @@ import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 
 
-
 internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
                                  //private var oneTapClient: SignInClient,
-                                 private val db: FirebaseFirestore
+                                          private val db: FirebaseFirestore
 ): FirebaseAuthRepository, KoinComponent {
 
 
@@ -33,7 +37,41 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
         auth.addAuthStateListener(authStateListener)
         awaitClose { auth.removeAuthStateListener(authStateListener) }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser?.toDomainModels())
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser?.toDomainModels())
+
+    override suspend fun updateCurrentUser(email: String, name: String, photoUri: String?): Response<Boolean> {
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(name)
+            .apply {
+                photoUri?.let { uri ->
+                    val photoUrl = uploadImageToFirebaseStorage(uri.toUri()) ?: return Response.Failure(Exception("Failed to upload image"))
+                    setPhotoUri(photoUrl)
+                }
+            }
+            .build()
+
+        return try {
+            auth.currentUser?.updateEmail(email)?.await()
+            auth.currentUser?.updateProfile(profileUpdates)?.await()
+            updateUserToFirestore()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    private suspend fun uploadImageToFirebaseStorage(imageUri: Uri): Uri? {
+        val storageRef = Firebase.storage.reference
+        val imageName = auth.currentUser?.uid
+        val imageRef = storageRef.child("images/$imageName")
+        return try {
+            val uploadTask = imageRef.putFile(imageUri).await()
+            imageRef.downloadUrl.await()
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     /*
     private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
@@ -78,7 +116,11 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
 
     override suspend fun signUpWithEmailPassword(email: String, password: String) =
         try {
-            auth.createUserWithEmailAndPassword(email, password).await()
+            val authResult =  auth.createUserWithEmailAndPassword(email, password).await()
+            val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
+            if (isNewUser) {
+                addUserToFirestore()
+            }
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)
@@ -129,6 +171,13 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     }
 
     private suspend fun addUserToFirestore() {
+        auth.currentUser?.apply {
+            val user = toUser()
+            db.collection("users").document(uid).set(user).await()
+        }
+    }
+
+    private suspend fun updateUserToFirestore() {
         auth.currentUser?.apply {
             val user = toUser()
             db.collection("users").document(uid).set(user).await()

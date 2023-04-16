@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">PowerEng</string>
+    <string name="your_punching_pace">Your punching pace</string>
+    <string name="description_days_strike">Mintain a bumping pace while meeting the daily goal</string>
+    <string name="text_title_score">Score</string>
+    <string name="text_title_unit">Unit</string>
+    <string name="text_title_part">Part</string>
+    <string name="change_photo">Change photo</string>
+    <string name="name">Name</string>
+    <string name="id">ID</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="save">Save</string>
+    <string name="sign_out">Sign out</string>
+    <string name="change_info">Change</string>
 </resources>

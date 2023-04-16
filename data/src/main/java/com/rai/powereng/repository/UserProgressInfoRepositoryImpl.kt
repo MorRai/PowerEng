@@ -1,11 +1,14 @@
 package com.rai.powereng.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.rai.powereng.database.UserProgressInfoDatabase
 import com.rai.powereng.mapper.toDomainModels
 import com.rai.powereng.model.*
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -129,19 +132,41 @@ internal class UserProgressInfoRepositoryImpl(
         }
     }
 
-
-    override fun getUsersScore() = callbackFlow {
-        val snapshotListener = db.collection("usersScore").addSnapshotListener { snapshot, e ->
-            val usersScoreResponse = if (snapshot != null) {
-                val usersScore = snapshot.toObjects(UserScore::class.java)
-                Response.Success(usersScore)
-            } else {
-                Response.Failure(e ?: Exception("Unknown error"))
+    override  fun getUsersScore(): Flow<Response<List<UserScoreWithProfile>>> = callbackFlow {
+        val usersScoreCollection = db.collection("usersScore")
+        val usersCollection = db.collection("users")
+        val usersScoreListenerRegistration = usersScoreCollection.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                trySend(Response.Failure(e))
+                return@addSnapshotListener
             }
-            trySend(usersScoreResponse)
+            if (snapshot != null) {
+                launch {
+                    val usersScore = snapshot.toObjects(UserScore::class.java)
+                    val usersScoreWithProfiles = mutableListOf<UserScoreWithProfile>()
+                    for (userScore in usersScore) {
+                        val userProfile = usersCollection.document(userScore.userId).get().await()
+                            .toObject<User>()
+                        if (userProfile != null) {
+                            usersScoreWithProfiles.add(
+                                UserScoreWithProfile(
+                                    userId = userScore.userId,
+                                    score = userScore.score,
+                                    daysStrike = userScore.daysStrike,
+                                    displayName = userProfile.displayName,
+                                    photoUrl = userProfile.photoUrl
+                                )
+                            )
+                        }
+                    }
+                    trySend(Response.Success(usersScoreWithProfiles))
+                }
+            } else {
+                trySend(Response.Failure(Exception("Нет данных по usersScore")))
+            }
         }
         awaitClose {
-            snapshotListener.remove()
+            usersScoreListenerRegistration.remove()
         }
     }
 
@@ -164,8 +189,6 @@ internal class UserProgressInfoRepositoryImpl(
         awaitClose {
             snapshotListener.remove()
         }
-
-
     }
 
     private fun getDifferenceDays(dateFirst: String, dateSecond: String): Int {

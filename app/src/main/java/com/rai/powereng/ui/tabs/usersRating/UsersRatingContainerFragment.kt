@@ -33,6 +33,8 @@ class UsersRatingContainerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         //viewModel.getAuthStateResponse()
         if (viewModel.getCurrentUserResponse().value != null){
             findNavController().navigate(R.id.action_usersRatingContainerFragment_to_usersRatingContentFragment)
@@ -43,5 +45,10 @@ class UsersRatingContainerFragment : Fragment() {
                     .navigate(R.id.action_contentFragment_to_auth_nav_graph)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

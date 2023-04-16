@@ -15,5 +15,13 @@
     <fragment
         android:id="@+id/profileContentFragment"
         android:name="com.rai.powereng.ui.tabs.profile.ProfileContentFragment"
-        android:label="ProfileContentFragment" />
+        android:label="ProfileContentFragment" >
+        <action
+            android:id="@+id/action_profileContentFragment_to_changeUserInfoFragment"
+            app:destination="@id/changeUserInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeUserInfoFragment"
+        android:name="com.rai.powereng.ui.changeUser.ChangeUserInfoFragment"
+        android:label="ChangeUserInfoFragment" />
 </navigation>

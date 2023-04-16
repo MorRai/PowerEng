@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.rai.powereng.databinding.ItemRatingBinding
-import com.rai.powereng.model.UserScore
+import com.rai.powereng.model.UserScoreWithProfile
 
-class UsersRatingAdapter(context: Context): ListAdapter<UserScore, UsersScoreViewHolder>(DIFF_UTIL) {
+class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
 
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -27,17 +28,17 @@ class UsersRatingAdapter(context: Context): ListAdapter<UserScore, UsersScoreVie
 
 
     companion object {
-        private val DIFF_UTIL = object : DiffUtil.ItemCallback<UserScore>() {
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<UserScoreWithProfile>() {
             override fun areItemsTheSame(
-                oldItem: UserScore,
-                newItem: UserScore,
+                oldItem: UserScoreWithProfile,
+                newItem: UserScoreWithProfile,
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: UserScore,
-                newItem: UserScore,
+                oldItem: UserScoreWithProfile,
+                newItem: UserScoreWithProfile,
             ): Boolean {
                 return oldItem == newItem
             }
@@ -50,9 +51,10 @@ class UsersScoreViewHolder(
     private val binding: ItemRatingBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("SetTextI18n")
-    fun bind(item: UserScore, position: Int) {
-        binding.userName.text = item.userId
+    fun bind(item: UserScoreWithProfile, position: Int) {
+        binding.userName.text = item.displayName
         binding.userNum.text = (position +1).toString() +"."
-        binding.userScore.text = item.score.toString()
+        binding.userScore.text = item.score.toString() + " xp"
+        binding.userPhoto.load(item.photoUrl)
     }
 }

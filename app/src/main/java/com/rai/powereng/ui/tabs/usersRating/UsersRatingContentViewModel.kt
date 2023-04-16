@@ -12,7 +12,7 @@ class UsersRatingContentViewModel(getUsersScoreUseCase: GetUsersScoreUseCase):Vi
     val usersScoreFlow = getUsersScoreUseCase.invoke()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(),
             initialValue = Response.Loading
         )
 }

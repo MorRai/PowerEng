@@ -14,8 +14,9 @@ interface FirebaseAuthRepository {
     val currentUserId: String
 
      fun getCurrentUser(viewModelScope: CoroutineScope): StateFlow<User?>
-    //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
 
+    //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>
+    suspend fun updateCurrentUser(email: String, name: String, photoUri: String?): Response<Boolean>
     suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean>
 
     suspend fun signOut(): Response<Boolean>
