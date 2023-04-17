@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+
 class ChangeUserInfoVievModel(
     private val signOut: SignOut,
     private val getCurrentUser: GetCurrentUser,
@@ -39,6 +40,5 @@ class ChangeUserInfoVievModel(
         val result = authRepository.updateCurrentUser(email,name, photoUri)
         _updateUserResponse.value = result
     }
-
 
 }

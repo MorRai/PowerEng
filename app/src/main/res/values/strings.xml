@@ -13,4 +13,6 @@
     <string name="save">Save</string>
     <string name="sign_out">Sign out</string>
     <string name="change_info">Change</string>
+    <string name="hint_email">email</string>
+    <string name="reset_password">Reset password</string>
 </resources>

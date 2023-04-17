@@ -19,7 +19,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_200"
+        android:background="@color/browser_actions_bg_grey"
         app:itemRippleColor="@color/purple_700"
         app:itemTextColor="@color/black"
         app:menu="@menu/menu_bottom_nav"/>

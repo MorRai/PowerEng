@@ -15,9 +15,13 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentChangeUserInfoBinding
+import com.rai.powereng.extensions.compressAndOptimizeImage
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChangeUserInfoFragment : Fragment() {
@@ -114,9 +118,13 @@ class ChangeUserInfoFragment : Fragment() {
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
-            // Выбрано новое изображение, можно записвать
-            binding.profileImage.load(uri)
-            selectedImageUri = uri
+            lifecycleScope.launch {
+                val compressedUri = withContext(Dispatchers.IO) {
+                    uri.compressAndOptimizeImage(get())
+                }
+                binding.profileImage.load(compressedUri)
+                selectedImageUri = compressedUri
+            }
         }
     }
 

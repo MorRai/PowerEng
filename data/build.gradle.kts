@@ -41,13 +41,10 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
-
-
     implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-storage:20.1.0")
+    implementation ("com.google.firebase:firebase-storage-ktx")
     implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.firebase:firebase-storage-ktx:20.0.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
 
     implementation(libs.kotlinx.coroutine)
