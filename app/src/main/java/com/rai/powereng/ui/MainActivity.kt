@@ -1,6 +1,6 @@
-package com.rai.powereng
+package com.rai.powereng.ui
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import com.rai.powereng.R
 
 class MainActivity : AppCompatActivity(R.layout.activity_main)

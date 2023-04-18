@@ -13,6 +13,8 @@ class PowerEngApplication : Application() {
         startKoin {
            androidContext(this@PowerEngApplication)
            modules(
+               dataModule,
+               viewModelsModule
 
            )
        }

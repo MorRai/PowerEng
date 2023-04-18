@@ -1,0 +1,12 @@
+package com.rai.powereng.repository
+
+import com.rai.powereng.model.Response
+import com.rai.powereng.model.TaskData
+
+interface TasksRepository {
+
+    suspend fun getTasksData(unitId: Int, partId: Int, taskNum: Int): Response<TaskData>
+
+    suspend fun getAmountTasksInPart(unitId: Int,partId: Int): Response<Int>
+
+}

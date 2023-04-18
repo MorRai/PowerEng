@@ -1,7 +1,7 @@
 [versions]
 minSdk = "28"
-compileSdk = "32"
-targetSdk = "32"
+compileSdk = "33"
+targetSdk = "33"
 
 androidx-lifecycle = "2.4.1"
 androidx-room =  "2.4.2"
