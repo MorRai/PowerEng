@@ -28,8 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_foreground"
-            android:contentDescription="Logo" />
+            app:srcCompat="@drawable/text_img"/>
 
 
         <Button
@@ -38,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:padding="8dp"
-            android:text="sign_in"
+            android:text="@string/sign_in"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.812"
@@ -49,7 +48,7 @@
             android:id="@+id/emailCreateAccountButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="create_account"
+            android:text="@string/create_account"
             android:textSize="20sp"
             android:padding="8dp"
             android:layout_marginTop="8dp"
@@ -62,9 +61,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="continue"
-            android:textColor="@color/purple_700"
-            android:textSize="14sp"
+            android:text="@string/continueAction"
+            android:textColor="@color/purple_500"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

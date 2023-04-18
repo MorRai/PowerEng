@@ -2,13 +2,17 @@ package com.rai.powereng.ui.partTasks
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.transition.Fade
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.fragment.app.Fragment
@@ -116,13 +120,13 @@ class PartTasksFragment : Fragment() {
 
     private fun clearForm() {
         with(binding) {
-            itemTranclate.answerBox.removeAllViews()
-            itemTranclate.optionBox.removeAllViews()
             if (workWithList && listErrors.size > 0 ) {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
             } else if (listErrors.size > 0) {
+                itemTranclate.answerBox.removeAllViews()
+                itemTranclate.optionBox.removeAllViews()
                 showErrorsScreen()
             } else {
                 findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(args.unitId,args.partId,amountMistakes))
@@ -133,13 +137,18 @@ class PartTasksFragment : Fragment() {
 
     private fun showErrorsScreen() {
         with(binding) {
+            val transitionEND = TransitionSet().apply {
+                addTransition(Fade(Fade.IN)).addTransition(Slide(Gravity.END))
+                duration = 500
+            }
+            TransitionManager.beginDelayedTransition(contentLayout, transitionEND)
             errorsScreen.root.visibility = View.VISIBLE
+            description.visibility = View.GONE
             itemTranclate.root.visibility = View.GONE
             itemMissingWord.root.visibility = View.GONE
             exerciseInfo.visibility = View.GONE
             itemListen.root.visibility = View.GONE
             check.setOnClickListener {
-                errorsScreen.root.visibility = View.GONE
                 workWithList = true
                 amountMistakes = listErrors.size
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
@@ -147,39 +156,49 @@ class PartTasksFragment : Fragment() {
         }
     }
 
+
     private fun bind(task: TaskData) {
         with(binding) {
+            val transitionEND = TransitionSet().apply {
+                addTransition(Fade(Fade.IN)).addTransition(Slide(Gravity.END))
+                duration = 500
+            }
+            TransitionManager.beginDelayedTransition(contentLayout, transitionEND)
+
+            exerciseInfo.visibility = View.GONE
+            itemMissingWord.root.visibility = View.GONE
+            itemTranclate.root.visibility = View.GONE
+            itemListen.root.visibility = View.GONE
+            errorsScreen.root.visibility = View.GONE
+            itemTranclate.answerBox.removeAllViews()
+            itemTranclate.optionBox.removeAllViews()
             when (task.typeTask) {
                 1, 2 -> {
-                    description.text = "Переведите предложение:"
+                    description.text = "Translate the sentence:"
                     itemTranclate.root.visibility = View.VISIBLE
                     exerciseInfo.visibility = View.VISIBLE
-                    itemMissingWord.root.visibility = View.GONE
-                    itemListen.root.visibility = View.GONE
                     bindForTranslate(task)
                 }
                 3 -> {
-                    description.text = "Вставьте слово"
+                    description.text = "Insert a word"
                     exerciseInfo.visibility = View.VISIBLE
                     itemMissingWord.root.visibility = View.VISIBLE
-                    itemTranclate.root.visibility = View.GONE
-                    itemListen.root.visibility = View.GONE
                     bindForMissingWord(task)
                 }
                 4 -> {
-                    description.text = "Введите что услышали"
+                    description.text = "Enter what you heard"
                     itemTranclate.root.visibility = View.VISIBLE
-                    itemMissingWord.root.visibility = View.GONE
-                    exerciseInfo.visibility = View.GONE
                     itemListen.root.visibility = View.VISIBLE
                     bindForListen(task)
                 }
             }
+
             dialogResultId.buttonContinue.setOnClickListener {
                 if (taskNum <= amountTasks) {
                     taskNum += 1
                 }
                 accessibilityButtons(contentLayout, true)
+
                 bottomSheet.visibility = View.GONE
                 clearForm()
             }
@@ -229,7 +248,7 @@ class PartTasksFragment : Fragment() {
                     R.id.variantTwo -> answerString = itemMissingWord.variantTwo.text.toString()
                 }
                 if (answerString.isBlank()) {
-                    Toast.makeText(requireContext(), "Хули не выбрано ничего", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "You must choose an answer!", Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
@@ -271,7 +290,7 @@ class PartTasksFragment : Fragment() {
         val textView = Button(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
-        textView.setTextAppearance(R.style.FlexItem)
+        //textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
             if (typeTask == 1 || typeTask == 4) {
                 speak(text)
@@ -286,7 +305,7 @@ class PartTasksFragment : Fragment() {
         val textView = Button(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
-        textView.setTextAppearance(R.style.FlexItem)
+        //textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
             addTextViewToOption(text, typeTask)
             binding.itemTranclate.answerBox.removeView(textView)
@@ -306,7 +325,7 @@ class PartTasksFragment : Fragment() {
                 textAnswer.setTextColor(resources.getColor(R.color.green, null))
                 buttonContinue.setBackgroundColor(resources.getColor(R.color.green, null))
                 buttonContinue.setTextColor(resources.getColor(R.color.white, null))
-                resultAnswer.text = "Правильно!"
+                resultAnswer.text = "Success!"
             } else {
                 if (!workWithList) {
                     listErrors.add(numTask)
@@ -317,8 +336,8 @@ class PartTasksFragment : Fragment() {
                 resultAnswer.setTextColor(resources.getColor(R.color.red, null))
                 textAnswer.setTextColor(resources.getColor(R.color.red, null))
                 trueAnswerText.setTextColor(resources.getColor(R.color.red, null))
-                resultAnswer.text = "Не верно!"
-                trueAnswerText.text = "Правильный ответ: "
+                resultAnswer.text = "Error!"
+                trueAnswerText.text = "Correct answer: "
             }
             textAnswer.text = answer
         }
