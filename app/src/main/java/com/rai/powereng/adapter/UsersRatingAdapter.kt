@@ -14,18 +14,22 @@ import com.rai.powereng.model.UserScoreWithProfile
 class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
 
     private val layoutInflater = LayoutInflater.from(context)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersScoreViewHolder {
         return UsersScoreViewHolder(
             binding = ItemRatingBinding.inflate(layoutInflater, parent, false)
         )
     }
 
+    override fun submitList(list: List<UserScoreWithProfile>?) {
+        // Sort the list by score in descending order before submitting
+        val sortedList = list?.sortedByDescending { it.score }
+        super.submitList(sortedList)
+    }
+
     override fun onBindViewHolder(holder: UsersScoreViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, position)
     }
-
 
     companion object {
         private val DIFF_UTIL = object : DiffUtil.ItemCallback<UserScoreWithProfile>() {
@@ -44,7 +48,6 @@ class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, Us
             }
         }
     }
-
 }
 
 class UsersScoreViewHolder(

@@ -24,17 +24,18 @@ internal class UserProgressInfoRepositoryImpl(
 
     override suspend fun addUserProgressInfo(userProgressInfo: UserProgressInfo): Response<Boolean> {
         return try {
-            val id = "unit${userProgressInfo.unitId}part${userProgressInfo.partId}"
-            val response = db.collection("tasks")
+            val id =
+                "unit${userProgressInfo.unitId}part${userProgressInfo.partId}id${userProgressInfo.userId}"
+            val response = db.collection("usersProgressInfo")
                 .document(id)
                 .get()
                 .await().toObject(UserProgressInfo::class.java)
-            if (response == null || response.points <= userProgressInfo.points) {
+            if (response == null || response.points <= userProgressInfo.points) { //если прошел хуже то не перезаписваем
                 db.collection("usersProgressInfo")
                     .document(id)
                     .set(userProgressInfo).await()
-                refreshUserScore(userProgressInfo.userId)
             }
+            refreshUserScore(userProgressInfo.userId, false)
             Response.Success(true)
         } catch (e: Exception) {
             try {
@@ -43,7 +44,6 @@ internal class UserProgressInfoRepositoryImpl(
             } catch (e: Exception) {
                 Response.Failure(e)
             }
-
         }
     }
 
@@ -70,7 +70,10 @@ internal class UserProgressInfoRepositoryImpl(
         }
     }
 
-    override suspend fun refreshUserScore(currentUserId: String): Response<Boolean> {
+    override suspend fun refreshUserScore(
+        currentUserId: String,
+        itStart: Boolean,
+    ): Response<Boolean> { //itStart по умолчанию фолс
         return try {
             val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val dateText = dateFormat.format(Date())
@@ -93,7 +96,27 @@ internal class UserProgressInfoRepositoryImpl(
                 .await().toObject(UserScore::class.java)
 
             val userScore = when {
-                oldUserScore == null || getDifferenceDays(oldUserScore.dateLastCompleteTask, dateText) > 1 -> {
+                itStart && (oldUserScore == null || getDifferenceDays(
+                    oldUserScore.dateLastCompleteTask,
+                    dateText
+                ) > 1) -> {
+                    UserScore(
+                        score = sumScore,
+                        userId = currentUserId,
+                        dateLastCompleteTask = "",
+                        daysStrike = 0,
+                        unit = maxUnit,
+                        part = maxPart
+                    )
+                }
+                itStart -> {
+                    return Response.Success(true)
+                }
+                oldUserScore == null || oldUserScore.dateLastCompleteTask == "" || getDifferenceDays(
+                    oldUserScore.dateLastCompleteTask,
+                    dateText
+                ) > 1 -> {
+
                     UserScore(
                         score = sumScore,
                         userId = currentUserId,
@@ -102,6 +125,7 @@ internal class UserProgressInfoRepositoryImpl(
                         unit = maxUnit,
                         part = maxPart
                     )
+
                 }
                 oldUserScore.dateLastCompleteTask == dateText -> {
                     UserScore(
@@ -132,39 +156,41 @@ internal class UserProgressInfoRepositoryImpl(
         }
     }
 
-    override  fun getUsersScore(): Flow<Response<List<UserScoreWithProfile>>> = callbackFlow {
+    override fun getUsersScore(): Flow<Response<List<UserScoreWithProfile>>> = callbackFlow {
         val usersScoreCollection = db.collection("usersScore")
         val usersCollection = db.collection("users")
-        val usersScoreListenerRegistration = usersScoreCollection.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                trySend(Response.Failure(e))
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                launch {
-                    val usersScore = snapshot.toObjects(UserScore::class.java)
-                    val usersScoreWithProfiles = mutableListOf<UserScoreWithProfile>()
-                    for (userScore in usersScore) {
-                        val userProfile = usersCollection.document(userScore.userId).get().await()
-                            .toObject<User>()
-                        if (userProfile != null) {
-                            usersScoreWithProfiles.add(
-                                UserScoreWithProfile(
-                                    userId = userScore.userId,
-                                    score = userScore.score,
-                                    daysStrike = userScore.daysStrike,
-                                    displayName = userProfile.displayName,
-                                    photoUrl = userProfile.photoUrl
-                                )
-                            )
-                        }
-                    }
-                    trySend(Response.Success(usersScoreWithProfiles))
+        val usersScoreListenerRegistration =
+            usersScoreCollection.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    trySend(Response.Failure(e))
+                    return@addSnapshotListener
                 }
-            } else {
-                trySend(Response.Failure(Exception("Нет данных по usersScore")))
+                if (snapshot != null) {
+                    launch {
+                        val usersScore = snapshot.toObjects(UserScore::class.java)
+                        val usersScoreWithProfiles = mutableListOf<UserScoreWithProfile>()
+                        for (userScore in usersScore) {
+                            val userProfile =
+                                usersCollection.document(userScore.userId).get().await()
+                                    .toObject<User>()
+                            if (userProfile != null) {
+                                usersScoreWithProfiles.add(
+                                    UserScoreWithProfile(
+                                        userId = userScore.userId,
+                                        score = userScore.score,
+                                        daysStrike = userScore.daysStrike,
+                                        displayName = userProfile.displayName,
+                                        photoUrl = userProfile.photoUrl
+                                    )
+                                )
+                            }
+                        }
+                        trySend(Response.Success(usersScoreWithProfiles))
+                    }
+                } else {
+                    trySend(Response.Failure(Exception("Нет данных по usersScore")))
+                }
             }
-        }
         awaitClose {
             usersScoreListenerRegistration.remove()
         }

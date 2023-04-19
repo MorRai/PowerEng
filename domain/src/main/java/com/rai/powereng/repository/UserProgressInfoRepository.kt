@@ -7,7 +7,7 @@ interface UserProgressInfoRepository {
     suspend fun addUserProgressInfo(userProgressInfo: UserProgressInfo): Response<Boolean>
     suspend fun addUserProgressInfoLocal(userProgressInfo: UserProgressInfo): Response<Boolean>
     suspend fun transferUserProgressInfo(currentUserId:String): Response<Boolean>
-    suspend fun refreshUserScore(currentUserId:String): Response<Boolean>
+    suspend fun refreshUserScore(currentUserId:String,itStart:Boolean = false): Response<Boolean>
      fun getUsersScore(): Flow<Response<List<UserScoreWithProfile>>>
      fun getYourScore(currentUserId:String): Flow<Response<UserScore>>
 }
