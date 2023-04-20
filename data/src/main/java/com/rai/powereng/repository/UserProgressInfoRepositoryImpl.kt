@@ -169,11 +169,13 @@ internal class UserProgressInfoRepositoryImpl(
                     launch {
                         val usersScore = snapshot.toObjects(UserScore::class.java)
                         val usersScoreWithProfiles = mutableListOf<UserScoreWithProfile>()
+
                         for (userScore in usersScore) {
                             val userProfile =
                                 usersCollection.document(userScore.userId).get().await()
                                     .toObject<User>()
                             if (userProfile != null) {
+
                                 usersScoreWithProfiles.add(
                                     UserScoreWithProfile(
                                         userId = userScore.userId,
@@ -185,6 +187,16 @@ internal class UserProgressInfoRepositoryImpl(
                                 )
                             }
                         }
+                        var num = 0
+                        var lastScore = -1//что б
+                        usersScoreWithProfiles.sortedByDescending{ it.score }.forEach{
+                            if (lastScore != it.score){
+                                num +=1
+                            }
+                            it.num = num
+                            lastScore = it.score
+                        }
+
                         trySend(Response.Success(usersScoreWithProfiles))
                     }
                 } else {

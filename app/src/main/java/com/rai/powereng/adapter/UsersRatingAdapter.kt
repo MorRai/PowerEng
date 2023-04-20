@@ -28,7 +28,7 @@ class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, Us
 
     override fun onBindViewHolder(holder: UsersScoreViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, position)
+        holder.bind(item)
     }
 
     companion object {
@@ -54,9 +54,9 @@ class UsersScoreViewHolder(
     private val binding: ItemRatingBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("SetTextI18n")
-    fun bind(item: UserScoreWithProfile, position: Int) {
+    fun bind(item: UserScoreWithProfile) {
         binding.userName.text = item.displayName
-        binding.userNum.text = (position +1).toString() +"."
+        binding.userNum.text = item.num.toString() +"."
         binding.userScore.text = item.score.toString() + " xp"
         binding.userPhoto.load(item.photoUrl)
     }
