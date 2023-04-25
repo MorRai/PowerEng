@@ -21,12 +21,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.firebase.auth.FirebaseAuth
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
+import com.rai.powereng.model.UserMultiplayer
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -46,9 +49,13 @@ class PartTasksFragment : Fragment() {
 
     private var taskNum = 1
     private var amountTasks = 0
-    private var amountMistakes= 0
+    private var amountMistakes = 0
     private var workWithList = false
     private val listErrors = mutableListOf<Int>()
+
+    private lateinit var playerName: String
+    private var correctAnswersCount = 0
+    private var startTime: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +69,33 @@ class PartTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.isMultiplayer) {
+            binding.multiplayerInfo.root.visibility = View.VISIBLE
+
+            playerName = FirebaseAuth.getInstance().currentUser?.displayName ?: "0"
+            // Start timer
+            startTime = System.currentTimeMillis()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.getAnswers(args.gameCode).collect {
+                    when (it) {
+                        is Response.Loading -> {}
+                        is Response.Success -> {
+                            bindMultiplay(it.data)
+                        }
+                        is Response.Failure -> {
+                            Toast.makeText(
+                                requireContext(),
+                                it.e.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
+
+
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.dialogResultId.dialogResult)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         val bottomSheetCallback = object : BottomSheetCallback() {
@@ -117,10 +151,24 @@ class PartTasksFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
+    private fun bindMultiplay(data: List<UserMultiplayer>) {
+        with(binding.multiplayerInfo) {
+            data[0].let {
+                user1Name.text = it.name
+                user1Score.text = "Score: ${it.score}"
+                user1Time.text = getTimeSting(it.time)
+            }
+            data[1].let {
+                user2Name.text = it.name
+                user2Score.text = "Score: ${it.score}"
+                user2Time.text = getTimeSting(it.time)
+            }
+        }
+    }
 
     private fun clearForm() {
         with(binding) {
-            if (workWithList && listErrors.size > 0 ) {
+            if (workWithList && listErrors.size > 0) {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
@@ -129,11 +177,16 @@ class PartTasksFragment : Fragment() {
                 itemTranclate.optionBox.removeAllViews()
                 showErrorsScreen()
             } else {
-                findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(args.unitId,args.partId,amountMistakes))
+                findNavController().navigate(
+                    PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(
+                        args.unitId,
+                        args.partId,
+                        amountMistakes
+                    )
+                )
             }
         }
     }
-
 
     private fun showErrorsScreen() {
         with(binding) {
@@ -155,7 +208,6 @@ class PartTasksFragment : Fragment() {
             }
         }
     }
-
 
     private fun bind(task: TaskData) {
         with(binding) {
@@ -205,7 +257,6 @@ class PartTasksFragment : Fragment() {
         }
     }
 
-
     private fun bindForListen(task: TaskData) {
         with(binding) {
             val textForListen = task.answer
@@ -237,7 +288,6 @@ class PartTasksFragment : Fragment() {
 
     }
 
-
     private fun bindForMissingWord(task: TaskData) {
         with(binding) {
             val checkAnswer = task.answer
@@ -248,7 +298,11 @@ class PartTasksFragment : Fragment() {
                     R.id.variantTwo -> answerString = itemMissingWord.variantTwo.text.toString()
                 }
                 if (answerString.isBlank()) {
-                    Toast.makeText(requireContext(), "You must choose an answer!", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "You must choose an answer!",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 } else {
                     setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
@@ -290,7 +344,6 @@ class PartTasksFragment : Fragment() {
         val textView = Button(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
-        //textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
             if (typeTask == 1 || typeTask == 4) {
                 speak(text)
@@ -305,7 +358,6 @@ class PartTasksFragment : Fragment() {
         val textView = Button(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
-        //textView.setTextAppearance(R.style.FlexItem)
         textView.setOnClickListener {
             addTextViewToOption(text, typeTask)
             binding.itemTranclate.answerBox.removeView(textView)
@@ -318,6 +370,10 @@ class PartTasksFragment : Fragment() {
             if (answerIsTrue) {
                 if (workWithList) {
                     listErrors.removeAt(0)
+                }
+                if (args.isMultiplayer) {
+                    correctAnswersCount += 1
+                    viewModel.saveAnswers(args.gameCode, playerName, correctAnswersCount, startTime)
                 }
                 viewModel.addProgress()
                 dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite, null))
@@ -343,11 +399,16 @@ class PartTasksFragment : Fragment() {
         }
     }
 
-
     private fun accessibilityButtons(layout: ViewGroup, accessibility: Boolean) {
         layout.descendants.filterIsInstance<Button>().forEach { button ->
             button.isClickable = accessibility
         }
+    }
+
+    private fun getTimeSting(elapsedSeconds: Long): String {
+        val elapsedMinutes = elapsedSeconds / 60
+        val remainingSeconds = elapsedSeconds % 60
+        return String.format("%d:%02d", elapsedMinutes, remainingSeconds)
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp">
+
+    <!-- Левый пользователь -->
+    <TextView
+        android:id="@+id/user1_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="User 1"
+        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/user1_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 10"
+        app:layout_constraintTop_toBottomOf="@+id/user1_name"
+        app:layout_constraintStart_toStartOf="@id/user1_name"/>
+
+    <TextView
+        android:id="@+id/user1_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: 10:30 AM"
+        app:layout_constraintTop_toBottomOf="@+id/user1_score"
+        app:layout_constraintStart_toStartOf="@id/user1_name"/>
+
+    <!-- Непроходимый разделитель -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="@id/user1_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/user1_name" />
+
+    <!-- Правый пользователь -->
+    <TextView
+        android:id="@+id/user2_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/user1_name"
+        tools:text="User 2" />
+
+    <TextView
+        android:id="@+id/user2_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 20"
+        app:layout_constraintEnd_toEndOf="@+id/user2_name"
+        app:layout_constraintTop_toBottomOf="@+id/user2_name" />
+
+    <TextView
+        android:id="@+id/user2_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: 11:00 AM"
+        app:layout_constraintEnd_toEndOf="@+id/user2_score"
+        app:layout_constraintTop_toBottomOf="@+id/user2_score" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,6 +53,26 @@
                 android:name="part"
                 android:defaultValue="0"
                 app:argType="integer" />
+            <argument
+                android:name="position"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="viewX"
+                app:argType="float"
+                android:defaultValue="0" />
+            <argument
+                android:name="viewY"
+                app:argType="float"
+                android:defaultValue="0" />
+            <argument
+                android:name="viewWidth"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="viewHeight"
+                app:argType="integer"
+                android:defaultValue="0" />
         </action>
     </fragment>
     <include app:graph="@navigation/tasks_nav_graph" />

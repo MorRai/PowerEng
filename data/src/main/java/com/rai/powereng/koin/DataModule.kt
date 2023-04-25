@@ -10,6 +10,7 @@ val dataModule = module {
         tasksRepositoryModule,
         userProgressInfoRepositoryModule,
         useCaseModule,
-        userProgressInfoDatabaseModule
+        userProgressInfoDatabaseModule,
+        usersMultiplayerRepositoryModule
     )
 }

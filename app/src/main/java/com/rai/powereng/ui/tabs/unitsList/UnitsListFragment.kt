@@ -9,14 +9,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rai.powereng.R
 import com.rai.powereng.adapter.UnitsAdapter
 import com.rai.powereng.databinding.FragmentUnitsListBinding
 import com.rai.powereng.model.Response
 import com.rai.powereng.ui.ContentFragmentDirections
-import com.rai.powereng.ui.partTasks.PartConfirmFragmentDirections
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -82,10 +80,10 @@ class UnitsListFragment : Fragment(), PartClickListener {
         super.onDestroyView()
         _binding = null
     }
-    override fun onPartClickListener(unitNum: Int,part: Int) {
+    override fun onPartClickListener(unitNum: Int,part: Int,position: Int, view: View) {
 
         Navigation.findNavController(requireActivity(), R.id.nav_container)
-            .navigate(ContentFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part))
+            .navigate(ContentFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part,position, view.x, view.y, view.width, view.height))
 
     }
 }

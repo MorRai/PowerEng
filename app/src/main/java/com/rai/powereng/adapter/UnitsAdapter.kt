@@ -70,19 +70,19 @@ class UnitViewHolder(
                     if(view is ImageView){view.setImageResource(R.drawable.not_pressed)  }
                     when (view.id) {
                         R.id.part1 -> {
-                            partListener.onPartClickListener(item.unitId, 1)
+                            partListener.onPartClickListener(item.unitId, 1, adapterPosition,view)
                         }
                         R.id.part2 -> {
-                            partListener.onPartClickListener(item.unitId, 2)
+                            partListener.onPartClickListener(item.unitId, 2, adapterPosition,view)
                         }
                         R.id.part3 -> {
-                            partListener.onPartClickListener(item.unitId, 3)
+                            partListener.onPartClickListener(item.unitId, 3, adapterPosition,view)
                         }
                         R.id.part4 -> {
-                            partListener.onPartClickListener(item.unitId, 4)
+                            partListener.onPartClickListener(item.unitId, 4, adapterPosition,view)
                         }
                         R.id.part5 -> {
-                            partListener.onPartClickListener(item.unitId, 5)
+                            partListener.onPartClickListener(item.unitId, 5, adapterPosition,view)
                         }
                     }
                     true
