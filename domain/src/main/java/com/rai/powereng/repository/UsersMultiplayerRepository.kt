@@ -15,4 +15,6 @@ interface UsersMultiplayerRepository {
     fun waitForPlayersToJoin(gameCode: String): Flow<Response<Boolean>>
 
     suspend fun saveAnswers(numCorrectAnswers: Int,gameCode:String, playerName:String, startTime:Long)
+    suspend fun cancelGame(gameCode: String): Response<Boolean>
+
 }

@@ -13,9 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -71,6 +74,7 @@ class PartTasksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (args.isMultiplayer) {
+
             binding.multiplayerInfo.root.visibility = View.VISIBLE
 
             playerName = FirebaseAuth.getInstance().currentUser?.displayName ?: "0"
@@ -153,15 +157,23 @@ class PartTasksFragment : Fragment() {
 
     private fun bindMultiplay(data: List<UserMultiplayer>) {
         with(binding.multiplayerInfo) {
-            data[0].let {
-                user1Name.text = it.name
-                user1Score.text = "Score: ${it.score}"
-                user1Time.text = getTimeSting(it.time)
+
+            if (data.size == 2) {
+                data[0].let {
+                    user1Name.text = it.name
+                    user1Score.text = "Score: ${it.score}"
+                    user1Time.text = getTimeSting(it.time)
+                }
+                data[1].let {
+                    user2Name.text = it.name
+                    user2Score.text = "Score: ${it.score}"
+                    user2Time.text = getTimeSting(it.time)
+                }
             }
-            data[1].let {
-                user2Name.text = it.name
-                user2Score.text = "Score: ${it.score}"
-                user2Time.text = getTimeSting(it.time)
+            else {
+                val bundle = bundleOf("message" to "Игра уничтожена")
+                setFragmentResult("requestKey", bundle)
+                findNavController().popBackStack()
             }
         }
     }

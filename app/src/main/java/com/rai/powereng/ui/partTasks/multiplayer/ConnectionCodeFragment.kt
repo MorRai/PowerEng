@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -45,6 +47,26 @@ class ConnectionCodeFragment : Fragment() {
 
         playerName = FirebaseAuth.getInstance().currentUser?.displayName ?: "0"
 
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.isSearchingGame) {
+                    cancelGame()
+                } else {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            val message = bundle.getString("message")
+            Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         with(binding) {
             create.setOnClickListener {
                 createGame()
@@ -52,9 +74,38 @@ class ConnectionCodeFragment : Fragment() {
             join.setOnClickListener {
                 joinGame()
             }
+            cancel.setOnClickListener {
+                cancelGame()
+            }
         }
     }
 
+
+
+    private fun cancelGame(){
+        gameCode = binding.gameCode.text.toString()
+        viewModel.cancelGame(gameCode)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.responseCancelFlow.collect {
+                when (it) {
+                    is Response.Loading -> {}
+                    is Response.Success -> {
+                        if (it.data) {
+                            viewModel.isSearchingGame = true
+                            showCancelGameView()
+                        }
+                    }
+                    is Response.Failure -> {
+                        Toast.makeText(
+                            requireContext(),
+                            it.e.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
 
     private fun createGame() {
         //gameCode = generateCode()
@@ -119,6 +170,18 @@ class ConnectionCodeFragment : Fragment() {
             join.visibility = View.GONE
             create.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
+            cancel.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showCancelGameView() {
+        with(binding) {
+            gameCode.visibility = View.VISIBLE
+            textView4.visibility = View.VISIBLE
+            join.visibility = View.VISIBLE
+            create.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+            cancel.visibility = View.GONE
         }
     }
 
@@ -134,6 +197,11 @@ class ConnectionCodeFragment : Fragment() {
         )
     }
 
+
+    //override fun onDestroy() {
+        //cancelGame() не кансалится эта фигня
+      //  super.onDestroy()
+    //}
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

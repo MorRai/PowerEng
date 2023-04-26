@@ -45,6 +45,30 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         awaitClose { answersRef.removeEventListener(valueEventListener) }
     }
 
+    override suspend fun cancelGame(gameCode: String): Response<Boolean> {
+        return try {
+            val userAnswersRef = databaseReference.child("games").child(gameCode).child("answers")
+            val snapshot = userAnswersRef.get().await()
+            val users = snapshot.children.mapNotNull { it.getValue(UserMultiplayer::class.java) }
+            when {
+                users.size == 1 -> {
+                    userAnswersRef.removeValue().await()
+                    Response.Success(true)
+                }
+                users.all { it.isComplete } -> {
+                    userAnswersRef.removeValue().await()
+                    Response.Success(true)
+                }
+                else -> {
+                    Response.Failure(Exception("Not all users completed the game"))
+                }
+            }
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+
     override suspend fun joinGame(gameCode: String, playerName: String): Response<Boolean>  {
         return try {
             val snapshot = databaseReference.child("games").child(gameCode).child("answers").get().await()
@@ -132,6 +156,7 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
             }
         }
         answersRef.addValueEventListener(valueEventListener)
-        awaitClose { answersRef.removeEventListener(valueEventListener) }
+        awaitClose { answersRef.removeEventListener(valueEventListener)
+            channel.close()}
     }
 }
