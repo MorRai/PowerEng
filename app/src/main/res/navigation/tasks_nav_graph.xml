@@ -81,6 +81,9 @@
             android:name="gameCode"
             app:argType="string"
             android:defaultValue="null" />
+        <action
+            android:id="@+id/action_partTasksFragment_to_gameResultFragment"
+            app:destination="@id/gameResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/partTasksFinishFragment"
@@ -115,4 +118,13 @@
             android:id="@+id/action_connectionCodeFragment_to_partTasksFragment"
             app:destination="@id/partTasksFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/gameResultFragment"
+        android:name="com.rai.powereng.ui.partTasks.multiplayer.GameResultFragment"
+        android:label="GameResultFragment" >
+        <argument
+            android:name="gameCode"
+            app:argType="string"
+            android:defaultValue="null" />
+    </dialog>
 </navigation>

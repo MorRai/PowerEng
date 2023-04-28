@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.descendants
@@ -184,6 +183,8 @@ class PartTasksFragment : Fragment() {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
+            } else if (args.isMultiplayer) {
+                findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToGameResultFragment(args.gameCode))
             } else if (listErrors.size > 0) {
                 itemTranclate.answerBox.removeAllViews()
                 itemTranclate.optionBox.removeAllViews()

@@ -11,6 +11,7 @@ import com.rai.powereng.ui.changeUser.ChangeUserInfoVievModel
 import com.rai.powereng.ui.partTasks.PartTasksFinishViewModel
 import com.rai.powereng.ui.partTasks.PartTasksViewModel
 import com.rai.powereng.ui.partTasks.multiplayer.ConnectionCodeViewModel
+import com.rai.powereng.ui.partTasks.multiplayer.GameResultViewModel
 import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContentViewModel
@@ -35,6 +36,7 @@ val viewModelsModule = module {
     viewModelOf(::ProfileContentViewModel)
     viewModelOf(::ChangeUserInfoVievModel)
     viewModelOf(::ConnectionCodeViewModel)
+    viewModelOf(::GameResultViewModel)
     viewModel {
         SignInViewModel(get(),
             get(),
