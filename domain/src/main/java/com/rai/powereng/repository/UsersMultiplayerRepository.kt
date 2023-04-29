@@ -8,13 +8,13 @@ interface UsersMultiplayerRepository {
 
     fun showAnswers(gameCode: String): Flow<Response<List<UserMultiplayer>>>
 
-    suspend fun createGame(gameCode: String, playerName: String)
+    suspend fun createGame(gameCode: String, playerName: String, playerImage:String)
 
-    suspend fun joinGame(gameCode: String, playerName: String): Response<Boolean>
+    suspend fun joinGame(gameCode: String, playerName: String,playerImage:String): Response<Boolean>
 
     fun waitForPlayersToJoin(gameCode: String): Flow<Response<Boolean>>
 
-    suspend fun saveAnswers(numCorrectAnswers: Int,gameCode:String, playerName:String, startTime:Long)
+    suspend fun saveAnswers(numCorrectAnswers: Int,gameCode:String, playerName:String, playerImage:String, startTime:Long, isComplete:Boolean)
     suspend fun cancelGame(gameCode: String): Response<Boolean>
 
 }

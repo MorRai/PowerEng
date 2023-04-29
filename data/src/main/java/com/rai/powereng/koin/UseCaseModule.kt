@@ -22,4 +22,9 @@ internal val useCaseModule = module {
     factoryOf(::GetUserIdUseCase)
     factoryOf(::GetUsersScoreUseCase)
     factoryOf(::GetUserScoreUseCase)
+    factoryOf(::JoinGameUseCase)
+    factoryOf(::CreateGameUseCase)
+    factoryOf(::SaveGameUseCase)
+    factoryOf(::GetScoreGameUseCase)
+
 }

@@ -13,6 +13,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.rai.powereng.mapper.toDomainModels
 import com.rai.powereng.model.Response
+import com.rai.powereng.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
@@ -30,6 +31,9 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
+
+    override val currentUser: User?
+        get() = auth.currentUser?.toDomainModels()
 
 
     override fun getCurrentUser(viewModelScope: CoroutineScope) = callbackFlow {

@@ -4,16 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
-import com.rai.powereng.repository.UsersMultiplayerRepository
 import com.rai.powereng.usecase.GetAmountTasksInPartUseCase
+import com.rai.powereng.usecase.GetScoreGameUseCase
 import com.rai.powereng.usecase.GetTasksUseCase
+import com.rai.powereng.usecase.SaveGameUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 
 class PartTasksViewModel(private val getTasksUseCase: GetTasksUseCase,
                          private val getAmountTasksInPartUseCase: GetAmountTasksInPartUseCase,
-                         private val multiplayerRepository: UsersMultiplayerRepository
+                         private val saveGameUseCase: SaveGameUseCase,
+                         private val getScoreGameUseCase: GetScoreGameUseCase
 ): ViewModel()  {
 
     private val _tasksFlow = MutableStateFlow<Response<TaskData>>(Response.Loading)
@@ -43,14 +45,12 @@ class PartTasksViewModel(private val getTasksUseCase: GetTasksUseCase,
     }
 
 
-    fun saveAnswers(gameCode: String, playerName: String, numCorrectAnswers: Int, startTime: Long) {
-        viewModelScope.launch {
-            multiplayerRepository.saveAnswers(numCorrectAnswers,gameCode, playerName,startTime)
-        }
+    fun saveAnswers(gameCode: String, numCorrectAnswers: Int, startTime: Long, isComplete: Boolean) {
+        saveGameUseCase.invoke(numCorrectAnswers,gameCode,startTime,isComplete)
     }
 
 
-    fun getAnswers(gameCode: String) =  multiplayerRepository.showAnswers(gameCode)
+    fun getAnswers(gameCode: String) =  getScoreGameUseCase.invoke(gameCode)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

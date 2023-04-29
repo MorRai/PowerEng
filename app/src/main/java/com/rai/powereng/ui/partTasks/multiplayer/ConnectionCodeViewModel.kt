@@ -1,18 +1,20 @@
 package com.rai.powereng.ui.partTasks.multiplayer
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
 import com.rai.powereng.repository.UsersMultiplayerRepository
+import com.rai.powereng.usecase.CreateGameUseCase
+import com.rai.powereng.usecase.JoinGameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ConnectionCodeViewModel( private val multiplayerRepository: UsersMultiplayerRepository
+class ConnectionCodeViewModel( private val multiplayerRepository: UsersMultiplayerRepository,
+                               private val joinGame: JoinGameUseCase,
+                               private val createGame: CreateGameUseCase
 ): ViewModel()  {
 
     private val _responseFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
@@ -25,17 +27,17 @@ class ConnectionCodeViewModel( private val multiplayerRepository: UsersMultiplay
 
 
 
-    fun createGame(gameCode: String, playerName: String) {
+    fun createGame(gameCode: String) {
         viewModelScope.launch {
-            multiplayerRepository.createGame(gameCode, playerName)
+            createGame.invoke(gameCode)
         }
         isSearchingGame = true
     }
 
-    fun joinGame(gameCode: String, playerName: String) {
+    fun joinGame(gameCode: String) {
         _responseFlow.value = Response.Loading
         viewModelScope.launch {
-            val result = multiplayerRepository.joinGame(gameCode, playerName)
+            val result = joinGame.invoke(gameCode)
             _responseFlow.value = result
         }
     }

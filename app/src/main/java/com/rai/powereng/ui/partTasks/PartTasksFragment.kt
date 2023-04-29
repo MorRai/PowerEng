@@ -23,7 +23,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.firebase.auth.FirebaseAuth
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
 import com.rai.powereng.model.Response
@@ -55,7 +54,7 @@ class PartTasksFragment : Fragment() {
     private var workWithList = false
     private val listErrors = mutableListOf<Int>()
 
-    private lateinit var playerName: String
+
     private var correctAnswersCount = 0
     private var startTime: Long = 0
 
@@ -76,7 +75,7 @@ class PartTasksFragment : Fragment() {
 
             binding.multiplayerInfo.root.visibility = View.VISIBLE
 
-            playerName = FirebaseAuth.getInstance().currentUser?.displayName ?: "0"
+
             // Start timer
             startTime = System.currentTimeMillis()
             viewLifecycleOwner.lifecycleScope.launch {
@@ -84,7 +83,7 @@ class PartTasksFragment : Fragment() {
                     when (it) {
                         is Response.Loading -> {}
                         is Response.Success -> {
-                            bindMultiplay(it.data)
+                            bindMultiplayer(it.data)
                         }
                         is Response.Failure -> {
                             Toast.makeText(
@@ -154,7 +153,7 @@ class PartTasksFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun bindMultiplay(data: List<UserMultiplayer>) {
+    private fun bindMultiplayer(data: List<UserMultiplayer>) {
         with(binding.multiplayerInfo) {
 
             if (data.size == 2) {
@@ -182,8 +181,10 @@ class PartTasksFragment : Fragment() {
             if (workWithList && listErrors.size > 0) {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
             } else if (taskNum <= amountTasks) {
+               if (args.isMultiplayer) {viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime,false)}
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
             } else if (args.isMultiplayer) {
+                viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true)
                 findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToGameResultFragment(args.gameCode))
             } else if (listErrors.size > 0) {
                 itemTranclate.answerBox.removeAllViews()
@@ -386,7 +387,6 @@ class PartTasksFragment : Fragment() {
                 }
                 if (args.isMultiplayer) {
                     correctAnswersCount += 1
-                    viewModel.saveAnswers(args.gameCode, playerName, correctAnswersCount, startTime)
                 }
                 viewModel.addProgress()
                 dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite, null))
@@ -431,6 +431,13 @@ class PartTasksFragment : Fragment() {
             tts!!.stop()
             tts!!.shutdown()
         }
+    }
+
+    override fun onDestroy() {
+        if (args.isMultiplayer){
+        viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true)}
+        super.onDestroy()
+
     }
 
     private fun speak(text: String, speed: Float = 1.0f) {

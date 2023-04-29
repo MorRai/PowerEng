@@ -11,7 +11,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.firebase.auth.FirebaseAuth
 import com.rai.powereng.databinding.FragmentConnectionCodeBinding
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
@@ -29,7 +28,6 @@ class ConnectionCodeFragment : Fragment() {
     private val args by navArgs<ConnectionCodeFragmentArgs>()
 
     private lateinit var gameCode: String
-    private lateinit var playerName: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,20 +43,18 @@ class ConnectionCodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerName = FirebaseAuth.getInstance().currentUser?.displayName ?: "0"
-
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (viewModel.isSearchingGame) {
                     cancelGame()
                 } else {
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()//щот не то
                 }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
+        setFragmentResultListener("requestKey") { _, bundle ->
             val message = bundle.getString("message")
             Toast.makeText(
                 requireContext(),
@@ -110,7 +106,7 @@ class ConnectionCodeFragment : Fragment() {
     private fun createGame() {
         //gameCode = generateCode()
         gameCode = binding.gameCode.text.toString()
-        viewModel.createGame(gameCode, playerName)
+        viewModel.createGame(gameCode)
         showWaitingForPlayersView()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.waitForPlayersToJoin(gameCode).collect {
@@ -135,7 +131,7 @@ class ConnectionCodeFragment : Fragment() {
 
     private fun joinGame() {
         gameCode = binding.gameCode.text.toString()
-        viewModel.joinGame(gameCode, playerName)
+        viewModel.joinGame(gameCode)
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.responseFlow.collect {
                 when (it) {

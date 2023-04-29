@@ -13,15 +13,17 @@ import kotlinx.coroutines.tasks.await
 
 class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
 
-    val databaseReference =
+    private val databaseReference =
         FirebaseDatabase.getInstance("https://powereng-cac3c-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
-    override suspend fun createGame(gameCode: String, playerName: String) {
+    override suspend fun createGame(gameCode: String, playerName: String,playerImage:String) {
         val userAnswersRef = databaseReference.child("games").child(gameCode).child("answers").child(playerName)
         val answers = hashMapOf(
             "name" to playerName,
             "score" to 0,
-            "time" to 0
+            "time" to 0,
+            "isComplete" to true,
+            "image" to playerImage
         )
         userAnswersRef.setValue(answers).await()
     }
@@ -69,7 +71,7 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
     }
 
 
-    override suspend fun joinGame(gameCode: String, playerName: String): Response<Boolean>  {
+    override suspend fun joinGame(gameCode: String, playerName: String,playerImage:String): Response<Boolean>  {
         return try {
             val snapshot = databaseReference.child("games").child(gameCode).child("answers").get().await()
             if (snapshot.exists()) {
@@ -80,7 +82,9 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
                     val answers = hashMapOf(
                         "name" to playerName,
                         "score" to 0,
-                        "time" to 0
+                        "time" to 0,
+                        "isComplete" to true,
+                        "image" to playerImage
                     )
                     userAnswersRef.setValue(answers).await()
                     Response.Success(true)
@@ -100,7 +104,9 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         numCorrectAnswers: Int,
         gameCode: String,
         playerName: String,
+        playerImage:String,
         startTime: Long,
+        isComplete:Boolean
     ) {
         val answersRef = databaseReference.child("games").child(gameCode).child("answers")
         val userAnswersRef = answersRef.child(playerName)
@@ -108,7 +114,9 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         val answers = hashMapOf(
             "name" to playerName,
             "score" to numCorrectAnswers,
-            "time" to elapsedSeconds
+            "time" to elapsedSeconds,
+            "isComplete" to isComplete,
+            "image" to playerImage
         )
         userAnswersRef.setValue(answers).await()
     }
@@ -156,7 +164,6 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
             }
         }
         answersRef.addValueEventListener(valueEventListener)
-        awaitClose { answersRef.removeEventListener(valueEventListener)
-            channel.close()}
+        awaitClose { answersRef.removeEventListener(valueEventListener) }
     }
 }
