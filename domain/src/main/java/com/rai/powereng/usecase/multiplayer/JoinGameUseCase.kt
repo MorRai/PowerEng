@@ -1,4 +1,4 @@
-package com.rai.powereng.usecase
+package com.rai.powereng.usecase.multiplayer
 
 import com.rai.powereng.model.Response
 import com.rai.powereng.repository.FirebaseAuthRepository

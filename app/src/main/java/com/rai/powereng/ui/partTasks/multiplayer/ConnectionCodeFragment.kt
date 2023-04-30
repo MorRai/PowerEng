@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.rai.powereng.databinding.FragmentConnectionCodeBinding
@@ -27,8 +28,6 @@ class ConnectionCodeFragment : Fragment() {
 
     private val args by navArgs<ConnectionCodeFragmentArgs>()
 
-    private lateinit var gameCode: String
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,16 +42,15 @@ class ConnectionCodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (viewModel.isSearchingGame) {
                     cancelGame()
                 } else {
-                    requireActivity().onBackPressedDispatcher.onBackPressed()//щот не то
+                    NavHostFragment.findNavController(this@ConnectionCodeFragment).navigateUp()
                 }
             }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        })
 
         setFragmentResultListener("requestKey") { _, bundle ->
             val message = bundle.getString("message")
@@ -76,10 +74,8 @@ class ConnectionCodeFragment : Fragment() {
         }
     }
 
-
-
     private fun cancelGame(){
-        gameCode = binding.gameCode.text.toString()
+        val gameCode = addPostfixCode(binding.gameCode.text.toString())
         viewModel.cancelGame(gameCode)
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.responseCancelFlow.collect {
@@ -87,7 +83,7 @@ class ConnectionCodeFragment : Fragment() {
                     is Response.Loading -> {}
                     is Response.Success -> {
                         if (it.data) {
-                            viewModel.isSearchingGame = true
+                            viewModel.isSearchingGame = false
                             showCancelGameView()
                         }
                     }
@@ -105,8 +101,33 @@ class ConnectionCodeFragment : Fragment() {
 
     private fun createGame() {
         //gameCode = generateCode()
-        gameCode = binding.gameCode.text.toString()
+        val gameCode = addPostfixCode(binding.gameCode.text.toString())
         viewModel.createGame(gameCode)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.responseCreateFlow.collect {
+                when (it) {
+                    is Response.Loading -> {}
+                    is Response.Success -> {
+                        if (it.data) {
+                            viewModel.isSearchingGame = true
+                            startWaiting(gameCode)
+                        }
+                    }
+                    is Response.Failure -> {
+                        Toast.makeText(
+                            requireContext(),
+                            it.e.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun startWaiting(gameCode:String){
         showWaitingForPlayersView()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.waitForPlayersToJoin(gameCode).collect {
@@ -114,7 +135,7 @@ class ConnectionCodeFragment : Fragment() {
                     is Response.Loading -> {}
                     is Response.Success -> {
                         if (it.data) {
-                            startTasks()
+                            startTasks(gameCode)
                         }
                     }
                     is Response.Failure -> {
@@ -130,7 +151,7 @@ class ConnectionCodeFragment : Fragment() {
     }
 
     private fun joinGame() {
-        gameCode = binding.gameCode.text.toString()
+        val gameCode = addPostfixCode(binding.gameCode.text.toString())
         viewModel.joinGame(gameCode)
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.responseFlow.collect {
@@ -138,7 +159,7 @@ class ConnectionCodeFragment : Fragment() {
                     is Response.Loading -> {}
                     is Response.Success -> {
                         if (it.data) {
-                            startTasks()
+                            startTasks(gameCode)
                         }
                     }
                     is Response.Failure -> {
@@ -157,6 +178,10 @@ class ConnectionCodeFragment : Fragment() {
         // добавим что бы код получили с скрытым добавление урока и части
         // TODO: generate unique game code
         return "12345"
+    }
+
+    private fun addPostfixCode(gameCode:String): String {
+        return gameCode + "u" + args.unitId + "p" +args.partId
     }
 
     private fun showWaitingForPlayersView() {
@@ -182,7 +207,7 @@ class ConnectionCodeFragment : Fragment() {
     }
 
 
-    private fun startTasks() {
+    private fun startTasks(gameCode:String) {
         findNavController().navigate(
             ConnectionCodeFragmentDirections.actionConnectionCodeFragmentToPartTasksFragment(
                 args.unitId,

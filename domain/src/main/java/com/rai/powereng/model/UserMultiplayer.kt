@@ -5,16 +5,23 @@ data class UserMultiplayer(
     var score: Int = 0,
     var time: Long = 0,
     var isComplete: Boolean = false,
+    var isForDelete: Boolean = false,
     val image: String = ""
 ){
     // иначе почемуто файр бейс не хочет работать, но схуяли?
-    // геттер для isComplete
     fun getIsComplete(): Boolean {
         return isComplete
     }
 
-    // сеттер для isComplete
     fun setIsComplete(isComplete: Boolean) {
         this.isComplete = isComplete
+    }
+
+    fun getIsForDelete(): Boolean {
+        return isForDelete
+    }
+
+    fun setIsForDelete(isForDelete: Boolean) {
+        this.isForDelete = isForDelete
     }
 }

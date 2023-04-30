@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentGameResultBinding
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.UserMultiplayer
@@ -26,6 +28,14 @@ class GameResultFragment  : DialogFragment() {
 
     private val args by navArgs<GameResultFragmentArgs>()
 
+    private var userMultiplayer:UserMultiplayer? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isCancelable = false
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,15 +52,21 @@ class GameResultFragment  : DialogFragment() {
 
 
         binding.continueButton.setOnClickListener {
-
+            val resultNav =
+                findNavController().popBackStack(R.id.tasks_nav_graph, true)
+            if (resultNav.not()) {
+                findNavController().navigate(R.id.contentFragment)
+            }
         }
+
+        val currentUser = viewModel.getCurrentUserResponse().value
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getAnswers(args.gameCode).collect {
                 when (it) {
                     is Response.Loading -> {}
                     is Response.Success -> {
-                        bind(it.data)
+                        bind(it.data,currentUser?.displayName?:"")
                     }
                     is Response.Failure -> {
                         Toast.makeText(
@@ -65,11 +81,13 @@ class GameResultFragment  : DialogFragment() {
 
     }
 
-
-
-    private fun bind(data: List<UserMultiplayer>) {
+    private fun bind(data: List<UserMultiplayer>,currentUserName:String) {
         with(binding) {
             val sortedData = data.sortedByDescending { it.isComplete }
+            val userWithMaxScore = data.maxWithOrNull(compareBy({ it.score }, { it.time }))
+            userMultiplayer = data.firstOrNull { it.name == currentUserName }
+
+
             if (sortedData.size == 2) {
                 sortedData[0].let {
                     user1Name.text = it.name
@@ -87,6 +105,14 @@ class GameResultFragment  : DialogFragment() {
                         resultTextView.visibility = View.VISIBLE
                         user2Score.text = it.score.toString()
                         user2Time.text = getTimeSting(it.time)
+                        if (currentUserName == userWithMaxScore?.name){
+                            resultTextView.text= "YOU WIN"
+                            resultTextView.setTextColor(resources.getColor(R.color.green, null))
+
+                        }else{
+                            resultTextView.text= "YOU LOSE"
+                            resultTextView.setBackgroundColor(resources.getColor(R.color.red, null))
+                        }
                     }else{
                         waitingProgressBar.visibility = View.VISIBLE
                         resultTextView.visibility = View.INVISIBLE
@@ -110,7 +136,13 @@ class GameResultFragment  : DialogFragment() {
     }
 
 
+    override fun onDestroy() {
+        userMultiplayer?.let {
+            viewModel.saveAnswers(args.gameCode, it.score, it.time, it.isComplete, true)
+        }
+        super.onDestroy()
 
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

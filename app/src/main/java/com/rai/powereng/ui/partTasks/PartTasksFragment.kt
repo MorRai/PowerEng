@@ -169,7 +169,7 @@ class PartTasksFragment : Fragment() {
                 }
             }
             else {
-                val bundle = bundleOf("message" to "Игра уничтожена")
+                val bundle = bundleOf("message" to "The game is destroyed")
                 setFragmentResult("requestKey", bundle)
                 findNavController().popBackStack()
             }
@@ -324,7 +324,7 @@ class PartTasksFragment : Fragment() {
                     accessibilityButtons(contentLayout, false)
                 }
             }
-            val listWords = task.variants.split(" ")//их всегда 2
+            val listWords = task.variants.split(" ")//there is always two
             itemMissingWord.variantOne.text = listWords[0]
             itemMissingWord.variantTwo.text = listWords[1]
             exerciseInfo.text = task.question
@@ -435,7 +435,7 @@ class PartTasksFragment : Fragment() {
 
     override fun onDestroy() {
         if (args.isMultiplayer){
-        viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true)}
+        viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true,true)}
         super.onDestroy()
 
     }

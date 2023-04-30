@@ -1,4 +1,4 @@
-package com.rai.powereng.usecase
+package com.rai.powereng.usecase.multiplayer
 
 import com.rai.powereng.repository.FirebaseAuthRepository
 import com.rai.powereng.repository.UsersMultiplayerRepository
@@ -15,6 +15,7 @@ class SaveGameUseCase(
         numCorrectAnswers: Int,
         gameCode: String, startTime: Long,
         isComplete: Boolean,
+        isForDelete: Boolean,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             if (repoAuth.isUserAuthenticatedInFirebase) {
@@ -24,7 +25,8 @@ class SaveGameUseCase(
                     repoAuth.currentUser?.displayName ?: "",
                     repoAuth.currentUser?.photoUrl ?: "",
                     startTime,
-                    isComplete
+                    isComplete,
+                    isForDelete
                 )
             }
         }

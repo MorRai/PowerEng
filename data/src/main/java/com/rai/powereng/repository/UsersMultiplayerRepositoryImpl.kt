@@ -16,16 +16,42 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
     private val databaseReference =
         FirebaseDatabase.getInstance("https://powereng-cac3c-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
-    override suspend fun createGame(gameCode: String, playerName: String,playerImage:String) {
-        val userAnswersRef = databaseReference.child("games").child(gameCode).child("answers").child(playerName)
-        val answers = hashMapOf(
-            "name" to playerName,
-            "score" to 0,
-            "time" to 0,
-            "isComplete" to true,
-            "image" to playerImage
-        )
-        userAnswersRef.setValue(answers).await()
+    suspend fun generateGameCode(): String {
+        val charPool : List<Char> = ('0'..'9') + ('a'..'z') + ('A'..'Z')
+        val gameCode = (1..6).map { kotlin.random.Random.nextInt(0, charPool.size) }
+            .map(charPool::get)
+            .joinToString("")
+        val gameSnapshot = databaseReference.child("games").child(gameCode).get().await() // проверяем его наличие в базе данных
+        return if (gameSnapshot.exists()) {
+            generateGameCode() // если код уже занят, генерируем новый
+        } else {
+            gameCode // иначе возвращаем сгенерированный код
+        }
+    }
+
+    override suspend fun createGame(gameCode: String, playerName: String,playerImage:String) : Response<Boolean> {
+        return try {
+            val gameRef = databaseReference.child("games").child(gameCode)
+            // Проверяем, существует ли игра с таким gameCode
+            val gameSnapshot = gameRef.get().await()
+            if (gameSnapshot.exists()) {
+                return Response.Failure(Exception("Game with this code already exists"))
+            }
+            val userUserRef =
+                databaseReference.child("games").child(gameCode).child("answers").child(playerName)
+            val answers = hashMapOf(
+                "name" to playerName,
+                "score" to 0,
+                "time" to 0,
+                "isComplete" to false,
+                "isForDelete" to false,
+                "image" to playerImage
+            )
+            userUserRef.setValue(answers).await()
+            return Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
     }
 
     override fun waitForPlayersToJoin(gameCode: String): Flow<Response<Boolean>> = callbackFlow {
@@ -57,7 +83,7 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
                     userAnswersRef.removeValue().await()
                     Response.Success(true)
                 }
-                users.all { it.isComplete } -> {
+                users.all { it.isForDelete } -> {
                     userAnswersRef.removeValue().await()
                     Response.Success(true)
                 }
@@ -83,7 +109,8 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
                         "name" to playerName,
                         "score" to 0,
                         "time" to 0,
-                        "isComplete" to true,
+                        "isComplete" to false,
+                        "isForDelete" to false,
                         "image" to playerImage
                     )
                     userAnswersRef.setValue(answers).await()
@@ -106,7 +133,8 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         playerName: String,
         playerImage:String,
         startTime: Long,
-        isComplete:Boolean
+        isComplete:Boolean,
+        isForDelete: Boolean
     ) {
         val answersRef = databaseReference.child("games").child(gameCode).child("answers")
         val userAnswersRef = answersRef.child(playerName)
@@ -116,9 +144,13 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
             "score" to numCorrectAnswers,
             "time" to elapsedSeconds,
             "isComplete" to isComplete,
+            "isForDelete" to isForDelete,
             "image" to playerImage
         )
         userAnswersRef.setValue(answers).await()
+        if (isForDelete){
+            cancelGame(gameCode)
+        }
     }
 
     override fun showAnswers(gameCode: String): Flow<Response<List<UserMultiplayer>>> = callbackFlow {

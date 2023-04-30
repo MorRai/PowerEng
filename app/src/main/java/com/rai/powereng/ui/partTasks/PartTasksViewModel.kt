@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import com.rai.powereng.usecase.GetAmountTasksInPartUseCase
-import com.rai.powereng.usecase.GetScoreGameUseCase
+import com.rai.powereng.usecase.multiplayer.GetScoreGameUseCase
 import com.rai.powereng.usecase.GetTasksUseCase
-import com.rai.powereng.usecase.SaveGameUseCase
+import com.rai.powereng.usecase.multiplayer.SaveGameUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -45,8 +45,8 @@ class PartTasksViewModel(private val getTasksUseCase: GetTasksUseCase,
     }
 
 
-    fun saveAnswers(gameCode: String, numCorrectAnswers: Int, startTime: Long, isComplete: Boolean) {
-        saveGameUseCase.invoke(numCorrectAnswers,gameCode,startTime,isComplete)
+    fun saveAnswers(gameCode: String, numCorrectAnswers: Int, startTime: Long, isComplete: Boolean, isForDelete: Boolean = false) {
+        saveGameUseCase.invoke(numCorrectAnswers,gameCode,startTime,isComplete,isForDelete)
     }
 
 
