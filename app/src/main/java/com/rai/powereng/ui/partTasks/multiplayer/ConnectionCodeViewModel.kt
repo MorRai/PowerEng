@@ -20,17 +20,17 @@ class ConnectionCodeViewModel(
     private val generateGameCode: GenerateGameCodeUseCase
 ) : ViewModel() {
 
-    private val _responseFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
+    private val _responseFlow = MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val responseFlow: StateFlow<Response<Boolean>> = _responseFlow
 
-    private val _responseCreateFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
+    private val _responseCreateFlow = MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val responseCreateFlow: StateFlow<Response<Boolean>> = _responseCreateFlow
 
-    private val _responseCancelFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
+    private val _responseCancelFlow = MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val responseCancelFlow: StateFlow<Response<Boolean>> = _responseCancelFlow
 
 
-    private val _responseGameCodeFlow = MutableStateFlow<Response<String>>(Response.Loading)
+    private val _responseGameCodeFlow = MutableStateFlow<Response<String>>(Response.Success(""))
     val responseGameCodeFlow: StateFlow<Response<String>> = _responseGameCodeFlow
 
     var isSearchingGame = false

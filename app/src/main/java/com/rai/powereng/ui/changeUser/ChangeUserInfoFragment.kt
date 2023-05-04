@@ -10,7 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.rai.powereng.R
@@ -62,8 +61,7 @@ class ChangeUserInfoFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedOut = it.data
                             if (isUserSignedOut) {
-                                Navigation.findNavController(requireActivity(), R.id.nav_container)
-                                    .navigate(R.id.action_contentFragment_to_auth_nav_graph)
+                                findNavController().navigate(R.id.action_changeUserInfoFragment_to_profileContainerFragment)
                             }
                         }
                         is Response.Failure -> {

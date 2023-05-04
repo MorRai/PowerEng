@@ -81,7 +81,7 @@ class ProfileContentFragment : Fragment() {
                 }
             }
 
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.signOutResponse.collect {
                     when (it) {
                         is Response.Loading -> progressBar.isVisible = true

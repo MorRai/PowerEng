@@ -15,7 +15,7 @@ class ProfileContentViewModel(getUserScoreUseCase: GetUserScoreUseCase,
                               getCurrentUser: GetCurrentUser
 ):ViewModel() {
 
-    private val _signOutResponse= MutableStateFlow<Response<Boolean>>(Response.Loading)
+    private val _signOutResponse= MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val signOutResponse: StateFlow<Response<Boolean>> = _signOutResponse
 
 

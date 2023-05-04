@@ -18,7 +18,7 @@ class PartTasksViewModel(private val getTasksUseCase: GetTasksUseCase,
                          private val getScoreGameUseCase: GetScoreGameUseCase
 ): ViewModel()  {
 
-    private val _tasksFlow = MutableStateFlow<Response<TaskData>>(Response.Loading)
+    private val _tasksFlow = MutableStateFlow<Response<TaskData>>(Response.Loading)// мы его не отображаем так  что норм иначе вечнае гружение при переключение экранов или еще что
     val tasksFlow: StateFlow<Response<TaskData>> = _tasksFlow
 
     private val _tasksAmountFlow = MutableStateFlow<Response<Int>>(Response.Success(0))

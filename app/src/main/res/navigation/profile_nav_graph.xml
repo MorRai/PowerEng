@@ -27,5 +27,11 @@
     <fragment
         android:id="@+id/changeUserInfoFragment"
         android:name="com.rai.powereng.ui.changeUser.ChangeUserInfoFragment"
-        android:label="ChangeUserInfoFragment" />
+        android:label="ChangeUserInfoFragment" >
+        <action
+            android:id="@+id/action_changeUserInfoFragment_to_profileContainerFragment"
+            app:destination="@id/profileContainerFragment"
+            app:popUpTo="@id/profileContainerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
