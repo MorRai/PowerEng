@@ -16,7 +16,7 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
     private val databaseReference =
         FirebaseDatabase.getInstance("https://powereng-cac3c-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
-    suspend fun generateGameCode(): String {
+    override suspend fun generateGameCode(): Response.Success<String> {
         val charPool : List<Char> = ('0'..'9') + ('a'..'z') + ('A'..'Z')
         val gameCode = (1..6).map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
@@ -25,7 +25,7 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         return if (gameSnapshot.exists()) {
             generateGameCode() // если код уже занят, генерируем новый
         } else {
-            gameCode // иначе возвращаем сгенерированный код
+           Response.Success(gameCode)  // иначе возвращаем сгенерированный код
         }
     }
 

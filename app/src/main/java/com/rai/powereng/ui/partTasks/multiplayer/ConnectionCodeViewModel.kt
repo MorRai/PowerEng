@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.rai.powereng.model.Response
 import com.rai.powereng.repository.UsersMultiplayerRepository
 import com.rai.powereng.usecase.multiplayer.CreateGameUseCase
+import com.rai.powereng.usecase.multiplayer.GenerateGameCodeUseCase
 import com.rai.powereng.usecase.multiplayer.JoinGameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,6 +17,7 @@ class ConnectionCodeViewModel(
     private val multiplayerRepository: UsersMultiplayerRepository,
     private val joinGame: JoinGameUseCase,
     private val createGame: CreateGameUseCase,
+    private val generateGameCode: GenerateGameCodeUseCase
 ) : ViewModel() {
 
     private val _responseFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
@@ -27,7 +29,21 @@ class ConnectionCodeViewModel(
     private val _responseCancelFlow = MutableStateFlow<Response<Boolean>>(Response.Loading)
     val responseCancelFlow: StateFlow<Response<Boolean>> = _responseCancelFlow
 
+
+    private val _responseGameCodeFlow = MutableStateFlow<Response<String>>(Response.Loading)
+    val responseGameCodeFlow: StateFlow<Response<String>> = _responseGameCodeFlow
+
     var isSearchingGame = false
+
+
+     fun generateGameCode() {
+         _responseGameCodeFlow.value =Response.Loading
+         viewModelScope.launch {
+             val result = generateGameCode.invoke()
+             _responseGameCodeFlow.value = result
+         }
+    }
+
 
     fun createGame(gameCode: String) {
         _responseCreateFlow.value = Response.Loading

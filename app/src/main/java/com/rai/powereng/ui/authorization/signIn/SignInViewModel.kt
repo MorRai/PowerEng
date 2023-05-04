@@ -52,7 +52,6 @@ class SignInViewModel(private val signInWithEmailPassword: SignInWithEmailPasswo
         _signInWithGoogleResponse.value = result
     }
 
-    //перенес сюда из прошлого модуля но есть вопрос как эту хуйню оставить в домейне без подключение андроид библеотек в не него
     suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
         return try {
             val signInResult = oneTapClient.beginSignIn(signInRequest).await()

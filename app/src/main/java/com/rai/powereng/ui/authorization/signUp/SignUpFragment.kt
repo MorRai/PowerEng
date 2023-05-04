@@ -43,7 +43,6 @@ class SignUpFragment : Fragment() {
                 val password = binding.fieldPassword.text.toString()
                 if (checkData(email, password)) {
                     viewModel.signUpUser(email, password)
-                    viewModel.sendEmailVerification()
                 }
             }
 

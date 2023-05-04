@@ -30,7 +30,7 @@ internal class UserProgressInfoRepositoryImpl(
                 .document(id)
                 .get()
                 .await().toObject(UserProgressInfo::class.java)
-            if (response == null || response.points <= userProgressInfo.points) { //если прошел хуже то не перезаписваем
+            if (response == null || response.points <= userProgressInfo.points) { //if it went worse then not rewritable
                 db.collection("usersProgressInfo")
                     .document(id)
                     .set(userProgressInfo).await()
@@ -73,7 +73,7 @@ internal class UserProgressInfoRepositoryImpl(
     override suspend fun refreshUserScore(
         currentUserId: String,
         itStart: Boolean,
-    ): Response<Boolean> { //itStart по умолчанию фолс
+    ): Response<Boolean> { //itStart false by default
         return try {
             val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val dateText = dateFormat.format(Date())
@@ -200,7 +200,7 @@ internal class UserProgressInfoRepositoryImpl(
                         trySend(Response.Success(usersScoreWithProfiles))
                     }
                 } else {
-                    trySend(Response.Failure(Exception("Нет данных по usersScore")))
+                    trySend(Response.Failure(Exception("No userScore data")))
                 }
             }
         awaitClose {
@@ -217,7 +217,7 @@ internal class UserProgressInfoRepositoryImpl(
                     if (userScore != null) {
                         Response.Success(userScore)
                     } else {
-                        Response.Failure(e ?: Exception("Unknown error"))
+                        Response.Failure(e ?: Exception("No date"))
                     }
                 } else {
                     Response.Failure(e ?: Exception("Unknown error"))

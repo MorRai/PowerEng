@@ -11,6 +11,7 @@ interface UsersMultiplayerRepository {
     suspend fun createGame(gameCode: String, playerName: String, playerImage:String): Response<Boolean>
 
     suspend fun joinGame(gameCode: String, playerName: String,playerImage:String): Response<Boolean>
+    suspend fun generateGameCode(): Response.Success<String>
 
     fun waitForPlayersToJoin(gameCode: String): Flow<Response<Boolean>>
 

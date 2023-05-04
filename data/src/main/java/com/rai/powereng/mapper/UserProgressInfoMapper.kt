@@ -1,6 +1,7 @@
 package com.rai.powereng.mapper
 
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.rai.powereng.model.User
 import com.rai.powereng.model.UserProgressInfo
 import com.rai.powereng.model.UserProgressInfoEntity
@@ -39,3 +40,10 @@ internal fun FirebaseUser.toDomainModels() : User {
          isEmailVerified = isEmailVerified,
     )
 }
+
+internal fun FirebaseUser.toUser() = mapOf(
+    "displayName" to displayName,
+    "email" to email,
+    "photoUrl" to photoUrl?.toString(),
+    "createdAt" to FieldValue.serverTimestamp()
+)

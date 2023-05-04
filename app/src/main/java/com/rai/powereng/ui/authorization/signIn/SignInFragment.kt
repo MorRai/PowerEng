@@ -51,9 +51,6 @@ class SignInFragment : Fragment() {
                 findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
             }
 
-            googleSignInButton.setOnClickListener{
-                viewModel.oneTapSignIn()
-            }
 
             lifecycleScope.launch {
                 viewModel.signInResponse.collect {
@@ -77,6 +74,10 @@ class SignInFragment : Fragment() {
                         }
                     }
                 }
+            }
+
+            googleSignInButton.setOnClickListener{
+                viewModel.oneTapSignIn()
             }
 
             lifecycleScope.launch {

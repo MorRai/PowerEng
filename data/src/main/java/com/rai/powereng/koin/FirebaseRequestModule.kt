@@ -7,6 +7,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -37,7 +38,9 @@ internal val firebaseRequestModule  = module {
             .build()
     }
 
-    single { Firebase.auth }//FirebaseAuth
+    single{ Firebase.auth }//FirebaseAuth
+
+    single { Firebase.storage }
 
     single { Firebase.firestore }//FirebaseFirestore
 

@@ -4,10 +4,7 @@ import com.rai.powereng.usecase.*
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import com.rai.powereng.usecase.auth.*
-import com.rai.powereng.usecase.multiplayer.CreateGameUseCase
-import com.rai.powereng.usecase.multiplayer.GetScoreGameUseCase
-import com.rai.powereng.usecase.multiplayer.JoinGameUseCase
-import com.rai.powereng.usecase.multiplayer.SaveGameUseCase
+import com.rai.powereng.usecase.multiplayer.*
 
 internal val useCaseModule = module {
     factoryOf(::SignInWithEmailPassword)
@@ -30,5 +27,6 @@ internal val useCaseModule = module {
     factoryOf(::CreateGameUseCase)
     factoryOf(::SaveGameUseCase)
     factoryOf(::GetScoreGameUseCase)
+    factoryOf(::GenerateGameCodeUseCase)
 
 }

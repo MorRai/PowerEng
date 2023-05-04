@@ -71,6 +71,28 @@ class ConnectionCodeFragment : Fragment() {
             cancel.setOnClickListener {
                 cancelGame()
             }
+            generateCode.setOnClickListener {
+                viewModel.generateGameCode()
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.responseGameCodeFlow.collect {
+                    when (it) {
+                        is Response.Loading -> {}
+                        is Response.Success -> {
+                            binding.gameCode.setText(it.data)
+                        }
+                        is Response.Failure -> {
+                            Toast.makeText(
+                                requireContext(),
+                                it.e.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+
+            }
         }
     }
 
@@ -172,12 +194,6 @@ class ConnectionCodeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun generateCode(): String {
-        // добавим что бы код получили с скрытым добавление урока и части
-        // TODO: generate unique game code
-        return "12345"
     }
 
     private fun addPostfixCode(gameCode:String): String {

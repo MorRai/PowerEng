@@ -38,9 +38,6 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-
-
             viewModel.geCurrentUserResponse()
 
             val navController = Navigation.findNavController(requireActivity(), R.id.nav_container)
@@ -53,7 +50,6 @@ class SplashFragment : Fragment() {
             }
             Handler(Looper.myLooper()!!).postDelayed({navController.graph = mainGraph},2000)
 
-        }
 
     }
 

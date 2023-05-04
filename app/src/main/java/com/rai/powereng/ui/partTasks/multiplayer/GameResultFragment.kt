@@ -111,7 +111,7 @@ class GameResultFragment  : DialogFragment() {
 
                         }else{
                             resultTextView.text= "YOU LOSE"
-                            resultTextView.setBackgroundColor(resources.getColor(R.color.red, null))
+                            resultTextView.setTextColor(resources.getColor(R.color.red, null))
                         }
                     }else{
                         waitingProgressBar.visibility = View.VISIBLE
