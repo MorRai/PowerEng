@@ -16,6 +16,7 @@ import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContentViewModel
 import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
+import com.rai.powereng.ui.tabs.unitsList.unitInfo.UnitInfoListViewModel
 import com.rai.powereng.ui.tabs.usersRating.UserRatingContainerViewModel
 import com.rai.powereng.ui.tabs.usersRating.UsersRatingContentViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -36,6 +37,7 @@ val viewModelsModule = module {
     viewModelOf(::ProfileContentViewModel)
     viewModelOf(::ChangeUserInfoVievModel)
     viewModelOf(::ConnectionCodeViewModel)
+    viewModelOf(::UnitInfoListViewModel)
     viewModelOf(::GameResultViewModel)
     viewModel {
         SignInViewModel(get(),

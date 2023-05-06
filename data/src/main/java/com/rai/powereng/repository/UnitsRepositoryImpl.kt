@@ -14,6 +14,7 @@ internal class UnitsRepositoryImpl(
         val snapshotListener = db.collection("unitList").addSnapshotListener { snapshot, e ->
             val unitsResponse = if (snapshot != null) {
                 val units = snapshot.toObjects(UnitData::class.java)
+                units.sortBy { it.unitId }
                 Response.Success(units)
             } else {
                 Response.Failure(e ?:  Exception("Unknown error"))
