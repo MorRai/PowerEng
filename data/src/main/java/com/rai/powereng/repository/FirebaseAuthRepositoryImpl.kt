@@ -35,7 +35,8 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override val isUserAuthenticatedInFirebase = currentUserFlow.value != null
+    override val isUserAuthenticatedInFirebase:Boolean
+        get() = currentUserFlow.value?.isEmailVerified ?: false
 
     override val currentUserId: String
         get() = currentUserFlow.value?.uid.orEmpty()

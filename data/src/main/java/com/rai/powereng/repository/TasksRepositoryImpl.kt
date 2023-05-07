@@ -3,6 +3,8 @@ package com.rai.powereng.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 internal class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRepository {
@@ -21,6 +23,23 @@ internal class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRep
         } catch (exception: Exception) {
             Response.Failure(exception)
         }
+    }
+
+    override fun getAllTasksOfUnit(unitId: Int) = callbackFlow{
+            val snapshotListener = db.collection("tasks")
+                .whereEqualTo("unit", unitId).addSnapshotListener { snapshot, e ->
+                val unitsResponse = if (snapshot != null) {
+                    val tasks = snapshot.toObjects(TaskData::class.java)
+                    Response.Success(tasks)
+                } else {
+                    Response.Failure(e ?:  Exception("Unknown error"))
+                }
+                trySend(unitsResponse)
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+
     }
 
     override suspend fun getAmountTasksInPart(unitId: Int, partId: Int): Response<Int> {

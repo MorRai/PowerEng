@@ -7,5 +7,6 @@ data class TaskData(
     val taskNum:Int=0,
     val question:String="",
     val answer:String="",
-    val variants:String=""
+    val variants:String="",
+    val forInfoUnit:String=""
 )

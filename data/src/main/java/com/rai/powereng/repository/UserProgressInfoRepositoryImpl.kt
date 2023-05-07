@@ -74,16 +74,19 @@ internal class UserProgressInfoRepositoryImpl(
         currentUserId: String,
         itStart: Boolean,
     ): Response<Boolean> { //itStart false by default
-        return try {
+         return try {
             val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val dateText = dateFormat.format(Date())
 
-            val response = db.collection("usersProgressInfo")
-                .whereEqualTo("userId", currentUserId)
-                .get()
-                .await().documents.mapNotNull { snapShot ->
-                    snapShot.toObject(UserProgressInfo::class.java)
-                }
+            val response =
+                db.collection("usersProgressInfo")
+                    .whereEqualTo("userId", currentUserId)
+                    .get()
+                    .await()
+                    .documents.mapNotNull { snapShot ->
+                        snapShot.toObject(UserProgressInfo::class.java)
+                    }
+
 
             val groupedData = response.groupBy { it.unitId }
             val maxUnit = groupedData.keys.maxOrNull() ?: 0
@@ -154,6 +157,7 @@ internal class UserProgressInfoRepositoryImpl(
         } catch (e: Exception) {
             Response.Failure(e)
         }
+
     }
 
     override fun getUsersScore(): Flow<Response<List<UserScoreWithProfile>>> = callbackFlow {
