@@ -19,7 +19,7 @@ class JoinGameUseCase(
             )
 
         } else {
-            Response.Failure(Exception("Пользователь не авторизирован"))
+            Response.Failure(Exception("User not authorized"))
         }
     }
 }

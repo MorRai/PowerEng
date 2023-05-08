@@ -41,7 +41,6 @@ class PartTasksFragment : Fragment() {
             "View was destroyed"
         }
 
-
     private var tts: TextToSpeech? = null
 
     private val viewModel by viewModel<PartTasksViewModel>()
@@ -53,10 +52,21 @@ class PartTasksFragment : Fragment() {
     private var amountMistakes = 0
     private var workWithList = false
     private val listErrors = mutableListOf<Int>()
-
-
     private var correctAnswersCount = 0
     private var startTime: Long = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            taskNum = it.getInt("taskNum")
+            amountTasks = it.getInt("amountTasks")
+            amountMistakes = it.getInt("amountMistakes")
+            workWithList = it.getBoolean("workWithList")
+            listErrors.addAll(it.getIntegerArrayList("listErrors") ?: emptyList())
+            correctAnswersCount = it.getInt("correctAnswersCount")
+            startTime = it.getLong("startTime")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,15 +78,23 @@ class PartTasksFragment : Fragment() {
             .root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("taskNum", taskNum)
+        outState.putInt("amountTasks", amountTasks)
+        outState.putInt("amountMistakes", amountMistakes)
+        outState.putBoolean("workWithList", workWithList)
+        outState.putIntegerArrayList("listErrors", ArrayList(listErrors))
+        outState.putInt("correctAnswersCount", correctAnswersCount)
+        outState.putLong("startTime", startTime)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (args.isMultiplayer) {
-
+            binding.progressPath.visibility = View.INVISIBLE
             binding.multiplayerInfo.root.visibility = View.VISIBLE
-
-
-            // Start timer
             startTime = System.currentTimeMillis()
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getAnswers(args.gameCode).collect {
@@ -86,11 +104,7 @@ class PartTasksFragment : Fragment() {
                             bindMultiplayer(it.data)
                         }
                         is Response.Failure -> {
-                            Toast.makeText(
-                                requireContext(),
-                                it.e.toString(),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showToast(it.e.toString())
                         }
                     }
                 }
@@ -108,7 +122,6 @@ class PartTasksFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
             }
         }
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
@@ -121,11 +134,7 @@ class PartTasksFragment : Fragment() {
                     bind(it.data)
                 }
                 is Response.Failure -> {
-                    Toast.makeText(
-                        requireContext(),
-                        it.e.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(it.e.toString())
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -138,11 +147,7 @@ class PartTasksFragment : Fragment() {
                     amountTasks = it.data
                 }
                 is Response.Failure -> {
-                    Toast.makeText(
-                        requireContext(),
-                        it.e.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(it.e.toString())
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -155,7 +160,6 @@ class PartTasksFragment : Fragment() {
 
     private fun bindMultiplayer(data: List<UserMultiplayer>) {
         with(binding.multiplayerInfo) {
-
             if (data.size == 2) {
                 data[0].let {
                     user1Name.text = it.name
@@ -167,30 +171,37 @@ class PartTasksFragment : Fragment() {
                     user2Score.text = "Score: ${it.score}"
                     user2Time.text = getTimeSting(it.time)
                 }
-            }
-            else {
-                val bundle = bundleOf("message" to "The game is destroyed")
+            } else {
+                val bundle = bundleOf(getString(R.string.message) to getString(R.string.the_game_is_destroyed))
                 setFragmentResult("requestKey", bundle)
                 findNavController().popBackStack()
             }
         }
     }
 
-    private fun clearForm() {
-        with(binding) {
-            if (workWithList && listErrors.size > 0) {
+    private fun getNextTask() {
+        when {
+            workWithList && listErrors.isNotEmpty() -> {
                 viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
-            } else if (taskNum <= amountTasks) {
-               if (args.isMultiplayer) {viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime,false)}
+            }
+            taskNum <= amountTasks -> {
+                if (args.isMultiplayer) {
+                    viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, false)
+                }
                 viewModel.getTasksUser(args.unitId, args.partId, taskNum)
-            } else if (args.isMultiplayer) {
+            }
+            args.isMultiplayer -> {
                 viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true)
-                findNavController().navigate(PartTasksFragmentDirections.actionPartTasksFragmentToGameResultFragment(args.gameCode))
-            } else if (listErrors.size > 0) {
-                itemTranclate.answerBox.removeAllViews()
-                itemTranclate.optionBox.removeAllViews()
+                findNavController().navigate(
+                    PartTasksFragmentDirections.actionPartTasksFragmentToGameResultFragment(args.gameCode)
+                )
+            }
+            listErrors.isNotEmpty() -> {
+                binding.itemTranclate.answerBox.removeAllViews()
+                binding.itemTranclate.optionBox.removeAllViews()
                 showErrorsScreen()
-            } else {
+            }
+            else -> {
                 findNavController().navigate(
                     PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(
                         args.unitId,
@@ -204,33 +215,49 @@ class PartTasksFragment : Fragment() {
 
     private fun showErrorsScreen() {
         with(binding) {
-            val transitionEND = TransitionSet().apply {
-                addTransition(Fade(Fade.IN)).addTransition(Slide(Gravity.END))
-                duration = 500
-            }
-            TransitionManager.beginDelayedTransition(contentLayout, transitionEND)
+            val transitionSet = TransitionSet()
+            setupTransition(transitionSet)
+            TransitionManager.beginDelayedTransition(contentLayout, transitionSet)
+            hideAllViews()
             errorsScreen.root.visibility = View.VISIBLE
-            description.visibility = View.GONE
-            itemTranclate.root.visibility = View.GONE
-            itemMissingWord.root.visibility = View.GONE
-            exerciseInfo.visibility = View.GONE
-            itemListen.root.visibility = View.GONE
             check.setOnClickListener {
                 workWithList = true
                 amountMistakes = listErrors.size
-                viewModel.getTasksUser(args.unitId, args.partId, listErrors[0])
+                getNextTask()
             }
         }
     }
 
     private fun bind(task: TaskData) {
         with(binding) {
-            val transitionEND = TransitionSet().apply {
-                addTransition(Fade(Fade.IN)).addTransition(Slide(Gravity.END))
-                duration = 500
+            val transitionSet = TransitionSet()
+            setupTransition(transitionSet)
+            TransitionManager.beginDelayedTransition(contentLayout, transitionSet)
+            hideAllViews()
+            when (task.typeTask) {
+                1, 2 -> {
+                    bindForTranslate(task)
+                }
+                3 -> {
+                    bindForMissingWord(task)
+                }
+                4 -> {
+                    bindForListen(task)
+                }
             }
-            TransitionManager.beginDelayedTransition(contentLayout, transitionEND)
+            dialogResultId.buttonContinue.setOnClickListener {
+                if (taskNum <= amountTasks) {
+                    taskNum += 1
+                }
+                accessibilityButtons(contentLayout, true)
+                bottomSheet.visibility = View.GONE
+                getNextTask()
+            }
+        }
+    }
 
+    private fun hideAllViews() {
+        with(binding) {
             exerciseInfo.visibility = View.GONE
             itemMissingWord.root.visibility = View.GONE
             itemTranclate.root.visibility = View.GONE
@@ -238,41 +265,22 @@ class PartTasksFragment : Fragment() {
             errorsScreen.root.visibility = View.GONE
             itemTranclate.answerBox.removeAllViews()
             itemTranclate.optionBox.removeAllViews()
-            when (task.typeTask) {
-                1, 2 -> {
-                    description.text = "Translate the sentence:"
-                    itemTranclate.root.visibility = View.VISIBLE
-                    exerciseInfo.visibility = View.VISIBLE
-                    bindForTranslate(task)
-                }
-                3 -> {
-                    description.text = "Insert a word"
-                    exerciseInfo.visibility = View.VISIBLE
-                    itemMissingWord.root.visibility = View.VISIBLE
-                    bindForMissingWord(task)
-                }
-                4 -> {
-                    description.text = "Enter what you heard"
-                    itemTranclate.root.visibility = View.VISIBLE
-                    itemListen.root.visibility = View.VISIBLE
-                    bindForListen(task)
-                }
-            }
+        }
+    }
 
-            dialogResultId.buttonContinue.setOnClickListener {
-                if (taskNum <= amountTasks) {
-                    taskNum += 1
-                }
-                accessibilityButtons(contentLayout, true)
-
-                bottomSheet.visibility = View.GONE
-                clearForm()
-            }
+    private fun setupTransition(transitionSet: TransitionSet) {
+        transitionSet.apply {
+            addTransition(Fade(Fade.IN)).addTransition(Slide(Gravity.END))
+            duration = 500
         }
     }
 
     private fun bindForListen(task: TaskData) {
         with(binding) {
+            description.text = getString(R.string.enter_what_you_heard)
+            itemTranclate.root.visibility = View.VISIBLE
+            itemListen.root.visibility = View.VISIBLE
+
             val textForListen = task.answer
             itemListen.playSound.setOnClickListener {
                 speak(textForListen)
@@ -280,30 +288,26 @@ class PartTasksFragment : Fragment() {
             itemListen.playSoundSlow.setOnClickListener {
                 speak(textForListen, 0.5f)
             }
-
             check.setOnClickListener {
-                var checkAnswer = ""
-                for (childView in itemTranclate.answerBox.children) {
-                    if (childView is Button) {
-                        checkAnswer = checkAnswer + " " + childView.text
-                    }
-                }
-                checkAnswer = checkAnswer.drop(1)
+                val checkAnswer = itemTranclate.answerBox.children
+                    .filterIsInstance<Button>()
+                    .joinToString(" ") { it.text }
                 setSettingsDialog(checkAnswer == textForListen, checkAnswer, task.taskNum)
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
             }
-            val listWords = task.answer.split(" ") + task.variants.split(" ")
-            listWords.forEach {
-                addTextViewToOption(it, task.typeTask)
-            }
-
+            task.answer.split(" ").plus(task.variants.split(" "))
+                .forEach { addTextViewToOptionAndAnswer(it, task.typeTask) }
         }
 
     }
 
     private fun bindForMissingWord(task: TaskData) {
         with(binding) {
+            description.text = getString(R.string.insert_a_word)
+            exerciseInfo.visibility = View.VISIBLE
+            itemMissingWord.root.visibility = View.VISIBLE
+
             val checkAnswer = task.answer
             var answerString = ""
             check.setOnClickListener {
@@ -312,49 +316,42 @@ class PartTasksFragment : Fragment() {
                     R.id.variantTwo -> answerString = itemMissingWord.variantTwo.text.toString()
                 }
                 if (answerString.isBlank()) {
-                    Toast.makeText(
-                        requireContext(),
-                        "You must choose an answer!",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    showToast(getString(R.string.you_must_choose_an_answer))
                 } else {
                     setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
                     bottomSheet.visibility = View.VISIBLE
                     accessibilityButtons(contentLayout, false)
                 }
             }
-            val listWords = task.variants.split(" ")//there is always two
-            itemMissingWord.variantOne.text = listWords[0]
-            itemMissingWord.variantTwo.text = listWords[1]
+            itemMissingWord.variantOne.text = task.variants.split(" ")[0]
+            itemMissingWord.variantTwo.text = task.variants.split(" ")[1]
             exerciseInfo.text = task.question
         }
     }
 
     private fun bindForTranslate(task: TaskData) {
         with(binding) {
+            description.text = getString(R.string.translate_the_sentence)
+            itemTranclate.root.visibility = View.VISIBLE
+            exerciseInfo.visibility = View.VISIBLE
+
             val checkAnswer = task.answer
             exerciseInfo.text = task.question
+
             check.setOnClickListener {
-                var answerString = ""
-                for (childView in itemTranclate.answerBox.children) {
-                    if (childView is Button) {
-                        answerString = answerString + " " + childView.text
-                    }
-                }
-                answerString = answerString.drop(1)
+                val answerString = itemTranclate.answerBox.children
+                    .filterIsInstance<Button>()
+                    .joinToString(" ") { it.text }
                 setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
             }
-            val listWords = task.answer.split(" ") + task.variants.split(" ")
-            listWords.forEach {
-                addTextViewToOption(it, task.typeTask)
-            }
+            task.answer.split(" ").plus(task.variants.split(" "))
+                .forEach { addTextViewToOptionAndAnswer(it, task.typeTask) }
         }
     }
 
-    private fun addTextViewToOption(text: String, typeTask: Int) {
+    private fun addTextViewToOptionAndAnswer(text: String, typeTask: Int) {
         val textView = Button(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
@@ -362,52 +359,51 @@ class PartTasksFragment : Fragment() {
             if (typeTask == 1 || typeTask == 4) {
                 speak(text)
             }
-            addTextViewToAnswer(text, typeTask)
-            binding.itemTranclate.optionBox.removeView(textView)
+            if (textView.parent == binding.itemTranclate.optionBox) {
+                binding.itemTranclate.optionBox.removeView(textView)
+                binding.itemTranclate.answerBox.addView(textView)
+            } else {
+                binding.itemTranclate.answerBox.removeView(textView)
+                binding.itemTranclate.optionBox.addView(textView)
+            }
         }
-        binding.itemTranclate.optionBox.addView(textView)
-    }
-
-    private fun addTextViewToAnswer(text: String, typeTask: Int) {
-        val textView = Button(requireContext())
-        textView.text = text
-        textView.setPadding(16, 16, 16, 16)
-        textView.setOnClickListener {
-            addTextViewToOption(text, typeTask)
-            binding.itemTranclate.answerBox.removeView(textView)
+        if (binding.itemTranclate.optionBox.childCount < 50) {
+            binding.itemTranclate.optionBox.addView(textView)
+        } else {
+            showToast("You have reached the maximum number of options!")
         }
-        binding.itemTranclate.answerBox.addView(textView)
     }
 
     private fun setSettingsDialog(answerIsTrue: Boolean, answer: String, numTask: Int) {
         with(binding.dialogResultId) {
-            if (answerIsTrue) {
-                if (workWithList) {
-                    listErrors.removeAt(0)
+            val bgColor = if (answerIsTrue) R.color.green_lite else R.color.red_lite
+            val buttonBgColor = if (answerIsTrue) R.color.green else R.color.red
+            val textColor = if (answerIsTrue) R.color.green else R.color.red
+            when {
+                answerIsTrue -> {
+                    if (workWithList) {
+                        listErrors.removeAt(0)
+                    }
+                    if (args.isMultiplayer) {
+                        correctAnswersCount += 1
+                    }
+                    viewModel.addProgress()
+                    resultAnswer.text = getString(R.string.success)
                 }
-                if (args.isMultiplayer) {
-                    correctAnswersCount += 1
+                else -> {
+                    if (!workWithList) {
+                        listErrors.add(numTask)
+                    }
+                    resultAnswer.text = getString(R.string.error)
+                    trueAnswerText.text = getString(R.string.correct_answer)
                 }
-                viewModel.addProgress()
-                dialogResult.setBackgroundColor(resources.getColor(R.color.green_lite, null))
-                resultAnswer.setTextColor(resources.getColor(R.color.green, null))
-                textAnswer.setTextColor(resources.getColor(R.color.green, null))
-                buttonContinue.setBackgroundColor(resources.getColor(R.color.green, null))
-                buttonContinue.setTextColor(resources.getColor(R.color.white, null))
-                resultAnswer.text = "Success!"
-            } else {
-                if (!workWithList) {
-                    listErrors.add(numTask)
-                }
-                dialogResult.setBackgroundColor(resources.getColor(R.color.red_lite, null))
-                buttonContinue.setBackgroundColor(resources.getColor(R.color.red, null))
-                buttonContinue.setTextColor(resources.getColor(R.color.white, null))
-                resultAnswer.setTextColor(resources.getColor(R.color.red, null))
-                textAnswer.setTextColor(resources.getColor(R.color.red, null))
-                trueAnswerText.setTextColor(resources.getColor(R.color.red, null))
-                resultAnswer.text = "Error!"
-                trueAnswerText.text = "Correct answer: "
             }
+            dialogResult.setBackgroundColor(resources.getColor(bgColor, null))
+            buttonContinue.setBackgroundColor(resources.getColor(buttonBgColor, null))
+            buttonContinue.setTextColor(resources.getColor(R.color.white, null))
+            resultAnswer.setTextColor(resources.getColor(textColor, null))
+            textAnswer.setTextColor(resources.getColor(textColor, null))
+            trueAnswerText.setTextColor(resources.getColor(textColor, null))
             textAnswer.text = answer
         }
     }
@@ -416,6 +412,10 @@ class PartTasksFragment : Fragment() {
         layout.descendants.filterIsInstance<Button>().forEach { button ->
             button.isClickable = accessibility
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun getTimeSting(elapsedSeconds: Long): String {
@@ -434,8 +434,15 @@ class PartTasksFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (args.isMultiplayer){
-        viewModel.saveAnswers(args.gameCode, correctAnswersCount, startTime, true,true)}
+        if (args.isMultiplayer) {
+            viewModel.saveAnswers(
+                args.gameCode,
+                correctAnswersCount,
+                startTime,
+                isComplete = true,
+                isForDelete = true
+            )
+        }
         super.onDestroy()
 
     }
@@ -456,5 +463,4 @@ class PartTasksFragment : Fragment() {
             }
         }
     }
-
 }

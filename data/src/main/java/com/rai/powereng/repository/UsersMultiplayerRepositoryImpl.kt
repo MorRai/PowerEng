@@ -21,18 +21,18 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         val gameCode = (1..6).map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
-        val gameSnapshot = databaseReference.child("games").child(gameCode).get().await() // проверяем его наличие в базе данных
+        val gameSnapshot = databaseReference.child("games").child(gameCode).get().await() // check if it exists in the database
         return if (gameSnapshot.exists()) {
-            generateGameCode() // если код уже занят, генерируем новый
+            generateGameCode() // if the code is already taken, generate a new one
         } else {
-           Response.Success(gameCode)  // иначе возвращаем сгенерированный код
+           Response.Success(gameCode)  // otherwise return the generated code
         }
     }
 
     override suspend fun createGame(gameCode: String, playerName: String,playerImage:String) : Response<Boolean> {
         return try {
             val gameRef = databaseReference.child("games").child(gameCode)
-            // Проверяем, существует ли игра с таким gameCode
+            // Check if there is a game with this gameCode
             val gameSnapshot = gameRef.get().await()
             if (gameSnapshot.exists()) {
                 return Response.Failure(Exception("Game with this code already exists"))

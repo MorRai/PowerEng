@@ -6,8 +6,8 @@ data class UserMultiplayer(
     var time: Long = 0,
     var isComplete: Boolean = false,
     var isForDelete: Boolean = false,
-    val image: String = ""
-){
+    val image: String = "",
+) {
     // иначе почемуто файр бейс не хочет работать, но схуяли?
     fun getIsComplete(): Boolean {
         return isComplete
