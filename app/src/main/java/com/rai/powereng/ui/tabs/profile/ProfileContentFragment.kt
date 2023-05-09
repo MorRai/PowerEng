@@ -73,7 +73,7 @@ class ProfileContentFragment : Fragment() {
                     if (user == null) {
                         Toast.makeText(
                             requireContext(),
-                            "User not authorized", Toast.LENGTH_SHORT
+                            getString(R.string.user_not_authorized), Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         bindUserInfo(user)

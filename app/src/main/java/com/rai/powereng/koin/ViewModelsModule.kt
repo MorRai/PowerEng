@@ -7,11 +7,11 @@ import com.rai.powereng.ui.authorization.forgotPassword.ForgotPasswordViewModel
 import com.rai.powereng.ui.authorization.signIn.SignInViewModel
 import com.rai.powereng.ui.authorization.signUp.SignUpViewModel
 import com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailViewModel
-import com.rai.powereng.ui.changeUser.ChangeUserInfoVievModel
-import com.rai.powereng.ui.partTasks.PartTasksFinishViewModel
-import com.rai.powereng.ui.partTasks.PartTasksViewModel
-import com.rai.powereng.ui.partTasks.multiplayer.ConnectionCodeViewModel
-import com.rai.powereng.ui.partTasks.multiplayer.GameResultViewModel
+import com.rai.powereng.ui.tabs.profile.changeUser.ChangeUserInfoVievModel
+import com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFinishViewModel
+import com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksViewModel
+import com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.ConnectionCodeViewModel
+import com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.GameResultViewModel
 import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContentViewModel

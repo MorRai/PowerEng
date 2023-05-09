@@ -6,7 +6,7 @@
 
     <dialog
         android:id="@+id/partConfirmFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartConfirmFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartConfirmFragment"
         android:label="PartConfirmFragment" >
         <action
             android:id="@+id/action_partConfirmFragment_to_partTasksFragment"
@@ -54,7 +54,7 @@
     </dialog>
     <fragment
         android:id="@+id/partTasksFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartTasksFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFragment"
         android:label="PartTasksFragment" >
         <argument
             android:name="unitId"
@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/partTasksFinishFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartTasksFinishFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFinishFragment"
         android:label="PartTasksFinishFragment" >
         <argument
             android:name="unitId"
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/connectionCodeFragment"
-        android:name="com.rai.powereng.ui.partTasks.multiplayer.ConnectionCodeFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.ConnectionCodeFragment"
         android:label="ConnectionCodeFragment" >
         <argument
             android:name="unitId"
@@ -120,7 +120,7 @@
     </fragment>
     <dialog
         android:id="@+id/gameResultFragment"
-        android:name="com.rai.powereng.ui.partTasks.multiplayer.GameResultFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.GameResultFragment"
         android:label="GameResultFragment" >
         <argument
             android:name="gameCode"

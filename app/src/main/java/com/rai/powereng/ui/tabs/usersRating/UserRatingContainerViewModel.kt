@@ -11,6 +11,5 @@ class UserRatingContainerViewModel(
     init {
         getCurrentUserResponse()
     }
-
     fun getCurrentUserResponse() = getCurrentUser.invoke(viewModelScope)
 }

@@ -58,7 +58,7 @@ class AuthorizationFragment : Fragment() {
             val currentUser = viewModel.getCurrentUserResponse().value
             if (currentUser !=null && !currentUser.isEmailVerified) {
                 findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
-            } else if (currentUser !=null && currentUser.isEmailVerified) {
+            } else if (currentUser !=null) {
                 val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
                 if (resultNav.not()) {
                     findNavController().navigate(R.id.contentFragment)

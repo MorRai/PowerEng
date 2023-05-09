@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.changeUser
+package com.rai.powereng.ui.tabs.profile.changeUser
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

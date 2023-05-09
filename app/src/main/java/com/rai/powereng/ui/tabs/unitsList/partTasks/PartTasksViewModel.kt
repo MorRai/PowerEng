@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks
+package com.rai.powereng.ui.tabs.unitsList.partTasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

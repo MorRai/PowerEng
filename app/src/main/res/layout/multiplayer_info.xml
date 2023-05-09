@@ -21,7 +21,7 @@
         android:id="@+id/user1_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: 10"
+        tools:text="Score: 10"
         app:layout_constraintTop_toBottomOf="@+id/user1_name"
         app:layout_constraintStart_toStartOf="@id/user1_name"/>
 
@@ -29,7 +29,7 @@
         android:id="@+id/user1_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time: 10:30 AM"
+        tools:text="Time: 10:30 AM"
         app:layout_constraintTop_toBottomOf="@+id/user1_score"
         app:layout_constraintStart_toStartOf="@id/user1_name"/>
 
@@ -58,7 +58,7 @@
         android:id="@+id/user2_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: 20"
+        tools:text="Score: 20"
         app:layout_constraintEnd_toEndOf="@+id/user2_name"
         app:layout_constraintTop_toBottomOf="@+id/user2_name" />
 
@@ -66,7 +66,7 @@
         android:id="@+id/user2_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time: 11:00 AM"
+        tools:text="Time: 11:00 AM"
         app:layout_constraintEnd_toEndOf="@+id/user2_score"
         app:layout_constraintTop_toBottomOf="@+id/user2_score" />
 

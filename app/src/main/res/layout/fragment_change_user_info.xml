@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <!-- Хедер с фотографией и кнопкой изменить фотографию -->
         <LinearLayout
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
@@ -35,7 +34,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Фотография пользователя -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="150dp"
@@ -47,7 +45,6 @@
                 app:civ_border_color="@color/purple_200"
                 app:civ_border_width="2dp" />
 
-            <!-- Текст "изменить фотографию" -->
             <TextView
                 android:id="@+id/change_photo_text"
                 android:layout_width="wrap_content"
@@ -59,7 +56,6 @@
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="16sp" />
 
-            <!-- Поле для ввода имени -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/name_field"
                 android:layout_width="match_parent"
@@ -75,7 +71,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Поле для ввода никнейма -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/id_field"
                 android:layout_width="match_parent"
@@ -91,7 +86,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Поле для ввода email -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email_field"
                 android:layout_width="match_parent"

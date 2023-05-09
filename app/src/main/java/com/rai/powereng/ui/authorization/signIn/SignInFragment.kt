@@ -127,15 +127,13 @@ class SignInFragment : Fragment() {
         }
     }
 
-
-    val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             try {
                 val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
                 val googleIdToken = credentials.googleIdToken
                 viewModel.signInWithGoogle(googleIdToken!!)
             } catch (it: ApiException) {
-                //print(it)
                 Toast.makeText(requireContext(),
                     it.status.toString(),
                     Toast.LENGTH_SHORT).show()

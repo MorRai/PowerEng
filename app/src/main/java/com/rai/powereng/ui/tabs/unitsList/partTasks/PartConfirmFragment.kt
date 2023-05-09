@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks
+package com.rai.powereng.ui.tabs.unitsList.partTasks
 
 import android.os.Bundle
 import android.view.Gravity
@@ -35,12 +35,22 @@ class PartConfirmFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding){
-            description.text = "Хотите перейти к разделу ${args.unitNum}, главе ${args.part} ?"
+            description.text = "Do you want to go to the unit ${args.unitNum}, part ${args.part} ?"
             startTasks.setOnClickListener {
-                findNavController().navigate(PartConfirmFragmentDirections.actionPartConfirmFragmentToPartTasksFragment(args.unitNum,args.part))
+                findNavController().navigate(
+                    PartConfirmFragmentDirections.actionPartConfirmFragmentToPartTasksFragment(
+                        args.unitNum,
+                        args.part
+                    )
+                )
             }
             startWithFriend.setOnClickListener {
-                findNavController().navigate(PartConfirmFragmentDirections.actionPartConfirmFragmentToConnectionCodeFragment(args.unitNum,args.part))
+                findNavController().navigate(
+                    PartConfirmFragmentDirections.actionPartConfirmFragmentToConnectionCodeFragment(
+                        args.unitNum,
+                        args.part
+                    )
+                )
             }
 
         }
@@ -57,8 +67,6 @@ class PartConfirmFragment: DialogFragment() {
         window?.setDimAmount(0.0f)
 
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentForgotPasswordBinding
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class ForgotPasswordFragment : Fragment() {
                             val isUserSignedIn = it.data
                             if (isUserSignedIn) {
                                 Toast.makeText(requireContext(),
-                                    "Письмо для востоновления аккаунта отправлено на почту!",
+                                    getString(R.string.account_recovery_email_has_been_sent),
                                     Toast.LENGTH_SHORT).show()
                                 findNavController().popBackStack()
                             }

@@ -55,16 +55,12 @@ class SignUpFragment : Fragment() {
                             val isUserSignedUp = it.data
                             if (isUserSignedUp) {
                                 viewModel.sendEmailVerification()
-                                Toast.makeText(requireContext(),
-                                    "Аккаунт создан на почту отправлено письмо для верефикации!",
-                                    Toast.LENGTH_SHORT).show()
+                                showToast(getString(R.string.account_created_email_sent_for_verification))
                             }
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
-                                it.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                            showToast(it.e.toString())
                         }
                     }
                 }
@@ -79,7 +75,8 @@ class SignUpFragment : Fragment() {
                             progressBar.isVisible = false
                             val isEmailVerification = it.data
                             if (isEmailVerification) {
-                                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                val resultNav =
+                                    findNavController().popBackStack(R.id.auth_nav_graph, true)
                                 if (resultNav.not()) {
                                     findNavController().navigate(R.id.contentFragment)
                                 }
@@ -87,9 +84,7 @@ class SignUpFragment : Fragment() {
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
-                                it.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                            showToast(it.e.toString())
                         }
                     }
                 }
@@ -103,14 +98,18 @@ class SignUpFragment : Fragment() {
     ): Boolean {
         var checkResult = true
         if (email.isEmpty()) {
-            Toast.makeText(requireContext(), "Email is empty", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.email_is_empty))
             checkResult = false
         }
         if (password.isEmpty()) {
-            Toast.makeText(requireContext(), "Password is empty", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.password_is_empty))
             checkResult = false
         }
         return checkResult
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

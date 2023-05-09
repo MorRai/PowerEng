@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="96dp"
-        android:text="Lets try to correct sentence with mistake"
+        android:text="@string/lets_try_to_correct_sentence_with_mistake"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

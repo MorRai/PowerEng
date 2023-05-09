@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.changeUser
+package com.rai.powereng.ui.tabs.profile.changeUser
 
 import android.net.Uri
 import android.os.Bundle

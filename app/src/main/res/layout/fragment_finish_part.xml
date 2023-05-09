@@ -23,7 +23,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="128dp"
         android:gravity="center"
-        android:text="Finish Lesson"
+        android:text="@string/finish_lesson"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:text="Continue"
+        android:text="@string/continueAction"
         android:textAllCaps="true"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent" />

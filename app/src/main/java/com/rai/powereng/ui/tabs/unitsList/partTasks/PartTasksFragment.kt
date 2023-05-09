@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks
+package com.rai.powereng.ui.tabs.unitsList.partTasks
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -172,7 +172,7 @@ class PartTasksFragment : Fragment() {
                     user2Time.text = getTimeSting(it.time)
                 }
             } else {
-                val bundle = bundleOf(getString(R.string.message) to getString(R.string.the_game_is_destroyed))
+                val bundle = bundleOf("message" to getString(R.string.the_game_is_destroyed))
                 setFragmentResult("requestKey", bundle)
                 findNavController().popBackStack()
             }
@@ -370,7 +370,7 @@ class PartTasksFragment : Fragment() {
         if (binding.itemTranclate.optionBox.childCount < 50) {
             binding.itemTranclate.optionBox.addView(textView)
         } else {
-            showToast("You have reached the maximum number of options!")
+            showToast(getString(R.string.you_have_reached_the_maximum_number_of_options))
         }
     }
 

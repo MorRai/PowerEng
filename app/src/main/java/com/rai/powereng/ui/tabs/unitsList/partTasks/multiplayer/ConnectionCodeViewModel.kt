@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks.multiplayer
+package com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks.multiplayer
+package com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +35,6 @@ class GameResultFragment  : DialogFragment() {
         super.onCreate(savedInstanceState)
         isCancelable = false
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,11 +105,11 @@ class GameResultFragment  : DialogFragment() {
                         user2Score.text = it.score.toString()
                         user2Time.text = getTimeSting(it.time)
                         if (currentUserName == userWithMaxScore?.name){
-                            resultTextView.text= "YOU WIN"
+                            resultTextView.text= getString(R.string.you_win)
                             resultTextView.setTextColor(resources.getColor(R.color.green, null))
 
                         }else{
-                            resultTextView.text= "YOU LOSE"
+                            resultTextView.text= getString(R.string.you_lose)
                             resultTextView.setTextColor(resources.getColor(R.color.red, null))
                         }
                     }else{
@@ -122,19 +121,18 @@ class GameResultFragment  : DialogFragment() {
             else {
                 Toast.makeText(
                     requireContext(),
-                    "Количество игроков не равно 2",
+                    getString(R.string.the_number_of_players_is_not_equal_to_2),
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
-    private fun getTimeSting(elapsedSeconds: Long): String {  //нужно вынести есть функция в парт таск
+    private fun getTimeSting(elapsedSeconds: Long): String {  //you need to take out there is a function in the part task
         val elapsedMinutes = elapsedSeconds / 60
         val remainingSeconds = elapsedSeconds % 60
         return String.format("%d:%02d", elapsedMinutes, remainingSeconds)
     }
-
 
     override fun onDestroy() {
         userMultiplayer?.let {

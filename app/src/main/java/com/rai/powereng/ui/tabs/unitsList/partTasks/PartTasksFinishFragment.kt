@@ -1,4 +1,4 @@
-package com.rai.powereng.ui.partTasks
+package com.rai.powereng.ui.tabs.unitsList.partTasks
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentFinishPartBinding
 import com.rai.powereng.model.Response
-import com.rai.powereng.model.UserProgressInfo
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.DateFormat

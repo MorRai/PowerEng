@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/changeUserInfoFragment"
-        android:name="com.rai.powereng.ui.changeUser.ChangeUserInfoFragment"
+        android:name="com.rai.powereng.ui.tabs.profile.changeUser.ChangeUserInfoFragment"
         android:label="ChangeUserInfoFragment" >
         <action
             android:id="@+id/action_changeUserInfoFragment_to_profileContainerFragment"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Message"
+        tools:text="Message"
         android:textColor="#000"
         android:textSize="16sp"/>
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Start"
+        android:text="@string/start"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="14sp"/>
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Start with friend"
+        android:text="@string/start_with_friend"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="14sp"/>
