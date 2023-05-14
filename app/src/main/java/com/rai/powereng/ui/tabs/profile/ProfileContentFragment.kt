@@ -13,6 +13,7 @@ import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.rai.powereng.R
@@ -89,7 +90,8 @@ class ProfileContentFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedOut = it.data
                             if (isUserSignedOut) {
-                                findNavController().popBackStack()
+                                Navigation.findNavController(requireActivity(), R.id.nav_container)
+                                    .navigate(R.id.action_contentFragment_to_auth_nav_graph)
                             }
                         }
                         is Response.Failure -> {
@@ -136,11 +138,11 @@ class ProfileContentFragment : Fragment() {
     private fun bindUserInfo(user: User) {
         with(binding) {
             nameUser.text = user.displayName
-            usernameId.text = user.uid
+            userEmail.text = user.email
             val date = Date(user.registrationTimeMillis ?: 0)
-            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale("ru"))
+            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale("eng"))
             joinedUser.text = buildString {
-                append("Registration: ")
+                append("Joined: ")
                 append(dateFormat.format(date))
             }
             profileImage.load(user.photoUrl)

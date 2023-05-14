@@ -1,6 +1,7 @@
 package com.rai.powereng.database
 
 import androidx.room.*
+import com.rai.powereng.model.MaxUnitAndPart
 import com.rai.powereng.model.UserProgressInfoEntity
 
 @Dao
@@ -21,4 +22,6 @@ internal interface UserProgressInfoDao {
     @Query("SELECT * from user_progress_info")
     suspend fun getAll(): List<UserProgressInfoEntity>
 
+    @Query("SELECT MAX(part_id) as max_part_id, MAX(unit_id) as max_unit_id FROM user_progress_info WHERE unit_id = (SELECT MAX(unit_id) FROM user_progress_info)")
+    suspend fun getMaxUnitAndPart(): MaxUnitAndPart
 }

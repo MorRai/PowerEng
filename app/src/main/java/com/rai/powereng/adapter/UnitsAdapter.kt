@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rai.powereng.R
+import com.rai.powereng.TaskAvailability
 import com.rai.powereng.databinding.ItemUnitBinding
 import com.rai.powereng.model.UnitData
 import com.rai.powereng.model.UserScore
@@ -86,18 +87,30 @@ class UnitViewHolder(
         }
 
         val touchListener = View.OnTouchListener { view, motionEvent ->
+            val partIndex = partViews.indexOf(view)
             when (motionEvent.action) {
+
                 MotionEvent.ACTION_DOWN -> {
+                    //val partIndex = partViews.indexOf(view)
                     if (view is ImageView) {
-                        view.setImageResource(R.drawable.pressed)
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                            TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_pressed)
+                            TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_not_pressed)
+                            TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_not_pressed)
+                        }
+
                     }
                     true
                 }
                 MotionEvent.ACTION_UP -> {
                     if (view is ImageView) {
-                        view.setImageResource(R.drawable.not_pressed)
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                            TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_not_pressed)
+                            TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_not_pressed)
+                            TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_not_pressed)
+                        }
                     }
-                    val partIndex = partViews.indexOf(view)
+                    //val partIndex = partViews.indexOf(view)
                     if (partIndex >= 0 && isEnabled(item.unitId, partIndex + 1, maxUnit, maxPart)) {
                         partListener.onPartClickListener(
                             item.unitId,
@@ -110,7 +123,11 @@ class UnitViewHolder(
                 }
                 MotionEvent.ACTION_CANCEL -> {
                     if (view is ImageView) {
-                        view.setImageResource(R.drawable.not_pressed)
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                            TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_not_pressed)
+                            TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_not_pressed)
+                            TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_not_pressed)
+                        }
                     }
                     true
                 }
@@ -120,9 +137,16 @@ class UnitViewHolder(
 
         }
         partViews.forEachIndexed { index, partView ->
+            val taskAvailability = getTaskAvailability(item.unitId, index + 1, maxUnit, maxPart)
+            val initialImage = when (taskAvailability) {
+                TaskAvailability.ACTIVE -> R.drawable.active_not_pressed
+                TaskAvailability.COMPLETE -> R.drawable.complete_not_pressed
+                TaskAvailability.BLOCK -> R.drawable.block_not_pressed
+            }
+            partView.setImageResource(initialImage)
             setTouchListenerOnPart(
                 partView,
-                isEnabled(item.unitId, index + 1, maxUnit, maxPart),
+                taskAvailability,
                 touchListener,
                 colorFilter
             )
@@ -131,13 +155,13 @@ class UnitViewHolder(
 
     private fun setTouchListenerOnPart(
         partView: ImageView,
-        isEnabled: Boolean,
+        taskAvailability: TaskAvailability,
         touchListener: View.OnTouchListener,
         colorFilter: ColorFilter,
     ) {
         partView.apply {
             setOnTouchListener(touchListener)
-            if (!isEnabled) {
+            if (taskAvailability == TaskAvailability.BLOCK) {
                 setColorFilter(colorFilter)
             }else{
                 setColorFilter(null)
@@ -147,6 +171,16 @@ class UnitViewHolder(
 
     private fun isEnabled(unitId: Int, part: Int, maxUnit: Int, maxPart: Int): Boolean {
         return maxUnit > unitId || (maxUnit == unitId && maxPart >= part)
+    }
+
+
+    private fun getTaskAvailability(unitId: Int, part: Int, maxUnit: Int, maxPart: Int): TaskAvailability {
+        return when {
+            maxUnit > unitId -> TaskAvailability.COMPLETE
+            maxUnit == unitId && maxPart > part -> TaskAvailability.COMPLETE
+            maxUnit == unitId && maxPart == part -> TaskAvailability.ACTIVE
+            else -> TaskAvailability.BLOCK
+        }
     }
 }
 

@@ -15,6 +15,7 @@ import com.rai.powereng.R
 import com.rai.powereng.adapter.UnitsAdapter
 import com.rai.powereng.databinding.FragmentUnitsListBinding
 import com.rai.powereng.model.Response
+import com.rai.powereng.model.UserScore
 import com.rai.powereng.ui.ContentFragmentDirections
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -85,9 +86,10 @@ class UnitsListFragment : Fragment(), PartClickListener {
                                 requireContext(),
                                 userScoreResponse.e.message ?: "", Toast.LENGTH_SHORT
                             ).show()
+                            adapter.setScore(UserScore())
                         }
                         Response.Loading -> {
-                            // do nothing
+                            adapter.setScore(UserScore())
                         }
 
                     }

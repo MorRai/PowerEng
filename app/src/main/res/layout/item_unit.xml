@@ -6,53 +6,63 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_200">
+        android:layout_height="wrap_content">
 
 
-        <TextView
-            android:id="@+id/unitNumber"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            tools:text="Unit 1"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/image_tint_1">
 
-        <TextView
-            android:id="@+id/unitDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:singleLine="false"
-            tools:text="Basic phrases, tell us where you are from"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/unitInfo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/unitNumber"
-            app:layout_constraintVertical_bias="0.0" />
 
-        <Button
-            android:id="@+id/unitInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/info"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/unitNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Unit 1" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/unitDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:singleLine="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/unitInfo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/unitNumber"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Basic phrases, tell us where you are from" />
+
+            <ImageView
+                android:id="@+id/unitInfo"
+                android:layout_width="46dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_info"
+                android:text="@string/info"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -63,11 +73,11 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/not_pressed"
+            android:src="@drawable/active_not_pressed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/not_pressed" />
+            tools:srcCompat="@drawable/active_not_pressed" />
 
         <ImageView
             android:id="@+id/part2"
@@ -75,10 +85,10 @@
             android:layout_height="75dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:src="@drawable/not_pressed"
+            android:src="@drawable/active_not_pressed"
             app:layout_constraintEnd_toEndOf="@+id/part1"
             app:layout_constraintTop_toBottomOf="@+id/part1"
-            tools:srcCompat="@drawable/not_pressed" />
+            tools:srcCompat="@drawable/active_not_pressed" />
 
         <ImageView
             android:id="@+id/part3"
@@ -86,10 +96,10 @@
             android:layout_height="75dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:src="@drawable/not_pressed"
+            android:src="@drawable/active_not_pressed"
             app:layout_constraintEnd_toEndOf="@+id/part2"
             app:layout_constraintTop_toBottomOf="@+id/part2"
-            tools:srcCompat="@drawable/not_pressed" />
+            tools:srcCompat="@drawable/active_not_pressed" />
 
         <ImageView
             android:id="@+id/part4"
@@ -97,10 +107,10 @@
             android:layout_height="75dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/not_pressed"
+            android:src="@drawable/active_not_pressed"
             app:layout_constraintStart_toStartOf="@+id/part3"
             app:layout_constraintTop_toBottomOf="@+id/part3"
-            tools:srcCompat="@drawable/not_pressed" />
+            tools:srcCompat="@drawable/active_not_pressed" />
 
         <ImageView
             android:id="@+id/part5"
@@ -108,9 +118,20 @@
             android:layout_height="75dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/not_pressed"
+            android:src="@drawable/active_not_pressed"
             app:layout_constraintStart_toStartOf="@+id/part4"
             app:layout_constraintTop_toBottomOf="@+id/part4"
-            tools:srcCompat="@drawable/not_pressed" />
+            tools:srcCompat="@drawable/active_not_pressed" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="214dp"
+            android:layout_height="254dp"
+            app:layout_constraintBottom_toBottomOf="@+id/part3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/part3"
+            app:layout_constraintTop_toTopOf="@+id/part3"
+            app:srcCompat="@drawable/fox_img" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

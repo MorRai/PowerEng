@@ -5,10 +5,12 @@ import com.google.firebase.firestore.ktx.toObject
 import com.rai.powereng.database.UserProgressInfoDatabase
 import com.rai.powereng.mapper.toDomainModels
 import com.rai.powereng.model.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -192,13 +194,13 @@ internal class UserProgressInfoRepositoryImpl(
                             }
                         }
                         var num = 0
-                        var lastScore = -1//что б
+                       //var lastScore = -1//что б
                         usersScoreWithProfiles.sortedByDescending{ it.score }.forEach{
-                            if (lastScore != it.score){
-                                num +=1
-                            }
+                            //if (lastScore != it.score){ // был план что с одними балами на одном месте
+                            num +=1
+                           // }
                             it.num = num
-                            lastScore = it.score
+                           // lastScore = it.score
                         }
 
                         trySend(Response.Success(usersScoreWithProfiles))
@@ -212,26 +214,44 @@ internal class UserProgressInfoRepositoryImpl(
         }
     }
 
+
+
     override fun getYourScore(currentUserId: String) = callbackFlow {
-        val snapshotListener = db.collection("usersScore")
-            .document(currentUserId)
-            .addSnapshotListener { snapshot, e ->
-                val userScoreResponse = if (snapshot != null) {
-                    val userScore = snapshot.toObject(UserScore::class.java)
-                    if (userScore != null) {
-                        Response.Success(userScore)
+        if (currentUserId.isNotEmpty()) {
+            val snapshotListener = db.collection("usersScore")
+                .document(currentUserId)
+                .addSnapshotListener { snapshot, error ->
+                    if (snapshot != null && snapshot.exists()) {
+                        val userScore = snapshot.toObject(UserScore::class.java)
+                        if (userScore != null) {
+                            trySend(Response.Success(userScore))
+                        } else {
+                            trySend(Response.Failure(Exception("Failed to parse UserScore")))
+                        }
                     } else {
-                        Response.Failure(e ?: Exception("No date"))
+                        trySend(Response.Failure(Exception("Snapshot is null or doesn't exist")))
                     }
-                } else {
-                    Response.Failure(e ?: Exception("Unknown error"))
                 }
-                trySend(userScoreResponse)
+
+            awaitClose {
+                snapshotListener.remove()
+
             }
-        awaitClose {
-            snapshotListener.remove()
+        } else {
+            val maxUnitAndPart = userProgressInfoDatabase.userProgressInfoDao().getMaxUnitAndPart()
+            val unit = if (maxUnitAndPart.maxUnitId == 0) 1 else maxUnitAndPart.maxUnitId
+            trySend(
+                Response.Success(
+                    UserScore(
+                        unit = unit,
+                        part = maxUnitAndPart.maxPartId
+                    )
+                )
+            )
+            awaitClose {}
         }
     }
+
 
     private fun getDifferenceDays(dateFirst: String, dateSecond: String): Int {
         val dateFormatInput = DateTimeFormatter.ofPattern("dd.MM.yyyy")
