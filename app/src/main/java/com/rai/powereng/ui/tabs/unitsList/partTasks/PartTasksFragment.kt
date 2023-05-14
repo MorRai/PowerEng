@@ -7,12 +7,15 @@ import android.transition.Slide
 import android.transition.TransitionManager
 import android.transition.TransitionSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.descendants
@@ -25,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
+import com.rai.powereng.extensions.getAllTextViews
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import com.rai.powereng.model.UserMultiplayer
@@ -290,8 +294,10 @@ class PartTasksFragment : Fragment() {
             }
             check.setOnClickListener {
                 val checkAnswer = itemTranclate.answerBox.children
-                    .filterIsInstance<Button>()
-                    .joinToString(" ") { it.text }
+                    .filterIsInstance<CardView>()
+                    .flatMap { cardView -> cardView.getAllTextViews() }
+                    .joinToString(" ") { textView -> textView.text }
+
                 setSettingsDialog(checkAnswer == textForListen, checkAnswer, task.taskNum)
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
@@ -340,8 +346,9 @@ class PartTasksFragment : Fragment() {
 
             check.setOnClickListener {
                 val answerString = itemTranclate.answerBox.children
-                    .filterIsInstance<Button>()
-                    .joinToString(" ") { it.text }
+                    .filterIsInstance<CardView>()
+                    .flatMap { cardView -> cardView.getAllTextViews() }
+                    .joinToString(" ") { textView -> textView.text }
                 setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
@@ -352,23 +359,38 @@ class PartTasksFragment : Fragment() {
     }
 
     private fun addTextViewToOptionAndAnswer(text: String, typeTask: Int) {
-        val textView = Button(requireContext())
+        val cardView = CardView(requireContext())
+        val textView = TextView(requireContext())
         textView.text = text
-        textView.setPadding(16, 16, 16, 16)
-        textView.setOnClickListener {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+        textView.setTextColor(resources.getColor(R.color.black,null))
+        textView.setPadding(16,16,16,16)
+        cardView.addView(textView)
+        val layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.setMargins(8, 8, 8, 8)
+        cardView.layoutParams = layoutParams
+        cardView.setCardBackgroundColor(resources.getColor(R.color.white,null))
+        cardView.cardElevation = 8f
+        cardView.radius = 16f
+
+
+        cardView.setOnClickListener {
             if (typeTask == 1 || typeTask == 4) {
                 speak(text)
             }
-            if (textView.parent == binding.itemTranclate.optionBox) {
-                binding.itemTranclate.optionBox.removeView(textView)
-                binding.itemTranclate.answerBox.addView(textView)
+            if (cardView.parent == binding.itemTranclate.optionBox) {
+                binding.itemTranclate.optionBox.removeView(cardView)
+                binding.itemTranclate.answerBox.addView(cardView)
             } else {
-                binding.itemTranclate.answerBox.removeView(textView)
-                binding.itemTranclate.optionBox.addView(textView)
+                binding.itemTranclate.answerBox.removeView(cardView)
+                binding.itemTranclate.optionBox.addView(cardView)
             }
         }
         if (binding.itemTranclate.optionBox.childCount < 50) {
-            binding.itemTranclate.optionBox.addView(textView)
+            binding.itemTranclate.optionBox.addView(cardView)
         } else {
             showToast(getString(R.string.you_have_reached_the_maximum_number_of_options))
         }

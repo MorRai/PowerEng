@@ -3,6 +3,8 @@ package com.rai.powereng.extensions
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
@@ -25,7 +27,8 @@ suspend fun Uri.compressAndOptimizeImage(context: Context): Uri? {
         .build()
 
     // Use Coil to create a downsized version of the image in memory
-    val bitmap = Coil.imageLoader(context).execute(downsizedRequest).drawable?.toBitmap() ?: return null
+    val bitmap =
+        Coil.imageLoader(context).execute(downsizedRequest).drawable?.toBitmap() ?: return null
 
     // Save the downsized image to a temporary file
     val outputFile = withContext(Dispatchers.IO) {
@@ -36,4 +39,16 @@ suspend fun Uri.compressAndOptimizeImage(context: Context): Uri? {
     }
     // Return the URI of the downsized image
     return Uri.fromFile(outputFile)
+}
+
+
+fun CardView.getAllTextViews(): List<TextView> {
+    val allTextViews = mutableListOf<TextView>()
+    for (i in 0 until this.childCount) {
+        val childView = this.getChildAt(i)
+        if (childView is TextView) {
+            allTextViews.add(childView)
+        }
+    }
+    return allTextViews
 }
