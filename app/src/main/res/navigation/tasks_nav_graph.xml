@@ -101,6 +101,14 @@
             android:name="mistakes"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="time"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="countTask"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/connectionCodeFragment"

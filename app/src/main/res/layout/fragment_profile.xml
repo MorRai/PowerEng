@@ -261,9 +261,9 @@
 
             <ImageView
                 android:id="@+id/imageViewIcon"
-                android:layout_width="155dp"
-                android:layout_height="150dp"
-                android:src="@drawable/fox_img"
+                android:layout_width="148dp"
+                android:layout_height="135dp"
+                android:src="@drawable/fox_book"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -272,13 +272,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/text_title_score"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textViewScore"
                 app:layout_constraintStart_toEndOf="@id/imageViewIcon"
-                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+                app:layout_constraintTop_toBottomOf="@+id/textTitleLevel" />
+
+            <TextView
+                android:id="@+id/textTitleLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/level"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                app:layout_constraintStart_toEndOf="@id/imageViewIcon"
+                app:layout_constraintTop_toTopOf="@+id/imageViewIcon" />
 
             <TextView
                 android:id="@+id/textTitleUnit"
@@ -312,12 +326,24 @@
                 android:id="@+id/textViewScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="100"
+                android:layout_marginTop="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewLevel"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/textViewLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageViewIcon"
+                tools:text="100" />
 
             <TextView
                 android:id="@+id/textViewUnit"

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentProfileBinding
+import com.rai.powereng.extensions.getLevel
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.User
 import com.rai.powereng.model.UserScore
@@ -132,6 +133,7 @@ class ProfileContentFragment : Fragment() {
             textViewScore.text = userScore.score.toString()
             textViewPart.text = userScore.part.toString()
             textViewUnit.text = userScore.unit.toString()
+            textViewLevel.text = getLevel(userScore.score).toString()
         }
     }
 

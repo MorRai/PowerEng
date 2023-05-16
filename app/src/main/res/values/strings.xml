@@ -59,4 +59,9 @@
     <string name="spalsch_screen">SPALSCH SCREEN</string>
     <string name="scroll_to_the_top">Scroll to the top</string>
     <string name="info">Info</string>
+    <string name="score_two_point">\"Score: \"</string>
+    <string name="level">Level:</string>
+    <string name="total_xp">TOTAL XP</string>
+    <string name="speedy">SPEEDY</string>
+    <string name="accuracy">ACCURACY</string>
 </resources>

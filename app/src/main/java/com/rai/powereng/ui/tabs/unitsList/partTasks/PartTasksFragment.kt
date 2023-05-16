@@ -29,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
 import com.rai.powereng.extensions.getAllTextViews
+import com.rai.powereng.extensions.getTimeSting
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import com.rai.powereng.model.UserMultiplayer
@@ -95,11 +96,12 @@ class PartTasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (startTime == 0L) {
+            startTime = System.currentTimeMillis()
+        }
         if (args.isMultiplayer) {
             binding.progressPath.visibility = View.INVISIBLE
             binding.multiplayerInfo.root.visibility = View.VISIBLE
-            startTime = System.currentTimeMillis()
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getAnswers(args.gameCode).collect {
                     when (it) {
@@ -167,12 +169,18 @@ class PartTasksFragment : Fragment() {
             if (data.size == 2) {
                 data[0].let {
                     user1Name.text = it.name
-                    user1Score.text = "Score: ${it.score}"
+                    user1Score.text = buildString {
+                        append(getString(R.string.score_two_point))
+                        append(it.score)
+                    }
                     user1Time.text = getTimeSting(it.time)
                 }
                 data[1].let {
                     user2Name.text = it.name
-                    user2Score.text = "Score: ${it.score}"
+                    user2Score.text = buildString {
+                        append(getString(R.string.score_two_point))
+                        append(it.score)
+                    }
                     user2Time.text = getTimeSting(it.time)
                 }
             } else {
@@ -210,7 +218,9 @@ class PartTasksFragment : Fragment() {
                     PartTasksFragmentDirections.actionPartTasksFragmentToPartTasksFinishFragment(
                         args.unitId,
                         args.partId,
-                        amountMistakes
+                        amountMistakes,
+                        (System.currentTimeMillis() - startTime) / 1000,
+                        amountTasks
                     )
                 )
             }
@@ -363,8 +373,8 @@ class PartTasksFragment : Fragment() {
         val textView = TextView(requireContext())
         textView.text = text
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-        textView.setTextColor(resources.getColor(R.color.black,null))
-        textView.setPadding(16,16,16,16)
+        textView.setTextColor(resources.getColor(R.color.black, null))
+        textView.setPadding(16, 16, 16, 16)
         cardView.addView(textView)
         val layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -372,7 +382,7 @@ class PartTasksFragment : Fragment() {
         )
         layoutParams.setMargins(8, 8, 8, 8)
         cardView.layoutParams = layoutParams
-        cardView.setCardBackgroundColor(resources.getColor(R.color.white,null))
+        cardView.setCardBackgroundColor(resources.getColor(R.color.white, null))
         cardView.cardElevation = 8f
         cardView.radius = 16f
 
@@ -438,12 +448,6 @@ class PartTasksFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun getTimeSting(elapsedSeconds: Long): String {
-        val elapsedMinutes = elapsedSeconds / 60
-        val remainingSeconds = elapsedSeconds % 60
-        return String.format("%d:%02d", elapsedMinutes, remainingSeconds)
     }
 
     override fun onDestroyView() {

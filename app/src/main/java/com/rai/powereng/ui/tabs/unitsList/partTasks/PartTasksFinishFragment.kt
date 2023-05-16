@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentFinishPartBinding
+import com.rai.powereng.extensions.getTimeSting
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,15 +44,24 @@ class PartTasksFinishFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            tableScoreText.text = getPoint().toString()
+            val correctAnswers = args.countTask - args.mistakes
+            val percentage = when {
+                args.countTask > 0 -> (correctAnswers * 100) / args.countTask
+                else -> 0
+            }
+            tableAccuracyText.text = buildString {
+                append(percentage.toString())
+                append("%")
+            }
+            tableTimeText.text = getTimeSting(args.time)
+
+
             buttonContinue.setOnClickListener {
-                var points = 50 - 5 * args.mistakes
-                if (points < 20) {
-                    points = 20
-                }
                 val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                 val dateText = dateFormat.format(Date())
                 viewModel.addUserInfo(
-                    points = points,
+                    points = getPoint(),
                     dateText = dateText,
                     mistakes = args.mistakes,
                     unitId = args.unitId,
@@ -86,6 +96,14 @@ class PartTasksFinishFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun getPoint(): Int {
+        var points = 50 - 5 * args.mistakes
+        if (points < 20) {
+            points = 20
+        }
+        return points
     }
 
     override fun onDestroyView() {

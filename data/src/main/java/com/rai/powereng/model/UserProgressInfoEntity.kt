@@ -15,3 +15,5 @@ internal data class UserProgressInfoEntity(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "part_id") val partId: Int,
 )
+
+

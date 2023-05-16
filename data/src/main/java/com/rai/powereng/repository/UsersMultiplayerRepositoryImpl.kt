@@ -126,7 +126,6 @@ class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         }
     }
 
-
     override suspend fun saveAnswers(
         numCorrectAnswers: Int,
         gameCode: String,

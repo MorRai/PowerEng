@@ -9,8 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+
 import kotlinx.coroutines.tasks.await
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -65,7 +64,7 @@ internal class UserProgressInfoRepositoryImpl(
                 .forEach {
                     addUserProgressInfo(it)
                 }
-            userProgressInfoDatabase.userProgressInfoDao().getAll()
+            userProgressInfoDatabase.userProgressInfoDao().deleteAll()
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)
@@ -76,7 +75,7 @@ internal class UserProgressInfoRepositoryImpl(
         currentUserId: String,
         itStart: Boolean,
     ): Response<Boolean> { //itStart false by default
-         return try {
+        return try {
             val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val dateText = dateFormat.format(Date())
 
@@ -91,7 +90,7 @@ internal class UserProgressInfoRepositoryImpl(
 
 
             val groupedData = response.groupBy { it.unitId }
-            val maxUnit = groupedData.keys.maxOrNull() ?: 0
+            val maxUnit = groupedData.keys.maxOrNull() ?: 1
             val maxPart = groupedData[maxUnit]?.maxByOrNull { it.partId }?.partId ?: 0
             val sumScore = response.sumOf { it.points }
 
@@ -194,13 +193,13 @@ internal class UserProgressInfoRepositoryImpl(
                             }
                         }
                         var num = 0
-                       //var lastScore = -1//что б
-                        usersScoreWithProfiles.sortedByDescending{ it.score }.forEach{
+                        //var lastScore = -1//что б
+                        usersScoreWithProfiles.sortedByDescending { it.score }.forEach {
                             //if (lastScore != it.score){ // был план что с одними балами на одном месте
-                            num +=1
-                           // }
+                            num += 1
+                            // }
                             it.num = num
-                           // lastScore = it.score
+                            // lastScore = it.score
                         }
 
                         trySend(Response.Success(usersScoreWithProfiles))
@@ -215,7 +214,6 @@ internal class UserProgressInfoRepositoryImpl(
     }
 
 
-
     override fun getYourScore(currentUserId: String) = callbackFlow {
         if (currentUserId.isNotEmpty()) {
             val snapshotListener = db.collection("usersScore")
@@ -226,10 +224,10 @@ internal class UserProgressInfoRepositoryImpl(
                         if (userScore != null) {
                             trySend(Response.Success(userScore))
                         } else {
-                            trySend(Response.Failure(Exception("Failed to parse UserScore")))
+                            trySend(Response.Success(UserScore(unit = 1, part = 0)))
                         }
                     } else {
-                        trySend(Response.Failure(Exception("Snapshot is null or doesn't exist")))
+                        trySend(Response.Success(UserScore(unit = 1, part = 0)))
                     }
                 }
 
