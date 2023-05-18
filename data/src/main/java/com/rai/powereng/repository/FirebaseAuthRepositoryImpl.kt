@@ -7,91 +7,47 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FieldValue.serverTimestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.FirebaseStorage
 import com.rai.powereng.mapper.toDomainModels
+import com.rai.powereng.mapper.toUser
 import com.rai.powereng.model.Response
+import com.rai.powereng.model.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 
 
 internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
-                                 //private var oneTapClient: SignInClient,
+                                         // private var oneTapClient: SignInClient,
+                                          private val storage: FirebaseStorage,
                                           private val db: FirebaseFirestore
 ): FirebaseAuthRepository, KoinComponent {
 
 
-    override val isUserAuthenticatedInFirebase = auth.currentUser != null
+    private val currentUserFlow = MutableStateFlow<FirebaseUser?>(null)
+
+
+    init {
+        auth.addAuthStateListener { firebaseAuth ->
+            currentUserFlow.value = firebaseAuth.currentUser
+        }
+    }
+
+    override val isUserAuthenticatedInFirebase:Boolean
+        get() = currentUserFlow.value?.isEmailVerified ?: false
 
     override val currentUserId: String
-        get() = auth.currentUser?.uid.orEmpty()
+        get() = currentUserFlow.value?.uid.orEmpty()
 
+    override val currentUser: User?
+        get() = currentUserFlow.value?.toDomainModels()
 
-    override fun getCurrentUser(viewModelScope: CoroutineScope) = callbackFlow {
-        val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(auth.currentUser?.toDomainModels())
-        }
-        auth.addAuthStateListener(authStateListener)
-        awaitClose { auth.removeAuthStateListener(authStateListener) }
-    }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser?.toDomainModels())
-
-    override suspend fun updateCurrentUser(email: String, name: String, photoUri: String?): Response<Boolean> {
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(name)
-            .apply {
-                photoUri?.let { uri ->
-                    val photoUrl = uploadImageToFirebaseStorage(uri.toUri()) ?: return Response.Failure(Exception("Failed to upload image"))
-                    setPhotoUri(photoUrl)
-                }
-            }
-            .build()
-
-        return try {
-            auth.currentUser?.updateEmail(email)?.await()
-            auth.currentUser?.updateProfile(profileUpdates)?.await()
-            updateUserToFirestore()
-            Response.Success(true)
-        } catch (e: Exception) {
-            Response.Failure(e)
-        }
+    override fun getCurrentUser(viewModelScope: CoroutineScope): StateFlow<User?> {
+        return currentUserFlow.map { it?.toDomainModels() }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), currentUserFlow.value?.toDomainModels())
     }
 
-    private suspend fun uploadImageToFirebaseStorage(imageUri: Uri): Uri? {
-        val storageRef = Firebase.storage.reference
-        val imageName = auth.currentUser?.uid
-        val imageRef = storageRef.child("images/$imageName")
-        return try {
-            val uploadTask = imageRef.putFile(imageUri).await()
-            imageRef.downloadUrl.await()
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    /*
-    private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
-    private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
-
-    override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
-        return try {
-            val signInResult = oneTapClient.beginSignIn(signInRequest).await()
-            Response.Success(signInResult)
-        } catch (e: Exception) {
-            try {
-                val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
-                Response.Success(signUpResult)
-            } catch (e: Exception) {
-                Response.Failure(e)
-            }
-        }
-    }
-    */
 
     override suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean> {
         return try {
@@ -107,6 +63,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
+
     override suspend fun signOut() =
         try {
             auth.signOut()
@@ -115,9 +72,9 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
             Response.Failure(e)
         }
 
-    override suspend fun signUpWithEmailPassword(email: String, password: String) =
-        try {
-            val authResult =  auth.createUserWithEmailAndPassword(email, password).await()
+    override suspend fun signUpWithEmailPassword(email: String, password: String) : Response<Boolean> {
+        return try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
             val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
             if (isNewUser) {
                 addUserToFirestore()
@@ -126,6 +83,8 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         } catch (e: Exception) {
             Response.Failure(e)
         }
+    }
+
 
     override suspend fun signInWithEmailPassword(email: String, password: String) =
         try {
@@ -145,7 +104,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
 
     override suspend fun sendEmailVerification()=
       try {
-          auth.currentUser?.sendEmailVerification()?.await()
+          currentUserFlow.value?.sendEmailVerification()?.await()
           Response.Success(true)
         } catch (e: Exception) {
           Response.Failure(e)
@@ -154,7 +113,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     override suspend fun reloadFirebaseUser()=flow {
         try {
             emit(Response.Loading)
-            auth.currentUser?.reload()?.await()
+            currentUserFlow.value?.reload()?.await()
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Failure(e))
@@ -164,7 +123,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     override suspend fun revokeAccess()=flow {
         try {
             emit(Response.Loading)
-            auth.currentUser?.delete()?.await()
+            currentUserFlow.value?.delete()?.await()
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Failure(e))
@@ -172,23 +131,71 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     }
 
     private suspend fun addUserToFirestore() {
-        auth.currentUser?.apply {
+        currentUserFlow.value?.apply {
             val user = toUser()
             db.collection("users").document(uid).set(user).await()
+        }
+    }
+
+    override suspend fun updateCurrentUser(email: String, name: String, photoUri: String?): Response<Boolean> {
+        val user = currentUserFlow.value ?: return Response.Failure(Exception("User is not authenticated"))
+
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(name)
+            .apply {
+                photoUri?.let { uri ->
+                    val photoUrl = uploadImageToFirebaseStorage(uri.toUri()) ?: return Response.Failure(Exception("Failed to upload image"))
+                    setPhotoUri(photoUrl)
+                }
+            }
+            .build()
+
+        return try {
+            user.updateEmail(email).await()
+            user.updateProfile(profileUpdates).await()
+            updateUserToFirestore()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    private suspend fun uploadImageToFirebaseStorage(imageUri: Uri): Uri? {
+        val imageName =  currentUserFlow.value?.uid
+        val imageRef = storage.reference.child("images/$imageName")
+        return try {
+            val uploadTask = imageRef.putFile(imageUri).await()
+            imageRef.downloadUrl.await()
+        } catch (e: Exception) {
+            null
         }
     }
 
     private suspend fun updateUserToFirestore() {
-        auth.currentUser?.apply {
+        currentUserFlow.value?.apply {
             val user = toUser()
             db.collection("users").document(uid).set(user).await()
         }
     }
+
+
+
+//private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
+//private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
+    /*
+override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
+    return try {
+        val signInResult = oneTapClient.beginSignIn(signInRequest).await()
+        Response.Success(signInResult)
+    } catch (e: Exception) {
+        try {
+            val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
+            Response.Success(signUpResult)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+}
+*/
 }
 
-internal fun FirebaseUser.toUser() = mapOf(
-    "displayName" to displayName,
-    "email" to email,
-    "photoUrl" to photoUrl?.toString(),
-    "createdAt" to serverTimestamp()
-)

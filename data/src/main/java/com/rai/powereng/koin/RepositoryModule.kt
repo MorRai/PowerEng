@@ -20,3 +20,8 @@ internal val tasksRepositoryModule = module {
 internal val userProgressInfoRepositoryModule = module {
     singleOf(::UserProgressInfoRepositoryImpl){bind<UserProgressInfoRepository>() }
 }
+
+
+internal val usersMultiplayerRepositoryModule = module {
+    singleOf(::UsersMultiplayerRepositoryImpl){bind<UsersMultiplayerRepository>() }
+}

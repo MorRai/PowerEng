@@ -18,10 +18,20 @@
         android:label="ProfileContentFragment" >
         <action
             android:id="@+id/action_profileContentFragment_to_changeUserInfoFragment"
-            app:destination="@id/changeUserInfoFragment" />
+            app:destination="@id/changeUserInfoFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/changeUserInfoFragment"
-        android:name="com.rai.powereng.ui.changeUser.ChangeUserInfoFragment"
-        android:label="ChangeUserInfoFragment" />
+        android:name="com.rai.powereng.ui.tabs.profile.changeUser.ChangeUserInfoFragment"
+        android:label="ChangeUserInfoFragment" >
+        <action
+            android:id="@+id/action_changeUserInfoFragment_to_profileContainerFragment"
+            app:destination="@id/profileContainerFragment"
+            app:popUpTo="@id/profileContainerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

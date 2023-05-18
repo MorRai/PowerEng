@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background"
     android:weightSum="2">
 
     <ProgressBar
@@ -23,22 +24,24 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
+            android:layout_width="459dp"
+            android:layout_height="338dp"
+            android:layout_marginTop="96dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_foreground"
-            android:contentDescription="Logo" />
+            app:srcCompat="@drawable/fox_enter" />
 
 
         <Button
             android:id="@+id/emailSignInButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="96dp"
+            android:layout_marginEnd="32dp"
             android:padding="8dp"
-            android:text="sign_in"
+            android:text="@string/sign_in"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.812"
@@ -49,7 +52,9 @@
             android:id="@+id/emailCreateAccountButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="create_account"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/create_account"
             android:textSize="20sp"
             android:padding="8dp"
             android:layout_marginTop="8dp"
@@ -62,9 +67,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="continue"
-            android:textColor="@color/purple_700"
-            android:textSize="14sp"
+            android:text="@string/continueAction"
+            android:textColor="@color/button_primary"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

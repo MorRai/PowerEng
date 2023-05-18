@@ -4,15 +4,22 @@
     android:id="@+id/tasks_nav_graph"
     app:startDestination="@id/partConfirmFragment">
 
-    <fragment
+    <dialog
         android:id="@+id/partConfirmFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartConfirmFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartConfirmFragment"
         android:label="PartConfirmFragment" >
         <action
             android:id="@+id/action_partConfirmFragment_to_partTasksFragment"
             app:destination="@id/partTasksFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/partConfirmFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_partConfirmFragment_to_connectionCodeFragment"
+            app:destination="@id/connectionCodeFragment" />
         <action
             android:id="@+id/action_contentFragment_to_tasks_nav_graph"
             app:destination="@id/tasks_nav_graph"/>
@@ -24,10 +31,30 @@
             android:name="part"
             app:argType="integer"
             android:defaultValue="0" />
-    </fragment>
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="viewX"
+            app:argType="float"
+            android:defaultValue="0" />
+        <argument
+            android:name="viewY"
+            app:argType="float"
+            android:defaultValue="0" />
+        <argument
+            android:name="viewWidth"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="viewHeight"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </dialog>
     <fragment
         android:id="@+id/partTasksFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartTasksFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFragment"
         android:label="PartTasksFragment" >
         <argument
             android:name="unitId"
@@ -40,12 +67,27 @@
         <action
             android:id="@+id/action_partTasksFragment_to_partTasksFinishFragment"
             app:destination="@id/partTasksFinishFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/partTasksFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="isMultiplayer"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="gameCode"
+            app:argType="string"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_partTasksFragment_to_gameResultFragment"
+            app:destination="@id/gameResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/partTasksFinishFragment"
-        android:name="com.rai.powereng.ui.partTasks.PartTasksFinishFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFinishFragment"
         android:label="PartTasksFinishFragment" >
         <argument
             android:name="unitId"
@@ -59,5 +101,38 @@
             android:name="mistakes"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="time"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="countTask"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
+    <fragment
+        android:id="@+id/connectionCodeFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.ConnectionCodeFragment"
+        android:label="ConnectionCodeFragment" >
+        <argument
+            android:name="unitId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="partId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_connectionCodeFragment_to_partTasksFragment"
+            app:destination="@id/partTasksFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/gameResultFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.GameResultFragment"
+        android:label="GameResultFragment" >
+        <argument
+            android:name="gameCode"
+            app:argType="string"
+            android:defaultValue="null" />
+    </dialog>
 </navigation>

@@ -25,7 +25,8 @@ suspend fun Uri.compressAndOptimizeImage(context: Context): Uri? {
         .build()
 
     // Use Coil to create a downsized version of the image in memory
-    val bitmap = Coil.imageLoader(context).execute(downsizedRequest).drawable?.toBitmap() ?: return null
+    val bitmap =
+        Coil.imageLoader(context).execute(downsizedRequest).drawable?.toBitmap() ?: return null
 
     // Save the downsized image to a temporary file
     val outputFile = withContext(Dispatchers.IO) {

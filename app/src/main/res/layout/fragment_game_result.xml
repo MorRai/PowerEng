@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user2Photo"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/text_img"
+        app:civ_border_color="@color/button_primary"
+        app:civ_border_width="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/vs"
+        app:layout_constraintTop_toBottomOf="@+id/user2Name" />
+
+    <TextView
+        android:id="@+id/vs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vs"
+        android:textColor="@color/black"
+        android:textSize="44sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="@+id/user1Photo"
+        app:layout_constraintEnd_toStartOf="@+id/user2Photo"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/user1Photo"
+        app:layout_constraintTop_toTopOf="@+id/user1Photo" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user1Photo"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/text_img"
+        app:civ_border_color="@color/button_primary"
+        app:civ_border_width="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/vs"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user1Name" />
+
+    <TextView
+        android:id="@+id/result_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        tools:text="You Win!"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/time"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/vs"
+        app:layout_constraintStart_toStartOf="@+id/vs"
+        app:layout_constraintTop_toBottomOf="@+id/vs" />
+
+    <TextView
+        android:id="@+id/textScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/score"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/vs"
+        app:layout_constraintStart_toStartOf="@+id/vs"
+        app:layout_constraintTop_toBottomOf="@+id/textTime" />
+
+    <TextView
+        android:id="@+id/user1Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="01:54"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@+id/textTime"
+        app:layout_constraintEnd_toEndOf="@+id/user1Photo"
+        app:layout_constraintStart_toStartOf="@+id/user1Photo"
+        app:layout_constraintTop_toTopOf="@+id/textTime" />
+
+
+    <TextView
+        android:id="@+id/user1Score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="50"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@+id/textScore"
+        app:layout_constraintEnd_toEndOf="@+id/user1Photo"
+        app:layout_constraintStart_toStartOf="@+id/user1Photo"
+        app:layout_constraintTop_toTopOf="@+id/textScore" />
+
+    <TextView
+        android:id="@+id/user2Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="01:54"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@+id/textTime"
+        app:layout_constraintEnd_toEndOf="@+id/user2Photo"
+        app:layout_constraintStart_toStartOf="@+id/user2Photo"
+        app:layout_constraintTop_toTopOf="@+id/textTime" />
+
+    <TextView
+        android:id="@+id/user2Score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="70"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@+id/textScore"
+        app:layout_constraintEnd_toEndOf="@+id/user2Photo"
+        app:layout_constraintStart_toStartOf="@+id/user2Photo"
+        app:layout_constraintTop_toTopOf="@+id/textScore" />
+
+    <Button
+        android:id="@+id/continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/continueAction"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textScore" />
+
+    <ProgressBar
+        android:id="@+id/waiting_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/user1Name"
+        style="@style/Widget.AppCompat.TextView"
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:breakStrategy="balanced"
+        android:gravity="center"
+        android:hyphenationFrequency="full"
+        tools:text="Pupkin Yalupkinkavav"
+        app:layout_constraintEnd_toEndOf="@+id/user1Photo"
+        app:layout_constraintStart_toStartOf="@+id/user1Photo"
+        app:layout_constraintTop_toBottomOf="@+id/result_text_view" />
+
+    <TextView
+        android:id="@+id/user2Name"
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:hyphenationFrequency="full"
+        android:breakStrategy="balanced"
+        tools:text="Pupkina Keterina Zalypenlo"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/user1Name"
+        app:layout_constraintEnd_toEndOf="@+id/user2Photo"
+        app:layout_constraintStart_toStartOf="@+id/user2Photo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageResult"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Неверно" />
+        tools:text="Mistake" />
 
     <TextView
         android:id="@+id/trueAnswerText"
@@ -66,7 +66,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="18dp"
-        android:text="Continue"
+        android:text="@string/continueAction"
         android:textAllCaps="true"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -7,5 +7,18 @@
     <fragment
         android:id="@+id/unitsListFragment"
         android:name="com.rai.powereng.ui.tabs.unitsList.UnitsListFragment"
-        android:label="UnitsListFragment" />
+        android:label="UnitsListFragment" >
+        <action
+            android:id="@+id/action_unitsListFragment_to_unitInfoListFragment"
+            app:destination="@id/unitInfoListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unitInfoListFragment"
+        android:name="com.rai.powereng.ui.tabs.unitsList.unitInfo.UnitInfoListFragment"
+        android:label="UnitInfoListFragment" >
+        <argument
+            android:name="unitId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

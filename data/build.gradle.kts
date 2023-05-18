@@ -45,7 +45,10 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-storage-ktx")
     implementation ("com.google.firebase:firebase-firestore-ktx")
+    implementation ("com.google.firebase:firebase-database-ktx")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
 
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)

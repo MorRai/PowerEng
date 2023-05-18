@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -40,10 +41,10 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="94dp"
-                android:layout_height="94dp"
+                android:layout_width="100dp"
+                android:layout_height="97dp"
                 android:src="@drawable/text_img"
-                app:civ_border_color="@color/purple_200"
+                app:civ_border_color="@color/button_primary"
                 app:civ_border_width="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +76,7 @@
                 tools:text="Joined: 01/01/2021" />
 
             <TextView
-                android:id="@+id/username_id"
+                android:id="@+id/user_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -99,7 +100,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/username_id" />
+                app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
             <Button
                 android:id="@+id/signOut"
@@ -112,7 +113,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/changeInfo"
-                app:layout_constraintTop_toBottomOf="@+id/username_id" />
+                app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -260,9 +261,9 @@
 
             <ImageView
                 android:id="@+id/imageViewIcon"
-                android:layout_width="155dp"
-                android:layout_height="150dp"
-                android:src="@drawable/text_img"
+                android:layout_width="148dp"
+                android:layout_height="135dp"
+                android:src="@drawable/fox_book"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -271,13 +272,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/text_title_score"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textViewScore"
                 app:layout_constraintStart_toEndOf="@id/imageViewIcon"
-                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+                app:layout_constraintTop_toBottomOf="@+id/textTitleLevel" />
+
+            <TextView
+                android:id="@+id/textTitleLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/level"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/textViewScore"
+                app:layout_constraintStart_toEndOf="@id/imageViewIcon"
+                app:layout_constraintTop_toTopOf="@+id/imageViewIcon" />
 
             <TextView
                 android:id="@+id/textTitleUnit"
@@ -311,12 +326,24 @@
                 android:id="@+id/textViewScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="100"
+                android:layout_marginTop="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/imageViewIcon" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewLevel"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/textViewLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageViewIcon"
+                tools:text="100" />
 
             <TextView
                 android:id="@+id/textViewUnit"

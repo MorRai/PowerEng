@@ -13,6 +13,8 @@ interface FirebaseAuthRepository {
 
     val currentUserId: String
 
+    val currentUser: User?
+
      fun getCurrentUser(viewModelScope: CoroutineScope): StateFlow<User?>
 
     //suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult?>

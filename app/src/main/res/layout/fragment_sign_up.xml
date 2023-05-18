@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background"
     android:weightSum="2">
 
     <ProgressBar
@@ -27,8 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_foreground"
-            android:contentDescription="Logo" />
+            app:srcCompat="@drawable/fox_auth" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fieldEmailLayout"
@@ -44,7 +44,8 @@
                 android:id="@+id/fieldEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint_email"
+                android:hint="@string/hint_email"
+                android:background="@color/white"
                 android:inputType="textEmailAddress"
                 android:textColorHint="#616161" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -65,7 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="hint_password"/>
+                android:hint="@string/hint_password"
+                android:background="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -74,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:padding="8dp"
-            android:text="create_account"
+            android:text="@string/create_account"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.906"

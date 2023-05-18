@@ -51,9 +51,6 @@ class SignInFragment : Fragment() {
                 findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
             }
 
-            googleSignInButton.setOnClickListener{
-                viewModel.oneTapSignIn()
-            }
 
             lifecycleScope.launch {
                 viewModel.signInResponse.collect {
@@ -77,6 +74,10 @@ class SignInFragment : Fragment() {
                         }
                     }
                 }
+            }
+
+            googleSignInButton.setOnClickListener{
+                viewModel.oneTapSignIn()
             }
 
             lifecycleScope.launch {
@@ -126,15 +127,13 @@ class SignInFragment : Fragment() {
         }
     }
 
-
-    val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             try {
                 val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
                 val googleIdToken = credentials.googleIdToken
                 viewModel.signInWithGoogle(googleIdToken!!)
             } catch (it: ApiException) {
-                //print(it)
                 Toast.makeText(requireContext(),
                     it.status.toString(),
                     Toast.LENGTH_SHORT).show()

@@ -56,7 +56,6 @@ class VerifyEmailFragment : Fragment() {
                             val isUserSignedOut = response.data
                             if (isUserSignedOut) {
                                 findNavController().popBackStack()
-                                //кидает на прошлый экран и потом опять сюда
                             }
                         }
                         is Response.Failure -> {

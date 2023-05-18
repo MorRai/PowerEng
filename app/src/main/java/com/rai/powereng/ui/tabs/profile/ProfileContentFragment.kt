@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentProfileBinding
+import com.rai.powereng.extensions.getLevel
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.User
 import com.rai.powereng.model.UserScore
@@ -61,6 +62,7 @@ class ProfileContentFragment : Fragment() {
                                 requireContext(),
                                 response.e.message ?: "", Toast.LENGTH_SHORT
                             ).show()
+                            bindScore(UserScore())
                         }
                         Response.Loading -> {
                             progressBar.isVisible = true
@@ -73,7 +75,7 @@ class ProfileContentFragment : Fragment() {
                     if (user == null) {
                         Toast.makeText(
                             requireContext(),
-                            "Ошибка авторизации", Toast.LENGTH_SHORT
+                            getString(R.string.user_not_authorized), Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         bindUserInfo(user)
@@ -81,7 +83,7 @@ class ProfileContentFragment : Fragment() {
                 }
             }
 
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.signOutResponse.collect {
                     when (it) {
                         is Response.Loading -> progressBar.isVisible = true
@@ -131,16 +133,20 @@ class ProfileContentFragment : Fragment() {
             textViewScore.text = userScore.score.toString()
             textViewPart.text = userScore.part.toString()
             textViewUnit.text = userScore.unit.toString()
+            textViewLevel.text = getLevel(userScore.score).toString()
         }
     }
 
     private fun bindUserInfo(user: User) {
         with(binding) {
             nameUser.text = user.displayName
-            usernameId.text = user.uid
+            userEmail.text = user.email
             val date = Date(user.registrationTimeMillis ?: 0)
-            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale("ru"))
-            joinedUser.text = "Регистрация: " + dateFormat.format(date)
+            val dateFormat = SimpleDateFormat("MMMM yyyy", Locale("eng"))
+            joinedUser.text = buildString {
+                append("Joined: ")
+                append(dateFormat.format(date))
+            }
             profileImage.load(user.photoUrl)
         }
     }
