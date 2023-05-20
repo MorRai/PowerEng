@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -42,6 +43,15 @@ class UnitsListFragment : Fragment(), PartClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+
+            setFragmentResultListener("requestKey") { _, bundle ->
+                val message = bundle.getString("message")
+                Toast.makeText(
+                    requireContext(),
+                    message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
             buttonReturnToTop.setOnClickListener {
                 recyclerView.smoothScrollToPosition(0)

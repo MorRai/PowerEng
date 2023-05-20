@@ -36,10 +36,10 @@ class ConnectionCodeViewModel(
     var isSearchingGame = false
 
 
-     fun generateGameCode() {
+     fun generateGameCode(postfix:String) {
          _responseGameCodeFlow.value =Response.Loading
          viewModelScope.launch {
-             val result = generateGameCode.invoke()
+             val result = generateGameCode.invoke(postfix)
              _responseGameCodeFlow.value = result
          }
     }

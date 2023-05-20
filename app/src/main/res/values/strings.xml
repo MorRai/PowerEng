@@ -66,4 +66,5 @@
     <string name="accuracy">ACCURACY</string>
     <string name="translate_word">Translate word</string>
     <string name="loading">LOADING</string>
+    <string name="dont_found_tasks">Don\'t found tasks</string>
 </resources>

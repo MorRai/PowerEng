@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import com.rai.powereng.databinding.FragmentConnectionCodeBinding
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
@@ -62,6 +63,8 @@ class ConnectionCodeFragment : Fragment() {
         }
 
         with(binding) {
+            toolbar.setupWithNavController(findNavController())
+
             create.setOnClickListener {
                 createGame()
             }
@@ -72,7 +75,7 @@ class ConnectionCodeFragment : Fragment() {
                 cancelGame()
             }
             generateCode.setOnClickListener {
-                viewModel.generateGameCode()
+                viewModel.generateGameCode("u" + args.unitId + "p" +args.partId)
             }
 
             viewLifecycleOwner.lifecycleScope.launch {

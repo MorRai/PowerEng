@@ -125,8 +125,8 @@
 
         <ImageView
             android:id="@+id/taskImage"
-            android:layout_width="214dp"
-            android:layout_height="254dp"
+            android:layout_width="184dp"
+            android:layout_height="204dp"
             app:layout_constraintBottom_toBottomOf="@+id/part3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/part3"

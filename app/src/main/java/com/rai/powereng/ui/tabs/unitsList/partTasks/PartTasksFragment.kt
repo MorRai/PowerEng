@@ -24,14 +24,17 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
 import com.rai.powereng.extensions.getAllTextViews
+import com.rai.powereng.extensions.getTimeSting
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import com.rai.powereng.model.UserMultiplayer
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -98,6 +101,16 @@ class PartTasksFragment : Fragment() {
         if (startTime == 0L) {
             startTime = System.currentTimeMillis()
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (true) {
+                val time = (System.currentTimeMillis() - startTime)/ 1000
+                binding.textTimer.text = getTimeSting(time)
+                delay(1000) // Ожидание 1 секунды
+            }
+        }
+
+        binding.toolbar.setupWithNavController(findNavController())
         if (args.isMultiplayer) {
             binding.progressPath.visibility = View.GONE
             binding.multiplayerInfo.root.visibility = View.VISIBLE
@@ -139,7 +152,7 @@ class PartTasksFragment : Fragment() {
                     bind(it.data)
                 }
                 is Response.Failure -> {
-                    showToast(it.e.toString())
+                    showToast(it.e.toString())   
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -149,10 +162,17 @@ class PartTasksFragment : Fragment() {
             when (it) {
                 is Response.Loading -> {}
                 is Response.Success -> {
-                    amountTasks = it.data
+                    if (it.data == 0){
+                        val bundle = bundleOf("message" to getString(R.string.dont_found_tasks))
+                        setFragmentResult("requestKey", bundle)
+                        findNavController().popBackStack()
+                    }else amountTasks = it.data
                 }
                 is Response.Failure -> {
-                    showToast(it.e.toString())
+                    //такого быть не должно но на всякий
+                    val bundle = bundleOf("message" to getString(R.string.dont_found_tasks))
+                    setFragmentResult("requestKey", bundle)
+                    findNavController().popBackStack()
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)

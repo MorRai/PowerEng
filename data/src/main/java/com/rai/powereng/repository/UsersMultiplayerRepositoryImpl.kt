@@ -16,14 +16,14 @@ internal class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
     private val databaseReference =
         FirebaseDatabase.getInstance("https://powereng-cac3c-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
-    override suspend fun generateGameCode(): Response.Success<String> {
+    override suspend fun generateGameCode(postfix:String): Response.Success<String> {
         val charPool : List<Char> = ('0'..'9') + ('a'..'z') + ('A'..'Z')
         val gameCode = (1..6).map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
-        val gameSnapshot = databaseReference.child("games").child(gameCode).get().await() // check if it exists in the database
+        val gameSnapshot = databaseReference.child("games").child(gameCode + postfix).get().await() // check if it exists in the database
         return if (gameSnapshot.exists()) {
-            generateGameCode() // if the code is already taken, generate a new one
+            generateGameCode(postfix) // if the code is already taken, generate a new one
         } else {
            Response.Success(gameCode)  // otherwise return the generated code
         }

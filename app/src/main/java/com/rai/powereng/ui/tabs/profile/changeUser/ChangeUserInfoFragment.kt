@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import coil.load
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentChangeUserInfoBinding
@@ -49,6 +50,8 @@ class ChangeUserInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
+            toolbar.setupWithNavController(findNavController())
+
             val user = viewModel.getCurrentUserResponse().value
             if (user != null ){
                 bindUserInfo(user)

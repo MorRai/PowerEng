@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:srcCompat="@drawable/text_img" />
+        app:srcCompat="@drawable/fox_img" />
 
     <TextView
         android:id="@+id/textView"
