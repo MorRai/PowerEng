@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
+internal class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
 
     private val databaseReference =
         FirebaseDatabase.getInstance("https://powereng-cac3c-default-rtdb.europe-west1.firebasedatabase.app/").reference

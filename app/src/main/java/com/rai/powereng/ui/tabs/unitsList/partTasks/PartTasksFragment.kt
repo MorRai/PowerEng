@@ -29,7 +29,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
 import com.rai.powereng.extensions.getAllTextViews
-import com.rai.powereng.extensions.getTimeSting
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.TaskData
 import com.rai.powereng.model.UserMultiplayer
@@ -100,7 +99,7 @@ class PartTasksFragment : Fragment() {
             startTime = System.currentTimeMillis()
         }
         if (args.isMultiplayer) {
-            binding.progressPath.visibility = View.INVISIBLE
+            binding.progressPath.visibility = View.GONE
             binding.multiplayerInfo.root.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getAnswers(args.gameCode).collect {
@@ -173,7 +172,7 @@ class PartTasksFragment : Fragment() {
                         append(getString(R.string.score_two_point))
                         append(it.score)
                     }
-                    user1Time.text = getTimeSting(it.time)
+                   // user1Time.text = getTimeSting(it.time)
                 }
                 data[1].let {
                     user2Name.text = it.name
@@ -181,7 +180,7 @@ class PartTasksFragment : Fragment() {
                         append(getString(R.string.score_two_point))
                         append(it.score)
                     }
-                    user2Time.text = getTimeSting(it.time)
+                  //  user2Time.text = getTimeSting(it.time)
                 }
             } else {
                 val bundle = bundleOf("message" to getString(R.string.the_game_is_destroyed))
@@ -258,6 +257,9 @@ class PartTasksFragment : Fragment() {
                 4 -> {
                     bindForListen(task)
                 }
+                5 ->{
+                    bindForWordTranslate(task)
+                }
             }
             dialogResultId.buttonContinue.setOnClickListener {
                 if (taskNum <= amountTasks) {
@@ -276,6 +278,7 @@ class PartTasksFragment : Fragment() {
             itemMissingWord.root.visibility = View.GONE
             itemTranclate.root.visibility = View.GONE
             itemListen.root.visibility = View.GONE
+            itemTaskWordTranslate.root.visibility = View.GONE
             errorsScreen.root.visibility = View.GONE
             itemTranclate.answerBox.removeAllViews()
             itemTranclate.optionBox.removeAllViews()
@@ -288,6 +291,39 @@ class PartTasksFragment : Fragment() {
             duration = 500
         }
     }
+
+
+    private fun bindForWordTranslate(task: TaskData){
+        with(binding) {
+            description.text = getString(R.string.translate_word)
+            exerciseInfo.visibility = View.VISIBLE
+            itemTaskWordTranslate.root.visibility = View.VISIBLE
+
+            val checkAnswer = task.answer
+            var answerString = ""
+            check.setOnClickListener {
+                when (itemTaskWordTranslate.wordVariants.checkedRadioButtonId) {
+                    R.id.variantOne -> answerString = itemTaskWordTranslate.variantOne.text.toString()
+                    R.id.variantTwo -> answerString = itemTaskWordTranslate.variantTwo.text.toString()
+                    R.id.variantThree -> answerString = itemTaskWordTranslate.variantThree.text.toString()
+                    R.id.variantFour -> answerString = itemTaskWordTranslate.variantFour.text.toString()
+                }
+                if (answerString.isBlank()) {
+                    showToast(getString(R.string.you_must_choose_an_answer))
+                } else {
+                    setSettingsDialog(checkAnswer == answerString, checkAnswer, task.taskNum)
+                    bottomSheet.visibility = View.VISIBLE
+                    accessibilityButtons(contentLayout, false)
+                }
+            }
+            itemTaskWordTranslate.variantOne.text = task.variants.split(" ")[0]
+            itemTaskWordTranslate.variantTwo.text = task.variants.split(" ")[1]
+            itemTaskWordTranslate.variantThree.text = task.variants.split(" ")[2]
+            itemTaskWordTranslate.variantFour.text = task.variants.split(" ")[3]
+            exerciseInfo.text = task.question
+        }
+    }
+
 
     private fun bindForListen(task: TaskData) {
         with(binding) {

@@ -64,4 +64,6 @@
     <string name="total_xp">TOTAL XP</string>
     <string name="speedy">SPEEDY</string>
     <string name="accuracy">ACCURACY</string>
+    <string name="translate_word">Translate word</string>
+    <string name="loading">LOADING</string>
 </resources>

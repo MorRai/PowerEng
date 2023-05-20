@@ -124,7 +124,7 @@
             tools:srcCompat="@drawable/active_not_pressed" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/taskImage"
             android:layout_width="214dp"
             android:layout_height="254dp"
             app:layout_constraintBottom_toBottomOf="@+id/part3"

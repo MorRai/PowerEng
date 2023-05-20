@@ -46,18 +46,33 @@
                 android:visibility="gone" />
 
 
-            <TextView
-                android:id="@+id/description"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:textAllCaps="true"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Description type of task..." />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Description type of task..." />
+
+                <TextView
+                    android:id="@+id/textTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:gravity="right|center_vertical"
+                    android:text="TextView"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/exerciseInfo"
@@ -98,6 +113,14 @@
             <include
                 android:id="@+id/item_missing_word"
                 layout="@layout/item_task_missing_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/item_task_word_translate"
+                layout="@layout/item_task_word_translate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

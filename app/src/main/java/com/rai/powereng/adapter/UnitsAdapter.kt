@@ -77,6 +77,12 @@ class UnitViewHolder(
         val maxUnit = userScore?.unit ?: 1
         val maxPart = userScore?.part?.plus(1) ?: 1
         binding.unitDescription.text = item.description
+        if(item.unitId % 2 == 0){
+            binding.taskImage.setImageResource(R.drawable.units1)
+        }else{
+            binding.taskImage.setImageResource(R.drawable.units2)
+        }
+
         binding.unitNumber.text = buildString {
         append("Unit ")
         append(item.unitId)

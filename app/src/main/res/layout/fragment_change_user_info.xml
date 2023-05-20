@@ -83,6 +83,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/id_edit_text"
                     android:inputType="none"
+                    android:enabled="false"
                     android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
