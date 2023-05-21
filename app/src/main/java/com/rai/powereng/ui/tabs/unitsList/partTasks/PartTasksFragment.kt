@@ -348,8 +348,9 @@ class PartTasksFragment : Fragment() {
     private fun bindForListen(task: TaskData) {
         with(binding) {
             description.text = getString(R.string.enter_what_you_heard)
-            itemTranclate.root.visibility = View.VISIBLE
             itemListen.root.visibility = View.VISIBLE
+            itemTranclate.root.visibility = View.VISIBLE
+
 
             val textForListen = task.answer
             itemListen.playSound.setOnClickListener {

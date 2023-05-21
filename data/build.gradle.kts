@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.kotlinx.coroutin.core)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.bundles.androidx.room)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)
 
