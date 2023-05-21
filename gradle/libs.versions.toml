@@ -20,6 +20,8 @@ junit-version = "4.13.2"
 androidx-test-ext = "1.1.5"
 androidx-test-espresso = "3.5.1"
 
+androidx-flexbox = "3.0.0"
+hdodenhof-circleimageview = "3.1.0"
 
 
 [libraries]
@@ -54,6 +56,10 @@ junit = {module = "junit:junit", version.ref = "junit-version"}
 androidx-test-ext= {module = "androidx.test.ext:junit", version.ref = "androidx-test-ext"}
 
 androidx-test-espresso= {module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso"}
+
+androidx-flexbox  = {module = "com.google.android.flexbox:flexbox", version.ref = "androidx-flexbox"}
+hdodenhof-circleimageview  = {module = "de.hdodenhof:circleimageview", version.ref = "hdodenhof-circleimageview"}
+
 
 [bundles]
 androidx-navigation = ["androidx-navigation-fragment", "androidx-navigation-ui"]
