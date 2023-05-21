@@ -27,6 +27,7 @@ hdodenhof-circleimageview = "3.1.0"
 [libraries]
 androidx-lifecycle-viewmodel = {module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle"}
 androidx-lifecycle-livedata = {module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle"}
+androidx-lifecycle-runtime = {module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle"}
 
 androidx-navigation-fragment = {module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation"}
 androidx-navigation-ui = {module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation"}
@@ -42,6 +43,10 @@ coil  = {module = "io.coil-kt:coil", version.ref = "coil-version"}
 androidx-swiperefreshlayout  = {module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout-version"}
 
 kotlinx-coroutine = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutine"}
+
+kotlinx-coroutin-play-services = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version = "1.6.1"}
+kotlinx-coroutin-core = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.1"}
+
 
 kotlinx-serialization = {module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 

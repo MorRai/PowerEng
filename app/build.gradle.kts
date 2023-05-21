@@ -46,7 +46,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":data"))
-    
+
     implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-storage-ktx")
@@ -54,9 +54,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-database-ktx")
     implementation("com.google.android.gms:play-services-auth")
 
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")
-
-
+    implementation(libs.kotlinx.coroutin.play.services)
     implementation(libs.hdodenhof.circleimageview)
     implementation(libs.androidx.flexbox)
     implementation(libs.coil)
