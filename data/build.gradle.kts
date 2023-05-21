@@ -36,13 +36,13 @@ dependencies {
 
     implementation(project(":domain"))
 
-    implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-storage-ktx")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.database.ktx)
 
+    implementation(libs.android.gms.play.services.auth)
     implementation(libs.kotlinx.coroutin.play.services)
     implementation(libs.kotlinx.coroutin.core)
     implementation(libs.androidx.lifecycle.runtime)

@@ -22,6 +22,8 @@ androidx-test-espresso = "3.5.1"
 
 androidx-flexbox = "3.0.0"
 hdodenhof-circleimageview = "3.1.0"
+android-gms-play-services-auth= "20.5.0"
+
 
 
 [libraries]
@@ -47,12 +49,13 @@ kotlinx-coroutine = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-android"
 kotlinx-coroutin-play-services = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version = "1.6.1"}
 kotlinx-coroutin-core = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.1"}
 
-
 kotlinx-serialization = {module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 
 androidx_core = {module = "androidx.core:core-ktx", version.ref = "androidx-core"}
 androidx-appcompat = {module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat"}
 android-material= {module = "com.google.android.material:material", version.ref = "android-material"}
+
+android-gms-play-services-auth= {module = "com.google.android.gms:play-services-auth", version.ref = "android-gms-play-services-auth"}
 
 androidx-constraintlayout= {module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout"}
 
@@ -65,6 +68,11 @@ androidx-test-espresso= {module = "androidx.test.espresso:espresso-core", versio
 androidx-flexbox  = {module = "com.google.android.flexbox:flexbox", version.ref = "androidx-flexbox"}
 hdodenhof-circleimageview  = {module = "de.hdodenhof:circleimageview", version.ref = "hdodenhof-circleimageview"}
 
+firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+firebase-database-ktx = { module = "com.google.firebase:firebase-database-ktx" }
+firebase-bom = "com.google.firebase:firebase-bom:29.2.1"
 
 [bundles]
 androidx-navigation = ["androidx-navigation-fragment", "androidx-navigation-ui"]
