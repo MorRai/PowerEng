@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.core.view.children
@@ -29,6 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentPartTasksBinding
+import com.rai.powereng.extensions.ConfirmationDialogUtils
 import com.rai.powereng.extensions.getAllTextViews
 import com.rai.powereng.extensions.getTimeSting
 import com.rai.powereng.model.Response
@@ -101,86 +103,97 @@ class PartTasksFragment : Fragment() {
         if (startTime == 0L) {
             startTime = System.currentTimeMillis()
         }
+        with(binding) {
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            while (true) {
-                val time = (System.currentTimeMillis() - startTime)/ 1000
-                binding.textTimer.text = getTimeSting(time)
-                delay(1000) // Ожидание 1 секунды
-            }
-        }
-
-        binding.toolbar.setupWithNavController(findNavController())
-        if (args.isMultiplayer) {
-            binding.progressPath.visibility = View.GONE
-            binding.multiplayerInfo.root.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.getAnswers(args.gameCode).collect {
-                    when (it) {
-                        is Response.Loading -> {}
-                        is Response.Success -> {
-                            bindMultiplayer(it.data)
-                        }
-                        is Response.Failure -> {
-                            showToast(it.e.toString())
+                while (true) {
+                    val time = (System.currentTimeMillis() - startTime) / 1000
+                    textTimer.text = getTimeSting(time)
+                    delay(1000) // Wait 1 second
+                }
+            }
+
+            toolbar.setupWithNavController(findNavController())
+            toolbar.setNavigationOnClickListener {
+                showConfirmationDialog()
+            }
+
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showConfirmationDialog()
+                }
+            })
+
+            if (args.isMultiplayer) {
+                progressPath.visibility = View.GONE
+                multiplayerInfo.root.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.getAnswers(args.gameCode).collect {
+                        when (it) {
+                            is Response.Loading -> {}
+                            is Response.Success -> {
+                                bindMultiplayer(it.data)
+                            }
+                            is Response.Failure -> {
+                                showToast(it.e.toString())
+                            }
                         }
                     }
                 }
             }
-        }
 
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.dialogResultId.dialogResult)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        val bottomSheetCallback = object : BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            val bottomSheetBehavior = BottomSheetBehavior.from(dialogResultId.dialogResult)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            val bottomSheetCallback = object : BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             }
+            bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        }
-        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-
-        viewModel.getTasksUser(args.unitId, args.partId, taskNum)
-        viewModel.tasksFlow.onEach {
-            when (it) {
-                is Response.Loading -> {}
-                is Response.Success -> {
-                    bind(it.data)
+            viewModel.getTasksUser(args.unitId, args.partId, taskNum)
+            viewModel.tasksFlow.onEach {
+                when (it) {
+                    is Response.Loading -> {}
+                    is Response.Success -> {
+                        bind(it.data)
+                    }
+                    is Response.Failure -> {
+                        showToast(it.e.toString())
+                    }
                 }
-                is Response.Failure -> {
-                    showToast(it.e.toString())   
-                }
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.getTasksAmount(args.unitId, args.partId)
-        viewModel.tasksAmountFlow.onEach {
-            when (it) {
-                is Response.Loading -> {}
-                is Response.Success -> {
-                    if (it.data == 0){
+            viewModel.getTasksAmount(args.unitId, args.partId)
+            viewModel.tasksAmountFlow.onEach {
+                when (it) {
+                    is Response.Loading -> {}
+                    is Response.Success -> {
+                        if (it.data == 0) {
+                            val bundle = bundleOf("message" to getString(R.string.dont_found_tasks))
+                            setFragmentResult("requestKey", bundle)
+                            findNavController().popBackStack()
+                        } else amountTasks = it.data
+                    }
+                    is Response.Failure -> { //this should not be, but just in case
                         val bundle = bundleOf("message" to getString(R.string.dont_found_tasks))
                         setFragmentResult("requestKey", bundle)
                         findNavController().popBackStack()
-                    }else amountTasks = it.data
+                    }
                 }
-                is Response.Failure -> {
-                    //такого быть не должно но на всякий
-                    val bundle = bundleOf("message" to getString(R.string.dont_found_tasks))
-                    setFragmentResult("requestKey", bundle)
-                    findNavController().popBackStack()
-                }
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.progress.onEach {
-            binding.progressPath.max = amountTasks
-            binding.progressPath.progress = it
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+            viewModel.progress.onEach {
+                progressPath.max = amountTasks
+                progressPath.progress = it
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+        }
     }
 
     private fun bindMultiplayer(data: List<UserMultiplayer>) {
@@ -192,7 +205,6 @@ class PartTasksFragment : Fragment() {
                         append(getString(R.string.score_two_point))
                         append(it.score)
                     }
-                   // user1Time.text = getTimeSting(it.time)
                 }
                 data[1].let {
                     user2Name.text = it.name
@@ -200,7 +212,6 @@ class PartTasksFragment : Fragment() {
                         append(getString(R.string.score_two_point))
                         append(it.score)
                     }
-                  //  user2Time.text = getTimeSting(it.time)
                 }
             } else {
                 val bundle = bundleOf("message" to getString(R.string.the_game_is_destroyed))
@@ -277,7 +288,7 @@ class PartTasksFragment : Fragment() {
                 4 -> {
                     bindForListen(task)
                 }
-                5 ->{
+                5 -> {
                     bindForWordTranslate(task)
                 }
             }
@@ -313,7 +324,7 @@ class PartTasksFragment : Fragment() {
     }
 
 
-    private fun bindForWordTranslate(task: TaskData){
+    private fun bindForWordTranslate(task: TaskData) {
         with(binding) {
             description.text = getString(R.string.translate_word)
             exerciseInfo.visibility = View.VISIBLE
@@ -323,10 +334,14 @@ class PartTasksFragment : Fragment() {
             var answerString = ""
             check.setOnClickListener {
                 when (itemTaskWordTranslate.wordVariants.checkedRadioButtonId) {
-                    R.id.variantOne -> answerString = itemTaskWordTranslate.variantOne.text.toString()
-                    R.id.variantTwo -> answerString = itemTaskWordTranslate.variantTwo.text.toString()
-                    R.id.variantThree -> answerString = itemTaskWordTranslate.variantThree.text.toString()
-                    R.id.variantFour -> answerString = itemTaskWordTranslate.variantFour.text.toString()
+                    R.id.variantOne -> answerString =
+                        itemTaskWordTranslate.variantOne.text.toString()
+                    R.id.variantTwo -> answerString =
+                        itemTaskWordTranslate.variantTwo.text.toString()
+                    R.id.variantThree -> answerString =
+                        itemTaskWordTranslate.variantThree.text.toString()
+                    R.id.variantFour -> answerString =
+                        itemTaskWordTranslate.variantFour.text.toString()
                 }
                 if (answerString.isBlank()) {
                     showToast(getString(R.string.you_must_choose_an_answer))
@@ -505,6 +520,13 @@ class PartTasksFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showConfirmationDialog() {
+        ConfirmationDialogUtils.showConfirmationDialog(
+            requireContext(),
+            findNavController()
+        )
     }
 
     override fun onDestroyView() {

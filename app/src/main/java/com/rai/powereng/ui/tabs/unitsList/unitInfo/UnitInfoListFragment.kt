@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rai.powereng.adapter.InfoUnitAdapter
 import com.rai.powereng.databinding.FragmentUnitInfoBinding
@@ -43,6 +45,7 @@ class UnitInfoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            toolbar.setupWithNavController(findNavController())
 
             val adapter = InfoUnitAdapter(requireContext())
             val layoutManager = LinearLayoutManager(requireContext())
@@ -71,7 +74,6 @@ class UnitInfoListFragment : Fragment() {
             }
         }
     }
-
 
     private fun isVisibleProgressBar(visible: Boolean) {
         binding.paginationProgressBar.isVisible = visible

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Profile change"
+        app:title="Change profile"
         tools:layout_editor_absoluteX="16dp" />
 
     <ProgressBar
