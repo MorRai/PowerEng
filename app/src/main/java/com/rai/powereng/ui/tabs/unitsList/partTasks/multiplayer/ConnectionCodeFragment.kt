@@ -66,7 +66,11 @@ class ConnectionCodeFragment : Fragment() {
         with(binding) {
             toolbar.setupWithNavController(findNavController())
             toolbar.setNavigationOnClickListener {
-                showConfirmationDialog()
+                if (viewModel.isSearchingGame) {
+                    cancelGame()
+                } else {
+                    showConfirmationDialog()
+                }
             }
             create.setOnClickListener {
                 createGame()
