@@ -15,12 +15,10 @@ import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
     private val signInWithEmailPassword: SignInWithEmailPassword,
-
     private val signInWithGoogle: SignInWithGoogle,
     val oneTapClient: SignInClient,
     private var signInRequest: BeginSignInRequest,
     private var signUpRequest: BeginSignInRequest,
-    // private val oneTapSignInWithGoogle: OneTapSignInWithGoogle
 ) : ViewModel() {
 
     private val _signInResponse = MutableStateFlow<Response<Boolean>>(Response.Success(false))

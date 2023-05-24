@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ForgotPasswordViewModel(private val sendPasswordReset: SendPasswordReset): ViewModel() {
+class ForgotPasswordViewModel(private val sendPasswordReset: SendPasswordReset) : ViewModel() {
 
-
-    private val _sendPasswordResetEmailResponse = MutableStateFlow<Response<Boolean>>(Response.Success(false))
-    val sendPasswordResetEmailResponse : StateFlow<Response<Boolean>> = _sendPasswordResetEmailResponse
+    private val _sendPasswordResetEmailResponse =
+        MutableStateFlow<Response<Boolean>>(Response.Success(false))
+    val sendPasswordResetEmailResponse: StateFlow<Response<Boolean>> =
+        _sendPasswordResetEmailResponse
 
     fun signUpUser(email: String) = viewModelScope.launch {
         _sendPasswordResetEmailResponse.value = Response.Loading
         val result = sendPasswordReset.invoke(email)
         _sendPasswordResetEmailResponse.value = result
     }
-
 
 }
 

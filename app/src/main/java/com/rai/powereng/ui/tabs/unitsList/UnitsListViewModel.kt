@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class UnitsListViewModel(
     getUnitsUseCase: GetUnitsUseCase,
-    getUserScoreUseCase: GetUserScoreUseCase
+    getUserScoreUseCase: GetUserScoreUseCase,
 ) : ViewModel() {
 
     val unitsFlow = getUnitsUseCase.invoke()
@@ -26,5 +26,4 @@ class UnitsListViewModel(
             started = SharingStarted.Eagerly,
             initialValue = Response.Loading
         )
-
 }

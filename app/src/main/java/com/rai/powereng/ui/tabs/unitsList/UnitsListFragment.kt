@@ -40,6 +40,7 @@ class UnitsListFragment : Fragment(), PartClickListener {
             .also { _binding = it }
             .root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
@@ -58,9 +59,12 @@ class UnitsListFragment : Fragment(), PartClickListener {
             }
 
             val adapter =
-                UnitsAdapter(requireContext(),this@UnitsListFragment ) {
-                    findNavController().navigate(UnitsListFragmentDirections.actionUnitsListFragmentToUnitInfoListFragment(
-                        it.unitId))
+                UnitsAdapter(requireContext(), this@UnitsListFragment) {
+                    findNavController().navigate(
+                        UnitsListFragmentDirections.actionUnitsListFragmentToUnitInfoListFragment(
+                            it.unitId
+                        )
+                    )
                 }
 
             val layoutManager = LinearLayoutManager(requireContext())
@@ -107,16 +111,29 @@ class UnitsListFragment : Fragment(), PartClickListener {
             }
         }
     }
+
     private fun isVisibleProgressBar(visible: Boolean) {
         binding.paginationProgressBar.isVisible = visible
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    override fun onPartClickListener(unitNum: Int,part: Int,position: Int, view: View) {
+
+    override fun onPartClickListener(unitNum: Int, part: Int, position: Int, view: View) {
         Navigation.findNavController(requireActivity(), R.id.nav_container)
-            .navigate(ContentFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part,position, view.x, view.y, view.width, view.height))
+            .navigate(
+                ContentFragmentDirections.actionContentFragmentToTasksNavGraph(
+                    unitNum,
+                    part,
+                    position,
+                    view.x,
+                    view.y,
+                    view.width,
+                    view.height
+                )
+            )
 
     }
 }

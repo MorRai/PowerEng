@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
-class ChangeUserInfoVievModel(
+class ChangeUserInfoViewModel(
     private val signOut: SignOut,
     private val getCurrentUser: GetCurrentUser,
     private val authRepository: FirebaseAuthRepository,
@@ -35,9 +35,9 @@ class ChangeUserInfoVievModel(
         _signOutResponse.value = result
     }
 
-    fun updateUser(email:String,name:String, photoUri:String?) = viewModelScope.launch {
+    fun updateUser(email: String, name: String, photoUri: String?) = viewModelScope.launch {
         _updateUserResponse.value = Response.Loading
-        val result = authRepository.updateCurrentUser(email,name, photoUri)
+        val result = authRepository.updateCurrentUser(email, name, photoUri)
         _updateUserResponse.value = result
     }
 

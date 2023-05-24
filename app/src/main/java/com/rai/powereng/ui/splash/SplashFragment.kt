@@ -28,10 +28,9 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         return FragmentSplashBinding.inflate(inflater, container, false).also { binding ->
-                _binding = binding
-            }.root
+            _binding = binding
+        }.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

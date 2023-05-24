@@ -27,7 +27,7 @@ class VerifyEmailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentVerifyEmailBinding.inflate(inflater, container, false)
             .also { _binding = it }
@@ -36,7 +36,7 @@ class VerifyEmailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding){
+        with(binding) {
             continueAction.setOnClickListener {
                 val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
                 if (resultNav.not()) {
@@ -48,7 +48,7 @@ class VerifyEmailFragment : Fragment() {
             }
 
             lifecycleScope.launch {
-                viewModel.signOutResponse.collect {response ->
+                viewModel.signOutResponse.collect { response ->
                     when (response) {
                         is Response.Loading -> progressBar.isVisible = true
                         is Response.Success -> {
@@ -60,9 +60,11 @@ class VerifyEmailFragment : Fragment() {
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
+                            Toast.makeText(
+                                requireContext(),
                                 response.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }

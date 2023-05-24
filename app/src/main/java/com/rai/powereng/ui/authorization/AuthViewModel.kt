@@ -8,5 +8,6 @@ class AuthViewModel(private val getCurrentUser: GetCurrentUser) : ViewModel() {
     init {
         getCurrentUserResponse()
     }
+
     fun getCurrentUserResponse() = getCurrentUser.invoke(viewModelScope)
 }

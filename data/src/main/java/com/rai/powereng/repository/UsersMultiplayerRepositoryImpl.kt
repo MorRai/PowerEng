@@ -59,7 +59,7 @@ internal class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val players = snapshot.value as HashMap<String, Any>
+                    val players = snapshot.value as HashMap<*, *>
                     if (players.size == 2) {
                         trySend(Response.Success(true))
                     }
@@ -96,12 +96,11 @@ internal class UsersMultiplayerRepositoryImpl : UsersMultiplayerRepository {
         }
     }
 
-
     override suspend fun joinGame(gameCode: String, playerName: String,playerImage:String): Response<Boolean>  {
         return try {
             val snapshot = databaseReference.child("games").child(gameCode).child("answers").get().await()
             if (snapshot.exists()) {
-                val result = snapshot.value as HashMap<String, Any>
+                val result = snapshot.value as HashMap<*, *>
                 val numKeys = result.size
                 if (numKeys == 1) {
                     val userAnswersRef = databaseReference.child("games").child(gameCode).child("answers").child(playerName)

@@ -11,12 +11,12 @@ class PowerEngApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-           androidContext(this@PowerEngApplication)
-           modules(
-               dataModule,
-               viewModelsModule
+            androidContext(this@PowerEngApplication)
+            modules(
+                dataModule,
+                viewModelsModule
 
-           )
-       }
+            )
+        }
     }
 }

@@ -13,7 +13,8 @@ import com.rai.powereng.R
 import com.rai.powereng.databinding.ItemRatingBinding
 import com.rai.powereng.model.UserScoreWithProfile
 
-class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
+class UsersRatingAdapter(context: Context) :
+    ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
 
     private val layoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersScoreViewHolder {

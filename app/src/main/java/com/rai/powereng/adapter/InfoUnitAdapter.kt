@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rai.powereng.databinding.ItemUnitInfoBinding
 import com.rai.powereng.model.TaskData
 
-class InfoUnitAdapter(context: Context): ListAdapter<TaskData, InfoUnitViewHolder>(DIFF_UTIL) {
+class InfoUnitAdapter(context: Context) : ListAdapter<TaskData, InfoUnitViewHolder>(DIFF_UTIL) {
 
     private val layoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InfoUnitViewHolder {
@@ -18,7 +18,6 @@ class InfoUnitAdapter(context: Context): ListAdapter<TaskData, InfoUnitViewHolde
             binding = ItemUnitInfoBinding.inflate(layoutInflater, parent, false)
         )
     }
-
 
     override fun onBindViewHolder(holder: InfoUnitViewHolder, position: Int) {
         val item = getItem(position)

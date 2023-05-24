@@ -25,14 +25,14 @@ internal class TasksRepositoryImpl(private val db: FirebaseFirestore) : TasksRep
         }
     }
 
-    override fun getAllTasksOfUnit(unitId: Int) = callbackFlow{
-            val snapshotListener = db.collection("tasks")
-                .whereEqualTo("unit", unitId).addSnapshotListener { snapshot, e ->
+    override fun getAllTasksOfUnit(unitId: Int) = callbackFlow {
+        val snapshotListener = db.collection("tasks")
+            .whereEqualTo("unit", unitId).addSnapshotListener { snapshot, e ->
                 val unitsResponse = if (snapshot != null) {
                     val tasks = snapshot.toObjects(TaskData::class.java)
                     Response.Success(tasks)
                 } else {
-                    Response.Failure(e ?:  Exception("Unknown error"))
+                    Response.Failure(e ?: Exception("Unknown error"))
                 }
                 trySend(unitsResponse)
             }
