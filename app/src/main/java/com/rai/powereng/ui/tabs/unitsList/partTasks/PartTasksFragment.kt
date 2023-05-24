@@ -483,6 +483,7 @@ class PartTasksFragment : Fragment() {
             val bgColor = if (answerIsTrue) R.color.green_lite else R.color.red_lite
             val buttonBgColor = if (answerIsTrue) R.color.green else R.color.red
             val textColor = if (answerIsTrue) R.color.green else R.color.red
+            val imageAnswer = if (answerIsTrue) R.drawable.ic_done else R.drawable.ic_close
             when {
                 answerIsTrue -> {
                     if (workWithList) {
@@ -502,6 +503,7 @@ class PartTasksFragment : Fragment() {
                     trueAnswerText.text = getString(R.string.correct_answer)
                 }
             }
+            imageResult.setImageResource(imageAnswer)
             dialogResult.setBackgroundColor(resources.getColor(bgColor, null))
             buttonContinue.setBackgroundColor(resources.getColor(buttonBgColor, null))
             buttonContinue.setTextColor(resources.getColor(R.color.white, null))
