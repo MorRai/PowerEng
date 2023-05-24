@@ -8,7 +8,7 @@ data class UserMultiplayer(
     var isForDelete: Boolean = false,
     val image: String = "",
 ) {
-    // иначе почемуто файр бейс не хочет работать, но схуяли?
+    // otherwise, for some reason, firebase does not want to work, but why? (firebase bug)
     fun getIsComplete(): Boolean {
         return isComplete
     }

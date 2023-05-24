@@ -11,7 +11,7 @@ class SaveGameUseCase(
     private val repoAuth: FirebaseAuthRepository,
 ) {
 
-     operator fun invoke(
+    operator fun invoke(
         numCorrectAnswers: Int,
         gameCode: String, startTime: Long,
         isComplete: Boolean,
@@ -31,5 +31,4 @@ class SaveGameUseCase(
             }
         }
     }
-
 }

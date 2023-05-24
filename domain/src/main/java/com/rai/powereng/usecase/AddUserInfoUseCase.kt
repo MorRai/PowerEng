@@ -7,7 +7,7 @@ import com.rai.powereng.repository.UserProgressInfoRepository
 
 class AddUserInfoUseCase(
     private val repoUserInfo: UserProgressInfoRepository,
-    private val repoAuth: FirebaseAuthRepository
+    private val repoAuth: FirebaseAuthRepository,
 ) {
     suspend operator fun invoke(userProgressInfo: UserProgressInfo): Response<Boolean> {
         return if (repoAuth.isUserAuthenticatedInFirebase && userProgressInfo.userId != "") {
