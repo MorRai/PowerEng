@@ -52,7 +52,7 @@ class SignInViewModel(private val signInWithEmailPassword: SignInWithEmailPasswo
         _signInWithGoogleResponse.value = result
     }
 
-    suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
+    private suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
         return try {
             val signInResult = oneTapClient.beginSignIn(signInRequest).await()
             Response.Success(signInResult)
