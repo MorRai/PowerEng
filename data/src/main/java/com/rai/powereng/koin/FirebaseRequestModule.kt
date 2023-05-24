@@ -8,6 +8,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.rai.powereng.BuildConfig
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -19,7 +20,7 @@ internal val firebaseRequestModule  = module {
         .setGoogleIdTokenRequestOptions(
             BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                 .setSupported(true)
-                .setServerClientId("928853453093-dps9hhilabn8v1thb8eom7lfqetsgj6h.apps.googleusercontent.com")
+                .setServerClientId(BuildConfig.GOOGLE_FIREBASE_KEY)
                 .setFilterByAuthorizedAccounts(true)
                 .build())
         .setAutoSelectEnabled(true)
@@ -32,7 +33,7 @@ internal val firebaseRequestModule  = module {
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
-                    .setServerClientId("928853453093-dps9hhilabn8v1thb8eom7lfqetsgj6h.apps.googleusercontent.com")
+                    .setServerClientId(BuildConfig.GOOGLE_FIREBASE_KEY)
                     .setFilterByAuthorizedAccounts(false)
                     .build())
             .build()
@@ -47,7 +48,7 @@ internal val firebaseRequestModule  = module {
     single{  Identity.getSignInClient(androidContext()) } //SignInClient
 
     single { GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("928853453093-dps9hhilabn8v1thb8eom7lfqetsgj6h.apps.googleusercontent.com")
+        .requestIdToken(BuildConfig.GOOGLE_FIREBASE_KEY)
         .requestEmail()
         .build()
     }

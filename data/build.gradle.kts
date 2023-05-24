@@ -12,6 +12,9 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
+        val googleFirebaseKey:String by project
+        buildConfigField("String","GOOGLE_FIREBASE_KEY", googleFirebaseKey)
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
