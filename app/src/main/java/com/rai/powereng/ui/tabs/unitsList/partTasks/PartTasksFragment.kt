@@ -384,7 +384,7 @@ class PartTasksFragment : Fragment() {
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
             }
-            task.answer.split(" ").plus(task.variants.split(" "))
+            (task.answer.split(" ").plus(task.variants.split(" "))).shuffled()
                 .forEach { addTextViewToOptionAndAnswer(it, task.typeTask) }
         }
 
@@ -435,7 +435,7 @@ class PartTasksFragment : Fragment() {
                 bottomSheet.visibility = View.VISIBLE
                 accessibilityButtons(contentLayout, false)
             }
-            task.answer.split(" ").plus(task.variants.split(" "))
+            (task.answer.split(" ").plus(task.variants.split(" "))).shuffled()
                 .forEach { addTextViewToOptionAndAnswer(it, task.typeTask) }
         }
     }
