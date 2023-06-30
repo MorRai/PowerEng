@@ -19,15 +19,15 @@ import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 
 
-internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
-                                         // private var oneTapClient: SignInClient,
-                                          private val storage: FirebaseStorage,
-                                          private val db: FirebaseFirestore
-): FirebaseAuthRepository, KoinComponent {
+internal class FirebaseAuthRepositoryImpl(
+    private val auth: FirebaseAuth,
+    // private var oneTapClient: SignInClient,
+    private val storage: FirebaseStorage,
+    private val db: FirebaseFirestore,
+) : FirebaseAuthRepository, KoinComponent {
 
 
     private val currentUserFlow = MutableStateFlow<FirebaseUser?>(null)
-
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
@@ -35,7 +35,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override val isUserAuthenticatedInFirebase:Boolean
+    override val isUserAuthenticatedInFirebase: Boolean
         get() = currentUserFlow.value?.isEmailVerified ?: false
 
     override val currentUserId: String
@@ -45,9 +45,12 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         get() = currentUserFlow.value?.toDomainModels()
 
     override fun getCurrentUser(viewModelScope: CoroutineScope): StateFlow<User?> {
-        return currentUserFlow.map { it?.toDomainModels() }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), currentUserFlow.value?.toDomainModels())
+        return currentUserFlow.map { it?.toDomainModels() }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            currentUserFlow.value?.toDomainModels()
+        )
     }
-
 
     override suspend fun firebaseSignInWithGoogle(idToken: String): Response<Boolean> {
         return try {
@@ -63,7 +66,6 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-
     override suspend fun signOut() =
         try {
             auth.signOut()
@@ -72,7 +74,10 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
             Response.Failure(e)
         }
 
-    override suspend fun signUpWithEmailPassword(email: String, password: String) : Response<Boolean> {
+    override suspend fun signUpWithEmailPassword(
+        email: String,
+        password: String,
+    ): Response<Boolean> {
         return try {
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
             val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
@@ -85,7 +90,6 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-
     override suspend fun signInWithEmailPassword(email: String, password: String) =
         try {
             auth.signInWithEmailAndPassword(email, password).await()
@@ -97,20 +101,20 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     override suspend fun sendPasswordReset(email: String) =
         try {
             auth.sendPasswordResetEmail(email).await()
-           Response.Success(true)
+            Response.Success(true)
         } catch (e: Exception) {
-          Response.Failure(e)
+            Response.Failure(e)
         }
 
-    override suspend fun sendEmailVerification()=
-      try {
-          currentUserFlow.value?.sendEmailVerification()?.await()
-          Response.Success(true)
+    override suspend fun sendEmailVerification() =
+        try {
+            currentUserFlow.value?.sendEmailVerification()?.await()
+            Response.Success(true)
         } catch (e: Exception) {
-          Response.Failure(e)
+            Response.Failure(e)
         }
 
-    override suspend fun reloadFirebaseUser()=flow {
+    override suspend fun reloadFirebaseUser() = flow {
         try {
             emit(Response.Loading)
             currentUserFlow.value?.reload()?.await()
@@ -120,7 +124,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override suspend fun revokeAccess()=flow {
+    override suspend fun revokeAccess() = flow {
         try {
             emit(Response.Loading)
             currentUserFlow.value?.delete()?.await()
@@ -137,14 +141,22 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
         }
     }
 
-    override suspend fun updateCurrentUser(email: String, name: String, photoUri: String?): Response<Boolean> {
-        val user = currentUserFlow.value ?: return Response.Failure(Exception("User is not authenticated"))
+    override suspend fun updateCurrentUser(
+        email: String,
+        name: String,
+        photoUri: String?,
+    ): Response<Boolean> {
+        val user =
+            currentUserFlow.value ?: return Response.Failure(Exception("User is not authenticated"))
 
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(name)
             .apply {
                 photoUri?.let { uri ->
-                    val photoUrl = uploadImageToFirebaseStorage(uri.toUri()) ?: return Response.Failure(Exception("Failed to upload image"))
+                    val photoUrl =
+                        uploadImageToFirebaseStorage(uri.toUri()) ?: return Response.Failure(
+                            Exception("Failed to upload image")
+                        )
                     setPhotoUri(photoUrl)
                 }
             }
@@ -161,7 +173,7 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
     }
 
     private suspend fun uploadImageToFirebaseStorage(imageUri: Uri): Uri? {
-        val imageName =  currentUserFlow.value?.uid
+        val imageName = currentUserFlow.value?.uid
         val imageRef = storage.reference.child("images/$imageName")
         return try {
             val uploadTask = imageRef.putFile(imageUri).await()
@@ -177,25 +189,5 @@ internal class FirebaseAuthRepositoryImpl(private val auth: FirebaseAuth,
             db.collection("users").document(uid).set(user).await()
         }
     }
-
-
-
-//private var signInRequest = get<BeginSignInRequest>(named("signInRequest"))
-//private var signUpRequest = get<BeginSignInRequest>(named("signUpRequest"))
-    /*
-override suspend fun oneTapSignInWithGoogle(): Response<BeginSignInResult> {
-    return try {
-        val signInResult = oneTapClient.beginSignIn(signInRequest).await()
-        Response.Success(signInResult)
-    } catch (e: Exception) {
-        try {
-            val signUpResult = oneTapClient.beginSignIn(signUpRequest).await()
-            Response.Success(signUpResult)
-        } catch (e: Exception) {
-            Response.Failure(e)
-        }
-    }
-}
-*/
 }
 

@@ -7,6 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface TasksRepository {
     suspend fun getTasksData(unitId: Int, partId: Int, taskNum: Int): Response<TaskData>
     fun getAllTasksOfUnit(unitId: Int): Flow<Response<List<TaskData>>>
-    suspend fun getAmountTasksInPart(unitId: Int,partId: Int): Response<Int>
-
+    suspend fun getAmountTasksInPart(unitId: Int, partId: Int): Response<Int>
 }

@@ -32,7 +32,7 @@ class ProfileContainerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (viewModel.getCurrentUserResponse().value != null){
+        if (viewModel.getCurrentUserResponse().value != null) {
             findNavController().navigate(R.id.action_profileContainerFragment_to_profileContentFragment)
         }
         with(binding) {

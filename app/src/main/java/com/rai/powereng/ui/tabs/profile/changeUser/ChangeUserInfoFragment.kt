@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import coil.load
 import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentChangeUserInfoBinding
+import com.rai.powereng.extensions.ConfirmationDialogUtils
 import com.rai.powereng.extensions.compressAndOptimizeImage
 import com.rai.powereng.model.Response
 import com.rai.powereng.model.User
@@ -34,7 +37,7 @@ class ChangeUserInfoFragment : Fragment() {
 
     private var selectedImageUri: Uri? = null
 
-    private val viewModel by viewModel<ChangeUserInfoVievModel>()
+    private val viewModel by viewModel<ChangeUserInfoViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,9 +51,22 @@ class ChangeUserInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding){
+        with(binding) {
+            toolbar.setupWithNavController(findNavController())
+            toolbar.setNavigationOnClickListener {
+                showConfirmationDialog()
+            }
+
+            requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        showConfirmationDialog()
+                    }
+                })
+
             val user = viewModel.getCurrentUserResponse().value
-            if (user != null ){
+            if (user != null) {
                 bindUserInfo(user)
             }
 
@@ -106,7 +122,11 @@ class ChangeUserInfoFragment : Fragment() {
             }
 
             save.setOnClickListener {
-                viewModel.updateUser(emailEditText.text.toString(),nameEditText.text.toString(),selectedImageUri?.toString())
+                viewModel.updateUser(
+                    emailEditText.text.toString(),
+                    nameEditText.text.toString(),
+                    selectedImageUri?.toString()
+                )
             }
 
             changePhotoText.setOnClickListener {
@@ -116,17 +136,18 @@ class ChangeUserInfoFragment : Fragment() {
 
     }
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            lifecycleScope.launch {
-                val compressedUri = withContext(Dispatchers.IO) {
-                    uri.compressAndOptimizeImage(get())
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                lifecycleScope.launch {
+                    val compressedUri = withContext(Dispatchers.IO) {
+                        uri.compressAndOptimizeImage(get())
+                    }
+                    binding.profileImage.load(compressedUri)
+                    selectedImageUri = compressedUri
                 }
-                binding.profileImage.load(compressedUri)
-                selectedImageUri = compressedUri
             }
         }
-    }
 
     private fun bindUserInfo(user: User) {
         with(binding) {
@@ -135,6 +156,13 @@ class ChangeUserInfoFragment : Fragment() {
             idEditText.setText(user.uid)
             profileImage.load(user.photoUrl)
         }
+    }
+
+    private fun showConfirmationDialog() {
+        ConfirmationDialogUtils.showConfirmationDialog(
+            requireContext(),
+            findNavController()
+        )
     }
 
     override fun onDestroyView() {

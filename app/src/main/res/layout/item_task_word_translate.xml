@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:id="@+id/word_variants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <RadioButton
+            android:id="@+id/variantOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_miss_word_selecter"
+            android:button="@android:color/transparent"
+            android:duplicateParentState="true"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:padding="16dp"
+            android:textColor="@drawable/miss_word_text_color"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp"
+            tools:text="RadioButton1" />
+
+        <RadioButton
+            android:id="@+id/variantTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_miss_word_selecter"
+            android:button="@android:color/transparent"
+            android:duplicateParentState="true"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:padding="16dp"
+            android:textColor="@drawable/miss_word_text_color"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="66dp"
+            tools:text="RadioButton2" />
+
+        <RadioButton
+            android:id="@+id/variantThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_miss_word_selecter"
+            android:button="@android:color/transparent"
+            android:duplicateParentState="true"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:textColor="@drawable/miss_word_text_color"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="66dp"
+            tools:text="RadioButton3" />
+
+        <RadioButton
+            android:id="@+id/variantFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_miss_word_selecter"
+            android:button="@android:color/transparent"
+            android:duplicateParentState="true"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:padding="16dp"
+            android:textColor="@drawable/miss_word_text_color"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="66dp"
+            tools:text="RadioButton4" />
+
+    </RadioGroup>
+</androidx.constraintlayout.widget.ConstraintLayout>

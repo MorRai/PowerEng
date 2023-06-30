@@ -195,7 +195,7 @@ internal class UserProgressInfoRepositoryImpl(
                         var num = 0
                         //var lastScore = -1//что б
                         usersScoreWithProfiles.sortedByDescending { it.score }.forEach {
-                            //if (lastScore != it.score){ // был план что с одними балами на одном месте
+                            //if (lastScore != it.score){ // there was a plan that with some point in one place
                             num += 1
                             // }
                             it.num = num
@@ -218,7 +218,7 @@ internal class UserProgressInfoRepositoryImpl(
         if (currentUserId.isNotEmpty()) {
             val snapshotListener = db.collection("usersScore")
                 .document(currentUserId)
-                .addSnapshotListener { snapshot, error ->
+                .addSnapshotListener { snapshot, _ ->
                     if (snapshot != null && snapshot.exists()) {
                         val userScore = snapshot.toObject(UserScore::class.java)
                         if (userScore != null) {
@@ -249,7 +249,6 @@ internal class UserProgressInfoRepositoryImpl(
             awaitClose {}
         }
     }
-
 
     private fun getDifferenceDays(dateFirst: String, dateSecond: String): Int {
         val dateFormatInput = DateTimeFormatter.ofPattern("dd.MM.yyyy")

@@ -7,7 +7,7 @@ import com.rai.powereng.model.UserProgressInfo
 import com.rai.powereng.model.UserProgressInfoEntity
 
 
-internal fun UserProgressInfoEntity.toDomainModels(currentUserId:String): UserProgressInfo {
+internal fun UserProgressInfoEntity.toDomainModels(currentUserId: String): UserProgressInfo {
     return UserProgressInfo(
         userId = currentUserId,
         points = points,
@@ -18,7 +18,7 @@ internal fun UserProgressInfoEntity.toDomainModels(currentUserId:String): UserPr
     )
 }
 
-internal fun UserProgressInfo.toDomainModels() : UserProgressInfoEntity{
+internal fun UserProgressInfo.toDomainModels(): UserProgressInfoEntity {
     return UserProgressInfoEntity(
         id = "unit $unitId part $partId",
         userId = userId,
@@ -30,14 +30,14 @@ internal fun UserProgressInfo.toDomainModels() : UserProgressInfoEntity{
     )
 }
 
-internal fun FirebaseUser.toDomainModels() : User {
+internal fun FirebaseUser.toDomainModels(): User {
     return User(
-         uid = uid,
-         displayName= displayName,
-         email = email,
-         photoUrl = photoUrl.toString(),
-         registrationTimeMillis = metadata?.creationTimestamp,
-         isEmailVerified = isEmailVerified,
+        uid = uid,
+        displayName = displayName,
+        email = email,
+        photoUrl = photoUrl.toString(),
+        registrationTimeMillis = metadata?.creationTimestamp,
+        isEmailVerified = isEmailVerified,
     )
 }
 

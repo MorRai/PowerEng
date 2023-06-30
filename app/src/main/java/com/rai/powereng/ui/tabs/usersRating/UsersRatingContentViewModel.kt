@@ -7,7 +7,7 @@ import com.rai.powereng.usecase.GetUsersScoreUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
-class UsersRatingContentViewModel(getUsersScoreUseCase: GetUsersScoreUseCase):ViewModel() {
+class UsersRatingContentViewModel(getUsersScoreUseCase: GetUsersScoreUseCase) : ViewModel() {
 
     val usersScoreFlow = getUsersScoreUseCase.invoke()
         .stateIn(

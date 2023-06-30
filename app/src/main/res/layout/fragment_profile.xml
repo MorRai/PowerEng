@@ -43,7 +43,7 @@
                 android:id="@+id/profile_image"
                 android:layout_width="100dp"
                 android:layout_height="97dp"
-                android:src="@drawable/text_img"
+                android:src="@drawable/fox_img"
                 app:civ_border_color="@color/button_primary"
                 app:civ_border_width="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -130,9 +130,10 @@
         app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutDaysStrike"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:id="@+id/layoutDaysStrike">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/textDaysStrike"
@@ -142,10 +143,10 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/rounded_textview"
                 android:gravity="center"
-                tools:text="0"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="0" />
 
             <TextView
                 android:id="@+id/headerDaysStrike"
@@ -256,7 +257,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:padding="16dp">
 
             <ImageView
@@ -264,6 +265,7 @@
                 android:layout_width="148dp"
                 android:layout_height="135dp"
                 android:src="@drawable/fox_book"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -292,7 +294,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textViewScore"
                 app:layout_constraintStart_toEndOf="@id/imageViewIcon"
-                app:layout_constraintTop_toTopOf="@+id/imageViewIcon" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textTitleUnit"
@@ -342,7 +344,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageViewIcon"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="100" />
 
             <TextView
@@ -350,24 +352,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:text="1"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewScore" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewScore"
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/textViewPart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:text="3"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewUnit" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewUnit"
+                tools:text="3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,7 +15,7 @@ import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UsersRatingContentFragment: Fragment() {
+class UsersRatingContentFragment : Fragment() {
     private var _binding: FragmentUsersRatingBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
@@ -27,7 +27,7 @@ class UsersRatingContentFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentUsersRatingBinding.inflate(inflater, container, false)
             .also { _binding = it }
@@ -36,9 +36,9 @@ class UsersRatingContentFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding){
+        with(binding) {
             val adapter =
-                UsersRatingAdapter(requireContext() )
+                UsersRatingAdapter(requireContext())
 
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = adapter
@@ -71,6 +71,7 @@ class UsersRatingContentFragment: Fragment() {
     private fun isVisibleProgressBar(visible: Boolean) {
         binding.paginationProgressBar.isVisible = visible
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rai.powereng.R
-import com.rai.powereng.TaskAvailability
+import com.rai.powereng.extensions.TaskAvailability
 import com.rai.powereng.databinding.ItemUnitBinding
 import com.rai.powereng.model.UnitData
 import com.rai.powereng.model.UserScore
@@ -28,6 +28,7 @@ class UnitsAdapter(
     private val layoutInflater = LayoutInflater.from(context)
 
     private var userScore: UserScore? = null
+
     @SuppressLint("NotifyDataSetChanged")
     fun setScore(score: UserScore?) {
         userScore = score
@@ -42,7 +43,7 @@ class UnitsAdapter(
 
     override fun onBindViewHolder(holder: UnitViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, partListener, userScore,onItemClicked)
+        holder.bind(item, partListener, userScore, onItemClicked)
     }
 
     companion object {
@@ -65,7 +66,6 @@ class UnitsAdapter(
 
 }
 
-
 class UnitViewHolder(
     private val binding: ItemUnitBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -73,14 +73,27 @@ class UnitViewHolder(
         arrayOf(binding.part1, binding.part2, binding.part3, binding.part4, binding.part5)
 
     @SuppressLint("ClickableViewAccessibility")
-    fun bind(item: UnitData, partListener: PartClickListener, userScore: UserScore?,onItemClicked: (UnitData) -> Unit) {
+    fun bind(
+        item: UnitData,
+        partListener: PartClickListener,
+        userScore: UserScore?,
+        onItemClicked: (UnitData) -> Unit,
+    ) {
         val maxUnit = userScore?.unit ?: 1
         val maxPart = userScore?.part?.plus(1) ?: 1
         binding.unitDescription.text = item.description
+        if (item.unitId % 3 == 0) {
+            binding.taskImage.setImageResource(R.drawable.units1)
+        } else if (item.unitId % 3 == 1) {
+            binding.taskImage.setImageResource(R.drawable.units2)
+        } else {
+            binding.taskImage.setImageResource(R.drawable.units3)
+        }
+
         binding.unitNumber.text = buildString {
-        append("Unit ")
-        append(item.unitId)
-    }
+            append("Unit ")
+            append(item.unitId)
+        }
         binding.unitInfo.setOnClickListener {
             onItemClicked(item)
         }
@@ -91,7 +104,7 @@ class UnitViewHolder(
 
                 MotionEvent.ACTION_DOWN -> {
                     if (view is ImageView) {
-                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)) {
                             TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_pressed)
                             TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_pressed)
                             TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_pressed)
@@ -102,7 +115,7 @@ class UnitViewHolder(
                 }
                 MotionEvent.ACTION_UP -> {
                     if (view is ImageView) {
-                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)) {
                             TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_not_pressed)
                             TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_not_pressed)
                             TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_not_pressed)
@@ -120,7 +133,7 @@ class UnitViewHolder(
                 }
                 MotionEvent.ACTION_CANCEL -> {
                     if (view is ImageView) {
-                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)){
+                        when (getTaskAvailability(item.unitId, partIndex + 1, maxUnit, maxPart)) {
                             TaskAvailability.ACTIVE -> view.setImageResource(R.drawable.active_not_pressed)
                             TaskAvailability.COMPLETE -> view.setImageResource(R.drawable.complete_not_pressed)
                             TaskAvailability.BLOCK -> view.setImageResource(R.drawable.block_not_pressed)
@@ -134,11 +147,12 @@ class UnitViewHolder(
 
         }
         partViews.forEachIndexed { index, partView ->
-            val initialImage = when (getTaskAvailability(item.unitId, index + 1, maxUnit, maxPart)) {
-                TaskAvailability.ACTIVE -> R.drawable.active_not_pressed
-                TaskAvailability.COMPLETE -> R.drawable.complete_not_pressed
-                TaskAvailability.BLOCK -> R.drawable.block_not_pressed
-            }
+            val initialImage =
+                when (getTaskAvailability(item.unitId, index + 1, maxUnit, maxPart)) {
+                    TaskAvailability.ACTIVE -> R.drawable.active_not_pressed
+                    TaskAvailability.COMPLETE -> R.drawable.complete_not_pressed
+                    TaskAvailability.BLOCK -> R.drawable.block_not_pressed
+                }
             partView.setImageResource(initialImage)
             partView.setOnTouchListener(touchListener)
         }
@@ -148,7 +162,12 @@ class UnitViewHolder(
         return maxUnit > unitId || (maxUnit == unitId && maxPart >= part)
     }
 
-    private fun getTaskAvailability(unitId: Int, part: Int, maxUnit: Int, maxPart: Int): TaskAvailability {
+    private fun getTaskAvailability(
+        unitId: Int,
+        part: Int,
+        maxUnit: Int,
+        maxPart: Int,
+    ): TaskAvailability {
         return when {
             maxUnit > unitId -> TaskAvailability.COMPLETE
             maxUnit == unitId && maxPart > part -> TaskAvailability.COMPLETE

@@ -54,11 +54,10 @@ class AuthorizationFragment : Fragment() {
             viewModel.getCurrentUserResponse()
 
 
-
             val currentUser = viewModel.getCurrentUserResponse().value
-            if (currentUser !=null && !currentUser.isEmailVerified) {
+            if (currentUser != null && !currentUser.isEmailVerified) {
                 findNavController().navigate(R.id.action_authorizationFragment_to_verifyEmailFragment)
-            } else if (currentUser !=null) {
+            } else if (currentUser != null) {
                 val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
                 if (resultNav.not()) {
                     findNavController().navigate(R.id.contentFragment)
@@ -68,10 +67,8 @@ class AuthorizationFragment : Fragment() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
 }

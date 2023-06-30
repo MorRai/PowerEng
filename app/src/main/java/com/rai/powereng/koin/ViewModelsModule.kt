@@ -7,7 +7,7 @@ import com.rai.powereng.ui.authorization.forgotPassword.ForgotPasswordViewModel
 import com.rai.powereng.ui.authorization.signIn.SignInViewModel
 import com.rai.powereng.ui.authorization.signUp.SignUpViewModel
 import com.rai.powereng.ui.authorization.verifyEmail.VerifyEmailViewModel
-import com.rai.powereng.ui.tabs.profile.changeUser.ChangeUserInfoVievModel
+import com.rai.powereng.ui.tabs.profile.changeUser.ChangeUserInfoViewModel
 import com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFinishViewModel
 import com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksViewModel
 import com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.ConnectionCodeViewModel
@@ -16,6 +16,7 @@ import com.rai.powereng.ui.splash.SplashViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContainerViewModel
 import com.rai.powereng.ui.tabs.profile.ProfileContentViewModel
 import com.rai.powereng.ui.tabs.unitsList.UnitsListViewModel
+import com.rai.powereng.ui.tabs.unitsList.partTasks.PartConfirmViewModel
 import com.rai.powereng.ui.tabs.unitsList.unitInfo.UnitInfoListViewModel
 import com.rai.powereng.ui.tabs.usersRating.UserRatingContainerViewModel
 import com.rai.powereng.ui.tabs.usersRating.UsersRatingContentViewModel
@@ -35,12 +36,14 @@ val viewModelsModule = module {
     viewModelOf(::PartTasksFinishViewModel)
     viewModelOf(::UsersRatingContentViewModel)
     viewModelOf(::ProfileContentViewModel)
-    viewModelOf(::ChangeUserInfoVievModel)
+    viewModelOf(::ChangeUserInfoViewModel)
     viewModelOf(::ConnectionCodeViewModel)
     viewModelOf(::UnitInfoListViewModel)
+    viewModelOf(::PartConfirmViewModel)
     viewModelOf(::GameResultViewModel)
     viewModel {
-        SignInViewModel(get(),
+        SignInViewModel(
+            get(),
             get(),
             get(),
             get(named("signInRequest")),

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -39,18 +40,31 @@ class UnitsListFragment : Fragment(), PartClickListener {
             .also { _binding = it }
             .root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+
+            setFragmentResultListener("requestKey") { _, bundle ->
+                val message = bundle.getString("message")
+                Toast.makeText(
+                    requireContext(),
+                    message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
             buttonReturnToTop.setOnClickListener {
                 recyclerView.smoothScrollToPosition(0)
             }
 
             val adapter =
-                UnitsAdapter(requireContext(),this@UnitsListFragment ) {
-                    findNavController().navigate(UnitsListFragmentDirections.actionUnitsListFragmentToUnitInfoListFragment(
-                        it.unitId))
+                UnitsAdapter(requireContext(), this@UnitsListFragment) {
+                    findNavController().navigate(
+                        UnitsListFragmentDirections.actionUnitsListFragmentToUnitInfoListFragment(
+                            it.unitId
+                        )
+                    )
                 }
 
             val layoutManager = LinearLayoutManager(requireContext())
@@ -97,16 +111,29 @@ class UnitsListFragment : Fragment(), PartClickListener {
             }
         }
     }
+
     private fun isVisibleProgressBar(visible: Boolean) {
         binding.paginationProgressBar.isVisible = visible
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    override fun onPartClickListener(unitNum: Int,part: Int,position: Int, view: View) {
+
+    override fun onPartClickListener(unitNum: Int, part: Int, position: Int, view: View) {
         Navigation.findNavController(requireActivity(), R.id.nav_container)
-            .navigate(ContentFragmentDirections.actionContentFragmentToTasksNavGraph(unitNum,part,position, view.x, view.y, view.width, view.height))
+            .navigate(
+                ContentFragmentDirections.actionContentFragmentToTasksNavGraph(
+                    unitNum,
+                    part,
+                    position,
+                    view.x,
+                    view.y,
+                    view.width,
+                    view.height
+                )
+            )
 
     }
 }

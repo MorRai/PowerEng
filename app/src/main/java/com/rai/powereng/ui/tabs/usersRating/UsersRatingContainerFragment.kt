@@ -24,7 +24,7 @@ class UsersRatingContainerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return CheckAuthBinding.inflate(inflater, container, false)
             .also { _binding = it }
@@ -34,10 +34,10 @@ class UsersRatingContainerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (viewModel.getCurrentUserResponse().value != null){
+        if (viewModel.getCurrentUserResponse().value != null) {
             findNavController().navigate(R.id.action_usersRatingContainerFragment_to_usersRatingContentFragment)
         }
-        with(binding){
+        with(binding) {
             goToAuth.setOnClickListener {
                 Navigation.findNavController(requireActivity(), R.id.nav_container)
                     .navigate(R.id.action_contentFragment_to_auth_nav_graph)

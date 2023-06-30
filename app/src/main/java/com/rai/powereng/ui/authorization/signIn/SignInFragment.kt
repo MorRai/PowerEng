@@ -47,7 +47,7 @@ class SignInFragment : Fragment() {
                 val password = binding.fieldPassword.text.toString()
                 viewModel.signUpUser(email, password)
             }
-            resendPassword.setOnClickListener{
+            resendPassword.setOnClickListener {
                 findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
             }
 
@@ -60,7 +60,8 @@ class SignInFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedIn = it.data
                             if (isUserSignedIn) {
-                                val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                val resultNav =
+                                    findNavController().popBackStack(R.id.auth_nav_graph, true)
                                 if (resultNav.not()) {
                                     findNavController().navigate(R.id.contentFragment)
                                 }
@@ -68,33 +69,38 @@ class SignInFragment : Fragment() {
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
+                            Toast.makeText(
+                                requireContext(),
                                 it.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
             }
 
-            googleSignInButton.setOnClickListener{
+            googleSignInButton.setOnClickListener {
                 viewModel.oneTapSignIn()
             }
 
             lifecycleScope.launch {
                 viewModel.oneTapSignInResponse
-                    .collect {response ->
+                    .collect { response ->
                         when (response) {
                             is Response.Loading -> progressBar.isVisible = true
                             is Response.Success -> {
                                 progressBar.isVisible = false
-                                response.data?.let { launch(it)
-                               }
+                                response.data?.let {
+                                    launch(it)
+                                }
                             }
                             is Response.Failure -> {
                                 progressBar.isVisible = false
-                                Toast.makeText(requireContext(),
+                                Toast.makeText(
+                                    requireContext(),
                                     response.e.toString(),
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -102,14 +108,15 @@ class SignInFragment : Fragment() {
 
             lifecycleScope.launch {
                 viewModel.signInWithGoogleResponse
-                    .collect {response ->
+                    .collect { response ->
                         when (response) {
                             is Response.Loading -> progressBar.isVisible = true
                             is Response.Success -> {
                                 progressBar.isVisible = false
                                 val isUserSignedIn = response.data
                                 if (isUserSignedIn) {
-                                    val resultNav = findNavController().popBackStack(R.id.auth_nav_graph, true)
+                                    val resultNav =
+                                        findNavController().popBackStack(R.id.auth_nav_graph, true)
                                     if (resultNav.not()) {
                                         findNavController().navigate(R.id.contentFragment)
                                     }
@@ -117,9 +124,11 @@ class SignInFragment : Fragment() {
                             }
                             is Response.Failure -> {
                                 progressBar.isVisible = false
-                                Toast.makeText(requireContext(),
+                                Toast.makeText(
+                                    requireContext(),
                                     response.e.toString(),
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -127,19 +136,23 @@ class SignInFragment : Fragment() {
         }
     }
 
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            try {
-                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
-                val googleIdToken = credentials.googleIdToken
-                viewModel.signInWithGoogle(googleIdToken!!)
-            } catch (it: ApiException) {
-                Toast.makeText(requireContext(),
-                    it.status.toString(),
-                    Toast.LENGTH_SHORT).show()
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                try {
+                    val credentials =
+                        viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+                    val googleIdToken = credentials.googleIdToken
+                    viewModel.signInWithGoogle(googleIdToken!!)
+                } catch (it: ApiException) {
+                    Toast.makeText(
+                        requireContext(),
+                        it.status.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
-    }
 
     fun launch(signInResult: BeginSignInResult) {
         val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()

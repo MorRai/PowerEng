@@ -27,17 +27,16 @@ class ForgotPasswordFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentForgotPasswordBinding.inflate(inflater, container, false)
             .also { _binding = it }
             .root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding){
+        with(binding) {
 
             emailResetPassword.setOnClickListener {
                 val email = binding.fieldEmail.text.toString()
@@ -52,17 +51,21 @@ class ForgotPasswordFragment : Fragment() {
                             progressBar.isVisible = false
                             val isUserSignedIn = it.data
                             if (isUserSignedIn) {
-                                Toast.makeText(requireContext(),
+                                Toast.makeText(
+                                    requireContext(),
                                     getString(R.string.account_recovery_email_has_been_sent),
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 findNavController().popBackStack()
                             }
                         }
                         is Response.Failure -> {
                             progressBar.isVisible = false
-                            Toast.makeText(requireContext(),
+                            Toast.makeText(
+                                requireContext(),
                                 it.e.toString(),
-                                Toast.LENGTH_SHORT).show()
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }

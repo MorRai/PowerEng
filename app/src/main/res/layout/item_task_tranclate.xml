@@ -5,32 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/answer_box"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        app:alignContent="flex_start"
-        app:alignItems="flex_start"
-        app:flexWrap="wrap"
+        android:layout_margin="8dp"
+        android:minHeight="150dp"
+        app:cardBackgroundColor="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_height="50dp"
-        tools:showIn="@layout/activity_main" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/option_box"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/answer_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:alignContent="flex_start"
+            app:alignItems="flex_start"
+            app:flexWrap="wrap"
+            tools:showIn="@layout/activity_main" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        app:alignContent="flex_start"
-        app:alignItems="flex_start"
-        app:flexWrap="wrap"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:minHeight="150dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answer_box"
-        tools:layout_height="50dp"
-        tools:showIn="@layout/activity_main" />
+        app:layout_constraintTop_toBottomOf="@+id/card_answer">
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/option_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:alignContent="flex_start"
+            app:alignItems="flex_start"
+            app:flexWrap="wrap"
+            tools:showIn="@layout/activity_main" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

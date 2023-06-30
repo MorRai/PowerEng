@@ -8,19 +8,21 @@ import com.rai.powereng.usecase.auth.SignUpWithEmailPassword
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(private val signUpWithEmailPassword: SignUpWithEmailPassword,
-                      private val sendEmailVerification: SendEmailVerification): ViewModel()  {
+class SignUpViewModel(
+    private val signUpWithEmailPassword: SignUpWithEmailPassword,
+    private val sendEmailVerification: SendEmailVerification,
+) : ViewModel() {
 
     private val _signUpUserFlow = MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val signUpUserFlow: StateFlow<Response<Boolean>> = _signUpUserFlow
 
-    private val _sendEmailVerificationFlow= MutableStateFlow<Response<Boolean>>(Response.Success(false))
+    private val _sendEmailVerificationFlow =
+        MutableStateFlow<Response<Boolean>>(Response.Success(false))
     val sendEmailVerificationFlow: StateFlow<Response<Boolean>> = _sendEmailVerificationFlow
-
 
     fun signUpUser(email: String, password: String) = viewModelScope.launch {
         _signUpUserFlow.value = Response.Loading
-        val result = signUpWithEmailPassword.invoke( email, password)
+        val result = signUpWithEmailPassword.invoke(email, password)
         _signUpUserFlow.value = result
     }
 

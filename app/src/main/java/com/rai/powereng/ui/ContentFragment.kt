@@ -40,9 +40,8 @@ class ContentFragment : Fragment() {
         setupBottomNavigationBar()
     }
 
-
     private fun setupBottomNavigationBar() {
-        with(binding){
+        with(binding) {
             val nestedController =
                 (childFragmentManager.findFragmentById(R.id.page_container) as NavHostFragment)
                     .navController

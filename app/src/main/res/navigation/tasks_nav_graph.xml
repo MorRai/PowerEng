@@ -55,15 +55,15 @@
     <fragment
         android:id="@+id/partTasksFragment"
         android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.PartTasksFragment"
-        android:label="PartTasksFragment" >
+        android:label="Task">
         <argument
             android:name="unitId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="partId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_partTasksFragment_to_partTasksFinishFragment"
             app:destination="@id/partTasksFinishFragment"
@@ -75,12 +75,12 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="isMultiplayer"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="gameCode"
-            app:argType="string"
-            android:defaultValue="null" />
+            android:defaultValue="null"
+            app:argType="string" />
         <action
             android:id="@+id/action_partTasksFragment_to_gameResultFragment"
             app:destination="@id/gameResultFragment" />
@@ -113,15 +113,15 @@
     <fragment
         android:id="@+id/connectionCodeFragment"
         android:name="com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer.ConnectionCodeFragment"
-        android:label="ConnectionCodeFragment" >
+        android:label="Multiplayer">
         <argument
             android:name="unitId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="partId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_connectionCodeFragment_to_partTasksFragment"
             app:destination="@id/partTasksFragment" />

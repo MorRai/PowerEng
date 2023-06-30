@@ -12,6 +12,9 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
+        val googleFirebaseKey:String by project
+        buildConfigField("String","GOOGLE_FIREBASE_KEY", googleFirebaseKey)
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -34,22 +37,20 @@ android {
 
 dependencies {
 
-    val room_version = "2.4.2"
-
     implementation(project(":domain"))
 
-    implementation("androidx.room:room-ktx:$room_version")
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-storage-ktx")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.database.ktx)
 
+    implementation(libs.android.gms.play.services.auth)
+    implementation(libs.kotlinx.coroutin.play.services)
+    implementation(libs.kotlinx.coroutin.core)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.bundles.androidx.room)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)
 
@@ -57,7 +58,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.android.material)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)

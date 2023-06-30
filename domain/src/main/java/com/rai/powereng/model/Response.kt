@@ -9,5 +9,6 @@ sealed class Response<out T> {
     data class Failure(
         val e: Exception,
     ) : Response<Nothing>()
+
     companion object
 }

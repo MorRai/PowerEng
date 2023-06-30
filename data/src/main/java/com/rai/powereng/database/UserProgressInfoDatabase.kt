@@ -5,6 +5,6 @@ import androidx.room.RoomDatabase
 import com.rai.powereng.model.UserProgressInfoEntity
 
 @Database(entities = [UserProgressInfoEntity::class], version = 1, exportSchema = false)
-internal abstract class UserProgressInfoDatabase: RoomDatabase() {
+internal abstract class UserProgressInfoDatabase : RoomDatabase() {
     abstract fun userProgressInfoDao(): UserProgressInfoDao
 }

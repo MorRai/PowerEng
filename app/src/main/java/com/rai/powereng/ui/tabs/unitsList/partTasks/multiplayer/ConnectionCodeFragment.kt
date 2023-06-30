@@ -1,5 +1,6 @@
 package com.rai.powereng.ui.tabs.unitsList.partTasks.multiplayer
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
+import com.rai.powereng.R
 import com.rai.powereng.databinding.FragmentConnectionCodeBinding
 import com.rai.powereng.model.Response
 import kotlinx.coroutines.launch
@@ -47,7 +49,7 @@ class ConnectionCodeFragment : Fragment() {
                 if (viewModel.isSearchingGame) {
                     cancelGame()
                 } else {
-                    NavHostFragment.findNavController(this@ConnectionCodeFragment).navigateUp()
+                    showConfirmationDialog()
                 }
             }
         })
@@ -62,6 +64,14 @@ class ConnectionCodeFragment : Fragment() {
         }
 
         with(binding) {
+            toolbar.setupWithNavController(findNavController())
+            toolbar.setNavigationOnClickListener {
+                if (viewModel.isSearchingGame) {
+                    cancelGame()
+                } else {
+                    showConfirmationDialog()
+                }
+            }
             create.setOnClickListener {
                 createGame()
             }
@@ -72,7 +82,7 @@ class ConnectionCodeFragment : Fragment() {
                 cancelGame()
             }
             generateCode.setOnClickListener {
-                viewModel.generateGameCode()
+                viewModel.generateGameCode("u" + args.unitId + "p" +args.partId)
             }
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -122,7 +132,6 @@ class ConnectionCodeFragment : Fragment() {
     }
 
     private fun createGame() {
-        //gameCode = generateCode()
         val gameCode = addPostfixCode(binding.gameCode.text.toString())
         viewModel.createGame(gameCode)
 
@@ -210,7 +219,6 @@ class ConnectionCodeFragment : Fragment() {
             cancel.visibility = View.VISIBLE
         }
     }
-
     private fun showCancelGameView() {
         with(binding) {
             gameCode.visibility = View.VISIBLE
@@ -221,8 +229,6 @@ class ConnectionCodeFragment : Fragment() {
             cancel.visibility = View.GONE
         }
     }
-
-
     private fun startTasks(gameCode:String) {
         findNavController().navigate(
             ConnectionCodeFragmentDirections.actionConnectionCodeFragmentToPartTasksFragment(
@@ -233,12 +239,19 @@ class ConnectionCodeFragment : Fragment() {
             )
         )
     }
-
-
-    //override fun onDestroy() {
-        //cancelGame() не кансалится эта фигня
-      //  super.onDestroy()
-    //}
+    private fun showConfirmationDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(R.string.confirm_exit_title)
+        builder.setMessage(R.string.confirm_exit_message)
+        builder.setPositiveButton(R.string.yes) { dialog, _ ->
+            dialog.dismiss()
+            findNavController().popBackStack()
+        }
+        builder.setNegativeButton(R.string.no) { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

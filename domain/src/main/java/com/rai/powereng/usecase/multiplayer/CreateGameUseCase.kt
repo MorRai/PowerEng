@@ -20,5 +20,4 @@ class CreateGameUseCase(
             Response.Failure(Exception("User not authorized"))
         }
     }
-
 }

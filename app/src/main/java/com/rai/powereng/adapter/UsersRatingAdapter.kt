@@ -3,15 +3,18 @@ package com.rai.powereng.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.rai.powereng.R
 import com.rai.powereng.databinding.ItemRatingBinding
 import com.rai.powereng.model.UserScoreWithProfile
 
-class UsersRatingAdapter(context: Context): ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
+class UsersRatingAdapter(context: Context) :
+    ListAdapter<UserScoreWithProfile, UsersScoreViewHolder>(DIFF_UTIL) {
 
     private val layoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersScoreViewHolder {
@@ -55,9 +58,32 @@ class UsersScoreViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("SetTextI18n")
     fun bind(item: UserScoreWithProfile) {
-        binding.userName.text = item.displayName
-        binding.userNum.text = item.num.toString() +"."
-        binding.userScore.text = item.score.toString() + " xp"
-        binding.userPhoto.load(item.photoUrl)
+        with(binding) {
+            binding.userName.text = item.displayName
+            when (item.num) {
+                1 -> {
+                    userNum.visibility = View.GONE
+                    imagePlace.visibility = View.VISIBLE
+                    imagePlace.setImageResource(R.drawable.ic_first)
+                }
+                2 -> {
+                    userNum.visibility = View.GONE
+                    imagePlace.visibility = View.VISIBLE
+                    imagePlace.setImageResource(R.drawable.ic_second)
+                }
+                3 -> {
+                    userNum.visibility = View.GONE
+                    imagePlace.visibility = View.VISIBLE
+                    imagePlace.setImageResource(R.drawable.ic_third)
+                }
+                else -> {
+                    userNum.visibility = View.VISIBLE
+                    imagePlace.visibility = View.GONE
+                    userNum.text = item.num.toString()
+                }
+            }
+            userScore.text = item.score.toString() + " xp"
+            userPhoto.load(item.photoUrl)
+        }
     }
 }

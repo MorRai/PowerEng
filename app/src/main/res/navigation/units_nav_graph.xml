@@ -15,10 +15,10 @@
     <fragment
         android:id="@+id/unitInfoListFragment"
         android:name="com.rai.powereng.ui.tabs.unitsList.unitInfo.UnitInfoListFragment"
-        android:label="UnitInfoListFragment" >
+        android:label="Unit info">
         <argument
             android:name="unitId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 </navigation>

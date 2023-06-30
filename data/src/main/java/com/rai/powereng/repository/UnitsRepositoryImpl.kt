@@ -7,8 +7,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
 internal class UnitsRepositoryImpl(
-    private val db: FirebaseFirestore
-    ):UnitsRepository {
+    private val db: FirebaseFirestore,
+) : UnitsRepository {
 
     override fun getUnitsData() = callbackFlow {
         val snapshotListener = db.collection("unitList").addSnapshotListener { snapshot, e ->
@@ -17,7 +17,7 @@ internal class UnitsRepositoryImpl(
                 units.sortBy { it.unitId }
                 Response.Success(units)
             } else {
-                Response.Failure(e ?:  Exception("Unknown error"))
+                Response.Failure(e ?: Exception("Unknown error"))
             }
             trySend(unitsResponse)
         }

@@ -14,7 +14,6 @@ internal val useCaseModule = module {
     factoryOf(::GetCurrentUser)
     factoryOf(::SendEmailVerification)
     factoryOf(::SignInWithGoogle)
-    factoryOf(::OneTapSignInWithGoogle)
     factoryOf(::GetUnitsUseCase)
     factoryOf(::GetTasksUseCase)
     factoryOf(::GetAmountTasksInPartUseCase)

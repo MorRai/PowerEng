@@ -6,16 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.rai.powereng.R
 import com.rai.powereng.databinding.DialogPartConfirmBinding
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PartConfirmFragment: DialogFragment() {
+class PartConfirmFragment : DialogFragment() {
     private var _binding: DialogPartConfirmBinding? = null
     private val binding
         get() = requireNotNull(_binding) {
             "View was destroyed"
         }
+
+
+    private val viewModel by viewModel<PartConfirmViewModel>()
 
     private val args by navArgs<PartConfirmFragmentArgs>()
 
@@ -30,12 +37,18 @@ class PartConfirmFragment: DialogFragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding){
-            description.text = "Do you want to go to the unit ${args.unitNum}, part ${args.part} ?"
+        with(binding) {
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.geCurrentUserResponse().collect { currentUser ->
+                    startWithFriend.isEnabled = currentUser != null
+                }
+            }
+
+            description.text = getString(R.string.confirmation_message, args.unitNum, args.part)
             startTasks.setOnClickListener {
                 findNavController().navigate(
                     PartConfirmFragmentDirections.actionPartConfirmFragmentToPartTasksFragment(
@@ -60,7 +73,7 @@ class PartConfirmFragment: DialogFragment() {
         layoutParams?.apply {
             gravity = Gravity.TOP or Gravity.START
             x = args.viewX.toInt() + args.viewWidth / 2
-            y = args.viewY.toInt() + args.viewHeight /2
+            y = args.viewY.toInt() + args.viewHeight / 2
         }
         window?.attributes = layoutParams
         window?.setBackgroundDrawableResource(android.R.color.transparent)

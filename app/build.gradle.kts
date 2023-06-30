@@ -24,7 +24,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro")
+                "proguard-rules.pro")
         }
     }
 
@@ -47,18 +47,17 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    implementation ("io.coil-kt:coil:1.4.0")
-    implementation ("com.google.android.flexbox:flexbox:3.0.0")
-    implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation (platform("com.google.firebase:firebase-bom:29.2.1"))
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-storage-ktx")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx")
-    implementation("com.google.android.gms:play-services-auth")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.database.ktx)
 
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1")
-
+    implementation(libs.android.gms.play.services.auth)
+    implementation(libs.kotlinx.coroutin.play.services)
+    implementation(libs.hdodenhof.circleimageview)
+    implementation(libs.androidx.flexbox)
+    implementation(libs.coil)
     implementation(libs.bundles.androidx.navigation)
     implementation(libs.kotlinx.coroutine)
     implementation(libs.koin.android)
